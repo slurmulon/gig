@@ -42,7 +42,7 @@ export class Track {
   get cursor () {
     return {
       measure : Math.min(Math.max(this.index.measure, 0), this.data.length),
-      beat    : Math.min(Math.max(this.index.beat, 0), this.data[0].length) //this.headers.time[1])
+      beat    : Math.min(Math.max(this.index.beat, 0),    this.data[0].length)
     }
   }
 
@@ -77,6 +77,7 @@ export class Track {
   }
 
   start () {
+    this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
     this.heart = setDynterval(this.step.bind(this), { wait: this.interval })
   }
 
@@ -112,10 +113,10 @@ export class Track {
    * The action to perform on next interval
    */
   step (interval) {
-    const beat      = this.state.beat
-    const next      = this.next.bind(this)
     const wait      = this.interval
     const duration  = wait * ((beat && beat.duration) || 1)
+    const beat      = this.state.beat
+    const next      = this.next.bind(this)
     const play      = this.on.step.start
     const stop      = this.on.step.stop
 
@@ -130,7 +131,7 @@ export class Track {
     // to get around this :/
     setTimeout(() => stop instanceof Function && stop(beat), duration)
 
-    return Object.assign(interval, { wait })
+    return Object.assign(interval || {}, { wait })
   }
 
   next () {
