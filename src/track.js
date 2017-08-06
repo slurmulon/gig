@@ -10,8 +10,6 @@ export class Track {
   // data = warble track
   constructor ({ source, audio, loop, volume, tempo, on }) {
     this.source = source
-    // this.data   = data
-    // this.meta   = meta
     this.audio  = audio
     this.loop   = loop
     this.volume = volume
@@ -34,7 +32,7 @@ export class Track {
 
   get state () {
     const measure = this.data[this.cursor.measure]
-    const beat    = this.data[this.cursor.measure][this.cursor.beat]
+    const beat = measure[this.cursor.beat]
 
     return { measure, beat }
   }
@@ -42,7 +40,7 @@ export class Track {
   get cursor () {
     return {
       measure : Math.min(Math.max(this.index.measure, 0), this.data.length),
-      beat    : Math.min(Math.max(this.index.beat, 0),    this.data[0].length)
+      beat    : Math.min(Math.max(this.index.beat,    0), this.data[0].length)
     }
   }
 
@@ -113,19 +111,21 @@ export class Track {
    * The action to perform on next interval
    */
   step (interval) {
-    const wait      = this.interval
-    const duration  = wait * ((beat && beat.duration) || 1)
     const beat      = this.state.beat
     const next      = this.next.bind(this)
     const play      = this.on.step.start
     const stop      = this.on.step.stop
+    const wait      = this.interval
+    const duration  = wait * ((beat && beat.duration) || 1)
 
-    if (play instanceof Function) {
+    if (beat && play instanceof Function) {
       play(beat)
     }
 
     next()
 
+    // stop playing the note after its duration has surpassed
+    // note that this can go beyond `wait`, or the lowest common beat
     setTimeout(() => stop instanceof Function && stop(beat), duration)
 
     return Object.assign(interval || {}, { wait })
