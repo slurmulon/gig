@@ -1,0 +1,44 @@
+{
+  "name": "juke",
+  "version": "0.0.0",
+  "description": "warble player for JS",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "test": "mocha --compilers js:babel-core/register"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slurmulon/juke.git"
+  },
+  "keywords": [
+    "song",
+    "track",
+    "jam",
+    "audio",
+    "mp3",
+    "warble",
+    "player"
+  ],
+  "author": "MadHax, LLC",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slurmulon/juke/issues"
+  },
+  "homepage": "https://github.com/slurmulon/juke#readme",
+  "dependencies": {
+    "howler": "^2.0.4",
+    "dynamic-interval": "slurmulon/dynamic-interval"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.1.1",
+    "chai-things": "^0.2.0",
+    "karma": "^1.7.0",
+    "karma-mocha": "^1.3.0",
+    "mocha": "^3.5.0",
+    "rollup": "^0.45.2"
+  }
+}

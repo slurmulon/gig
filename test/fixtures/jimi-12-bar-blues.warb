@@ -1,0 +1,20 @@
+@Title = 'The Absolute Slowest Jimi Style 12-Bar-Blues Backing Track in A'
+@Tempo = 42
+@Tags  = ['blues', 'rock', 'slow']
+
+:A = Scale('A minorpentatonic')
+:D = Scale('D minorpentatonic')
+:E = Scale('E minorpentatonic')
+
+:Track = [
+  1 -> :A
+  1 -> :D
+  2 -> :A
+  2 -> :D
+  2 -> :A
+  1 -> :E
+  1 -> :D
+  2 -> :A
+]
+
+!Play :Track
