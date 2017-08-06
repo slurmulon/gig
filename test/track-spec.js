@@ -47,7 +47,7 @@ describe('Track', () => {
       let steps  = 0
       let passes = false
 
-      track.on.step.start = beat => {
+      track.on.step.play = beat => {
         console.log('stepped through beat', beat)
         console.log('steps taken so far', steps)
 

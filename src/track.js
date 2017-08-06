@@ -112,7 +112,7 @@ export class Track {
   step (interval) {
     const beat      = this.state.beat
     const next      = this.next.bind(this)
-    const play      = this.on.step.start
+    const play      = this.on.step.play
     const stop      = this.on.step.stop
     const wait      = this.interval
     const duration  = wait * ((beat && beat.duration) || 1)
