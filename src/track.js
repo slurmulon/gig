@@ -126,9 +126,6 @@ export class Track {
 
     next()
 
-    // FIXME: this doesn't end up getting triggered, perhaps because
-    // it's nested in a setDynterval..? might have to use generators
-    // to get around this :/
     setTimeout(() => stop instanceof Function && stop(beat), duration)
 
     return Object.assign(interval || {}, { wait })
