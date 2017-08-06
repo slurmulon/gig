@@ -3,11 +3,6 @@ import chaiThings from 'chai-things'
 import fs from 'fs'
 import { Track } from '../dist/bundle'
 
-// const chai = require('chai')
-// const chaiThings = require('chai-things')
-// const fs = require('fs')
-// const { Track } = require('../dist/bundle')
-
 chai.should()
 chai.use(chaiThings)
 
@@ -63,6 +58,14 @@ describe('Track', () => {
 
       track.start()
     }).timeout(0)
+  })
+
+  describe('play', () => {
+
+  })
+
+  describe('stop', () => {
+
   })
 
   describe('interval', () => {
