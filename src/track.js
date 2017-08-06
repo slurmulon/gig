@@ -1,5 +1,6 @@
 import { Howl } from 'howler'
-import setDynterval from 'dynamic-interval'
+import { setDynterval } from 'dynamic-interval'
+import fs from 'fs'
 
 // TODO: http://stackoverflow.com/questions/24724852/pause-and-resume-setinterval
 
@@ -19,9 +20,8 @@ export class Track {
 
     this.index = { measure: 0, beat: 0 }
     this.music = new Howl({ src: audio, loop })
-    this.heart = setDynterval(this.step, { wait: this.interval }) // TODO: consider only setting the interval on `play`
 
-    this.listen()
+    // this.listen()
   }
 
   get data () {
@@ -34,7 +34,7 @@ export class Track {
 
   get state () {
     const measure = this.data[this.cursor.measure]
-    const beat    = this.data[measure][this.cursor.beat]
+    const beat    = this.data[this.cursor.measure][this.cursor.beat]
 
     return { measure, beat }
   }
@@ -42,14 +42,15 @@ export class Track {
   get cursor () {
     return {
       measure : Math.min(Math.max(this.index.measure, 0), this.data.length),
-      beat    : Math.min(Math.max(this.index.beat, 0), this.headers.time[1])
+      beat    : Math.min(Math.max(this.index.beat, 0), this.data[0].length) //this.headers.time[1])
     }
   }
 
   get interval () {
+    const global = this.headers.tempo
     const tempos = {
-      init: this.headers.tempo
-      user: this.tempo
+      init: global,
+      user: this.tempo || global
     }
 
     const diff = tempos.user / tempos.init
@@ -58,11 +59,11 @@ export class Track {
   }
 
   listen () {
-    music.on('play',  this.play)
-    music.on('pause', this.pause)
-    music.on('stop',  this.stop)
-    music.on('rate',  this.rate)
-    music.on('seek',  this.seek)
+    this.music.on('play',  this.play)
+    this.music.on('pause', this.pause)
+    this.music.on('stop',  this.stop)
+    this.music.on('rate',  this.rate)
+    this.music.on('seek',  this.seek)
   }
 
   // TODO: integrate core Howler event handler
@@ -75,13 +76,21 @@ export class Track {
     }
   }
 
+  start () {
+    this.heart = setDynterval(this.step.bind(this), { wait: this.interval })
+  }
+
   play () {
+    if (!this.heart) this.start()
+
     this.music.play()
     this.emit('play')
   }
 
   stop () {
     this.music.stop()
+
+    clearInterval(this.heart)
   }
 
   pause () {
@@ -103,30 +112,39 @@ export class Track {
    * The action to perform on next interval
    */
   step (interval) {
-    // TODO: create function that maps current time in track to a beat in the track!
-    // TODO: wrap the above in a generator that can be yielded
-
-    // 1. determine current position (beat) in warble based on the current position and time signature of the track (and this.interval, the lowest common denominator beat)
-    // 2. find all notes that should be played on the current beat
-    // 3. play and render any notes on the current beat
-    // 4. update the tempo if necessary (low priority)
-    // 5. increase track cursor by one beat
     const beat      = this.state.beat
+    const next      = this.next.bind(this)
     const wait      = this.interval
-    const duration  = wait * beat.duration
-    const play      = this.on.step.start || () => beat
-    const stop      = this.on.step.stop  || () => beat
+    const duration  = wait * ((beat && beat.duration) || 1)
+    const play      = this.on.step.start
+    const stop      = this.on.step.stop
 
-    console.log('DAS NOTES', beat)
+    if (play instanceof Function) {
+      play(beat)
+    }
 
-    play(beat)
-    setTimeout(() => stop(beat), duration)
+    next()
+
+    // FIXME: this doesn't end up getting triggered, perhaps because
+    // it's nested in a setDynterval..? might have to use generators
+    // to get around this :/
+    setTimeout(() => stop instanceof Function && stop(beat), duration)
 
     return Object.assign(interval, { wait })
   }
 
+  next () {
+    const limit = {
+      measure : Math.max(this.data.length    - 1, 1),
+      beat    : Math.max(this.data[0].length - 1, 1)
+    }
+
+    this.index.measure = (this.index.measure + 1) % limit.measure
+    this.index.beat    = (this.index.beat    + 1) % limit.beat
+  }
+
   static read (path) {
-    return new Track({ source: require(path) })
+    return new Track({ source: fs.readFileSync(path) })
   }
 
 }
