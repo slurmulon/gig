@@ -4,7 +4,6 @@ import fs from 'fs'
 
 // TODO: http://stackoverflow.com/questions/24724852/pause-and-resume-setinterval
 
-// TODO: need to support track time meta information in warble
 export class Track {
 
   // data = warble track
@@ -13,7 +12,7 @@ export class Track {
     this.audio  = audio
     this.loop   = loop
     this.volume = volume
-    this.tempo  = tempo // TODO: fully support this later, tricky (seemingly)
+    this.tempo  = tempo
     this.on     = on || { step: { } }
 
     this.index = { measure: 0, beat: 0 }
