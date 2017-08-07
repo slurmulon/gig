@@ -1,18 +1,19 @@
 import { Howl } from 'howler'
 import { setDynterval } from 'dynamic-interval'
-import fs from 'fs'
+// import fs from 'fs'
 
 // TODO: http://stackoverflow.com/questions/24724852/pause-and-resume-setinterval
 
 export class Track {
 
   // data = warble track
-  constructor ({ source, audio, loop, volume, tempo, on }) {
+  constructor ({ source, audio, loop, volume, tempo, delay, on }) {
     this.source = source
     this.audio  = audio
     this.loop   = loop
     this.volume = volume
     this.tempo  = tempo
+    this.delay  = delay
     this.on     = on || { step: { } }
 
     this.index = { measure: 0, beat: 0 }
@@ -74,8 +75,10 @@ export class Track {
   }
 
   start () {
-    this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
-    this.heart = setDynterval(this.step.bind(this), { wait: this.interval })
+    setTimeout(() => {
+      this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
+      this.heart = setDynterval(this.step.bind(this), { wait: this.interval })
+    }, this.delay || 0)
   }
 
   play () {
@@ -140,8 +143,8 @@ export class Track {
     this.index.beat    = (this.index.beat    + 1) % limit.beat
   }
 
-  static read (path) {
-    return new Track({ source: fs.readFileSync(path) })
-  }
+  // static read (path) {
+  //   return new Track({ source: fs.readFileSync(path) })
+  // }
 
 }
