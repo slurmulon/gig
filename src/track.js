@@ -75,17 +75,23 @@ export class Track {
   }
 
   start () {
+    const delay = this.delay * this.interval
+
     setTimeout(() => {
       this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
       this.heart = setDynterval(this.step.bind(this), { wait: this.interval })
-    }, this.delay || 0)
+    }, delay || 0)
   }
 
   play () {
-    if (!this.heart) this.start()
+    this.music.once('load', () => {
+      if (!this.heart) this.start()
 
-    this.music.play()
-    this.emit('play')
+      console.log('[juke] starting to play track')
+
+      this.music.play()
+      this.emit('play')
+    })
   }
 
   stop () {
