@@ -4,8 +4,8 @@
   "description": "warble player for JS",
   "main": "src/index.js",
   "scripts": {
-    "build_old": "babel src --out-dir lib",
     "build": "rollup -c",
+    "prepublish": "npm run build",
     "test": "npm run build && mocha --compilers js:babel-core/register"
   },
   "repository": {
@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/slurmulon/juke#readme",
   "dependencies": {
-    "howler": "^2.0.4",
-    "dynamic-interval": "slurmulon/dynamic-interval"
+    "dynamic-interval": "slurmulon/dynamic-interval",
+    "howler": "^2.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
