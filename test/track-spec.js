@@ -33,7 +33,7 @@ describe('Track', () => {
 
     })
 
-    it.only('should recursively step through the track\'s measures and beats', (done) => {
+    it('should recursively step through the track\'s measures and beats', (done) => {
       const source = fixtures.slow.json
       const audio  = fixtures.slow.audio
       const track  = new Track({ source, audio })

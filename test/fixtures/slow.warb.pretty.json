@@ -135,7 +135,7 @@
     ],
     "headers": {
         "lowest-beat": 1,
-        "ms-per-beat": 2000,
+        "ms-per-beat": 5714.2856,
         "tags": [
             "list",
             "blues",
