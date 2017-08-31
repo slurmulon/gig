@@ -2,9 +2,9 @@
 @Tempo = 42
 @Tags  = ['blues', 'rock', 'slow']
 
-:A = Scale('A minorpentatonic')
-:D = Scale('D minorpentatonic')
-:E = Scale('E minorpentatonic')
+:A = Scale('A3 minorpentatonic')
+:D = Scale('D3 minorpentatonic')
+:E = Scale('E3 minorpentatonic')
 
 :Track = [
   1 -> :A
