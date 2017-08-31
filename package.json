@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/slurmulon/juke#readme",
   "dependencies": {
-    "dynamic-interval": "slurmulon/dynamic-interval",
+    "stateful-dynamic-interval": "slurmulon/stateful-dynamic-interval",
     "howler": "^2.0.4"
   },
   "devDependencies": {

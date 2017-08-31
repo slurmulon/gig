@@ -26,7 +26,11 @@ describe('Track', () => {
 
       track.start()
 
-      setTimeout(() => passes.should.equal(true) && done(), 2000)
+      setTimeout(() => {
+        passes.should.equal(true)
+        console.log('playing should end!')
+        done()
+      }, 2000)
     }).timeout(0)
 
     it('should wait ms-per-beat between each step', () => {
