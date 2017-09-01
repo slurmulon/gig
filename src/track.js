@@ -1,5 +1,5 @@
 import { Howl } from 'howler'
-import { setDynterval } from 'dynamic-interval'
+import { setStatefulDynterval } from 'stateful-dynamic-interval'
 // import fs from 'fs'
 
 // TODO: http://stackoverflow.com/questions/24724852/pause-and-resume-setinterval
@@ -79,7 +79,7 @@ export class Track {
 
     setTimeout(() => {
       this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
-      this.heart = setDynterval(this.step.bind(this), { wait: this.interval })
+      this.heart = setStatefulDynterval(this.step.bind(this), { wait: this.interval })
     }, delay || 0)
   }
 
@@ -96,15 +96,17 @@ export class Track {
 
   stop () {
     this.music.stop()
-
-    clearInterval(this.heart)
+    this.heart.clear()
   }
 
   pause () {
     this.music.pause()
+    this.heart.pause()
+  }
 
-    // capture state of interval
-    // pause interval
+  resume () {
+    this.music.play()
+    this.heart.resume()
   }
 
   mute () {
