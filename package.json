@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/slurmulon/juke#readme",
   "dependencies": {
-    "stateful-dynamic-interval": "slurmulon/stateful-dynamic-interval",
-    "howler": "^2.0.4"
+    "howler": "^2.0.4",
+    "stateful-dynamic-interval": "github:slurmulon/stateful-dynamic-interval"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
