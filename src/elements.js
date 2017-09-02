@@ -1,29 +1,6 @@
 /**
- * Represents a playable sequence of elements in a track (Note, Scale, Chord, Rest, etc.)
- */
-export class Elements {
-
-  constructor (data) {
-    this.data = data
-  }
-
-  get duration () {
-    return this.data.duration
-  }
-
-  get items () {
-    const notes = this.data.notes
-    const items = notes instanceof Array ? notes : [notes]
-
-    return items.map(item => new Element(item))
-  }
-
-}
-
-/**
  * Represents a single playable element (Note, Scale, Chord or Rest)
  */
-// FIXME: support implicit elements (involves reflecting on the value - can use teoria for this, most likely)
 export class Element {
 
   constructor (data) {
@@ -38,8 +15,63 @@ export class Element {
     return this.data.atom.init['arguments']
   }
 
-  identify () {
+  // FIXME: support implicit elements (involves reflecting on the value - can use teoria for this, most likely)
+  get kind () {
     return this.data.atom.keyword
   }
 
 }
+
+/**
+ * Represents a single beat in a track (Note, Scale, Chord, Rest, etc.)
+ *
+ * duration -> notes
+ */
+export class Beat {
+
+  constructor (data) {
+    this.data = data
+  }
+
+  get duration () {
+    return !this.empty ? this.data.duration : 1
+  }
+
+  get items () {
+    if (this.empty) return []
+
+    const notes = this.data.notes
+    const items = notes instanceof Array ? notes : [notes]
+
+    return items.map(item => new Element(item))
+  }
+
+  get empty () {
+    return !this.data
+  }
+
+  get exists () {
+    return !this.empty
+  }
+
+  static from (beats) {
+    if (beats instanceof Array) {
+      return beats.map(beat => new Beat(beat))
+    }
+
+    return new Beat(beats)
+  }
+
+}
+
+// export class Measure {
+
+//   constructor (data) {
+//     this.data = data
+//   }
+
+//   get items () {
+//     return this.data.map(Beat.from)
+//   }
+
+// }

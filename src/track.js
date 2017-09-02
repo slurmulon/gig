@@ -1,4 +1,4 @@
-import { Elements } from './elements'
+import { Beat } from './elements'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 // import fs from 'fs'
@@ -22,8 +22,9 @@ export class Track {
   }
 
   get data () {
-    // return new Elements(this.source.data) // work in progress, breaks integration
-    return this.source.data
+    return this.source.data.map(Beat.from)
+    // return Beat.from(this.source.data)
+    // return this.source.data
   }
 
   get headers () {
@@ -40,7 +41,7 @@ export class Track {
   get cursor () {
     return {
       measure : Math.min(Math.max(this.index.measure, 0), this.data.length),
-      beat    : Math.min(Math.max(this.index.beat, 0), this.data[0].length)
+      beat    : Math.min(Math.max(this.index.beat,    0), this.data[0].length)
     }
   }
 
@@ -88,8 +89,6 @@ export class Track {
     this.music.once('load', () => {
       if (!this.heart) this.start()
 
-      console.log('[juke] starting to play track')
-
       this.music.play()
       this.emit('play')
     })
@@ -129,16 +128,17 @@ export class Track {
     const play = this.on.step.play
     const stop = this.on.step.stop
     const wait = this.interval
-    const duration = wait * ((beat && beat.duration) || 1)
+    // const duration = wait * ((!beat.empty && beat.duration) || 1)
+    const duration = wait * beat.duration
 
-    if (beat && play instanceof Function) {
+    if (beat.exists && play instanceof Function) {
       play(beat)
     }
 
     next()
 
     // stop playing the note after its duration has surpassed
-    // note that this can go beyond `wait`, or the lowest common beat
+    // note that this can go beyond `wait`, or the duration of the lowest common beat
     setTimeout(() => stop instanceof Function && stop(beat), duration)
 
     return Object.assign(interval || {}, { wait })
