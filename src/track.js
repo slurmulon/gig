@@ -1,8 +1,9 @@
+import { Elements } from './elements'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 // import fs from 'fs'
 
-// TODO: integrate `warble-json-schema`
+// TODO: integrate `warble-json-schema` validation
 export class Track {
 
   constructor ({ source, audio, loop, volume, tempo, delay, on }) {
@@ -21,6 +22,7 @@ export class Track {
   }
 
   get data () {
+    // return new Elements(this.source.data) // work in progress, breaks integration
     return this.source.data
   }
 
@@ -75,6 +77,7 @@ export class Track {
   start () {
     const delay = this.delay * this.interval
 
+    // FIXME: this should be pauseable (use setStatefulDynterval)
     setTimeout(() => {
       this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
       this.heart = setStatefulDynterval(this.step.bind(this), { wait: this.interval })

@@ -3,16 +3,16 @@
  */
 export class Elements {
 
-  constructor (source) {
-    this.source = source
+  constructor (data) {
+    this.data = data
   }
 
   get duration () {
-    return this.source.duration
+    return this.data.duration
   }
 
   get items () {
-    const notes = this.source.notes
+    const notes = this.data.notes
     const items = notes instanceof Array ? notes : [notes]
 
     return items.map(item => new Element(item))
@@ -26,8 +26,8 @@ export class Elements {
 // FIXME: support implicit elements (involves reflecting on the value - can use teoria for this, most likely)
 export class Element {
 
-  constructor (source) {
-    this.source = source
+  constructor (data) {
+    this.data = data
   }
 
   get value () {
@@ -35,11 +35,11 @@ export class Element {
   }
 
   get inputs () {
-    return this.source.atom.init['arguments']
+    return this.data.atom.init['arguments']
   }
 
   identify () {
-    return this.source.atom.keyword
+    return this.data.atom.keyword
   }
 
 }
