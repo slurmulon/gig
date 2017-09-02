@@ -2,11 +2,9 @@ import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 // import fs from 'fs'
 
-// TODO: http://stackoverflow.com/questions/24724852/pause-and-resume-setinterval
-
+// TODO: integrate `warble-json-schema`
 export class Track {
 
-  // data = warble track
   constructor ({ source, audio, loop, volume, tempo, delay, on }) {
     this.source = source
     this.audio  = audio
@@ -40,7 +38,7 @@ export class Track {
   get cursor () {
     return {
       measure : Math.min(Math.max(this.index.measure, 0), this.data.length),
-      beat    : Math.min(Math.max(this.index.beat,    0), this.data[0].length)
+      beat    : Math.min(Math.max(this.index.beat, 0), this.data[0].length)
     }
   }
 
@@ -113,6 +111,8 @@ export class Track {
     this.music.mute()
   }
 
+  // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
+  // NOTE: if we assume every interval is the same, relative to tempo, this could work
   seek (to) { // in seconds
     this.music.seek(to)
   }
@@ -121,12 +121,12 @@ export class Track {
    * The action to perform on next interval
    */
   step (interval) {
-    const beat      = this.state.beat
-    const next      = this.next.bind(this)
-    const play      = this.on.step.play
-    const stop      = this.on.step.stop
-    const wait      = this.interval
-    const duration  = wait * ((beat && beat.duration) || 1)
+    const beat = this.state.beat
+    const next = this.next.bind(this)
+    const play = this.on.step.play
+    const stop = this.on.step.stop
+    const wait = this.interval
+    const duration = wait * ((beat && beat.duration) || 1)
 
     if (beat && play instanceof Function) {
       play(beat)
