@@ -23,6 +23,7 @@ export class Elements {
 /**
  * Represents a single playable element (Note, Scale, Chord or Rest)
  */
+// FIXME: support implicit elements (involves reflecting on the value - can use teoria for this, most likely)
 export class Element {
 
   constructor (source) {
