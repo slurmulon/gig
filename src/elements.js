@@ -1,3 +1,5 @@
+import teoria from 'teoria'
+
 /**
  * Represents a single playable element (Note, Scale, Chord or Rest)
  */
@@ -12,12 +14,40 @@ export class Element {
   }
 
   get inputs () {
+    console.log('input atom', this.data.atom)
     return this.data.atom.init['arguments']
   }
 
-  // FIXME: support implicit elements (involves reflecting on the value - can use teoria for this, most likely)
   get kind () {
-    return this.data.atom.keyword
+    const explicits = ['Note', 'Scale', 'Chord', 'Rest']
+    const keyword = this.data.atom.keyword
+
+    if (explicits.includes(keyword)) {
+      return keyword.toLowerCase()
+    }
+
+    return this.identify()
+  }
+
+  identify () {
+    let identity
+
+    try {
+      teoria.note(this.value)
+      identity = 'note'
+    } catch (e) {}
+
+    try {
+      teoria.scale(this.value)
+      identity = 'scale'
+    } catch (e) {}
+
+    try {
+      teoria.chord(this.value)
+      identity = 'chord'
+    } catch (e) {}
+
+    return identity
   }
 
 }
@@ -34,7 +64,7 @@ export class Beat {
   }
 
   get duration () {
-    return !this.empty ? this.data.duration : 1
+    return !this.empty ? this.data.duration : 1 // TODO: need to think about using 1 as fallback more
   }
 
   get items () {
@@ -55,7 +85,7 @@ export class Beat {
   }
 
   static from (beats) {
-    if (beats instanceof Array) {
+    if (beats instanceof Array) { // in other words, a measure
       return beats.map(beat => new Beat(beat))
     }
 
@@ -63,15 +93,3 @@ export class Beat {
   }
 
 }
-
-// export class Measure {
-
-//   constructor (data) {
-//     this.data = data
-//   }
-
-//   get items () {
-//     return this.data.map(Beat.from)
-//   }
-
-// }

@@ -23,8 +23,6 @@ export class Track {
 
   get data () {
     return this.source.data.map(Beat.from)
-    // return Beat.from(this.source.data)
-    // return this.source.data
   }
 
   get headers () {
@@ -54,7 +52,7 @@ export class Track {
 
     const diff = tempos.user / tempos.init
 
-    return this.headers['ms-per-beat'] * diff
+    return this.headers['ms-per-beat'] / diff
   }
 
   listen () {
@@ -78,7 +76,6 @@ export class Track {
   start () {
     const delay = this.delay * this.interval
 
-    // FIXME: this should be pauseable (use setStatefulDynterval)
     setTimeout(() => {
       this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
       this.heart = setStatefulDynterval(this.step.bind(this), { wait: this.interval })
@@ -123,25 +120,66 @@ export class Track {
    * The action to perform on next interval
    */
   step (interval) {
-    const beat = this.state.beat
-    const next = this.next.bind(this)
-    const play = this.on.step.play
-    const stop = this.on.step.stop
-    const wait = this.interval
-    // const duration = wait * ((!beat.empty && beat.duration) || 1)
+    const beat  = this.state.beat
+    const next  = this.next.bind(this)
+    const play  = this.on.step.play // TODO: should also add `step.start`, that way `lay` only gets called when a note is actually played
+    const start = this.on.step.start
+    const stop  = this.on.step.stop
+    const wait  = this.interval
     const duration = wait * beat.duration
+
+    console.log('\n\n^^^^^^ step (index, exists, duration)', this.index, beat.exists, duration)
+
+    if (start instanceof Function) {
+      start(beat)
+    }
 
     if (beat.exists && play instanceof Function) {
       play(beat)
     }
 
+    console.log('----- after beat play', duration)
+
+    // FIXME: sometimes this doesn't get called
+    // I think what's happening is the parent interval is getting cleared before this can
+    // Evidence to suggest this:
+    // - each step is running for the exact same amount of time, and this fails when
+    //   then inner setTimeout called here has a duration longer than the parent (like, 2 measures)
+    setTimeout(() => {
+      console.log('&&&&& about to call stop')
+
+      if (stop instanceof Function) {
+        stop(beat)
+      }
+
+      console.log('&&&&& about to call next')
+
+      // next() // ideal, but since this timeout doesn't kick off sometimes, experimenting with other options
+    }, duration)
+
+    console.log('----- after timeout invocation', duration)
+
     next()
 
-    // stop playing the note after its duration has surpassed
-    // note that this can go beyond `wait`, or the duration of the lowest common beat
-    setTimeout(() => stop instanceof Function && stop(beat), duration)
+    // if (beat.exists) {
+    //   if (play instanceof Function) {
+    //     play(beat)
+    //   }
 
-    return Object.assign(interval || {}, { wait })
+    //   // TODO: break this out so it gets called regardless if a note was played (next, in particular)
+    //   // FIXME: this is getting called on empty notes
+    //   setTimeout(() => {
+    //     if (stop instanceof Function) {
+    //       stop(beat)
+    //     }
+
+    //     next()
+    //   }, duration)
+    // } else {
+    //   next()
+    // }
+
+    return Object.assign(interval || {}, { wait: duration })
   }
 
   next () {
@@ -150,8 +188,12 @@ export class Track {
       beat    : Math.max(this.data[0].length - 1, 1)
     }
 
+    console.log('[next] measure limits', limit)
+
     this.index.measure = (this.index.measure + 1) % limit.measure
     this.index.beat    = (this.index.beat    + 1) % limit.beat
+
+    console.log('[next] updated measure, beat', this.index.measure, this.index.beat)
   }
 
   // static read (path) {

@@ -2,59 +2,65 @@ import chai from 'chai'
 import chaiThings from 'chai-things'
 import fs from 'fs'
 import { Track } from '../dist/bundle'
+import fixtures from './fixtures'
 
-chai.should()
+const should = chai.should()
+
 chai.use(chaiThings)
 
-const fixtures = {
-  slow: {
-    json  : JSON.parse(fs.readFileSync('./test/fixtures/slow.warb.json')),
-    audio : fs.readFileSync('./test/fixtures/slow.wav')
-  }
-}
+// const fixtures = {
+//   slow: {
+//     json  : JSON.parse(fs.readFileSync('./test/fixtures/slow.warb.json')),
+//     audio : fs.readFileSync('./test/fixtures/slow.wav')
+//   }
+// }
 
 describe('Track', () => {
   // FIXME: this is failing because setInterval doesn't kick off UNTIl 2000 ms, not starts and then waits until 2000 ms.
   describe('step', () => {
-    it('should play the current beat', (done) => {
-      const source = fixtures.slow.json //JSON.parse(fs.readFileSync('./test/fixtures/slow.warb.json'))
-      const audio  = fixtures.slow.audio //fs.readFileSync('./test/fixtures/slow.wav')
+    it('should play the current beat', done => {
+      const source = fixtures.slow.json
+      const audio  = fixtures.slow.audio
       const track  = new Track({ source, audio })
+      const wait   = source.headers['ms-per-beat']
       let passes   = false
 
-      track.on.step.stop = beat => passes = true
+      track.on.step.stop = beat => {
+        passes = true
+      }
 
       track.start()
 
       setTimeout(() => {
         passes.should.equal(true)
-        console.log('playing should end!')
         done()
-      }, 2000)
+      }, wait + 5)
     }).timeout(0)
 
     it('should wait ms-per-beat between each step', () => {
 
     })
 
-    it('should recursively step through the track\'s measures and beats', (done) => {
+    it.only('should recursively step through the track\'s measures and beats', done => {
       const source = fixtures.slow.json
       const audio  = fixtures.slow.audio
-      const track  = new Track({ source, audio })
+      const track  = new Track({ source, audio, tempo: 140 })
       const limit  = track.data.length * track.data[0].length
 
       let steps  = 0
       let passes = false
 
-      track.on.step.play = beat => {
-        console.log('stepped through beat', beat)
+      track.on.step.start = beat => {
+        console.log('stepped through beat', beat.data)
         console.log('steps taken so far', steps)
 
         steps++
       }
 
       track.on.step.stop = beat => {
+        console.log('!!!! stopping (steps, limit)', steps, limit, beat)
         if (beat && steps === limit) {
+          console.log('ABOUT TO EVALUATE BROOOOO')
           true.should.equal(true)
           done()
         }
