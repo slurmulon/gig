@@ -129,6 +129,8 @@ export class Track {
     const wait  = this.interval
     const duration = wait * beat.duration
 
+    console.log('[juke] step duration', beat, duration)
+
     if (start instanceof Function) {
       start(beat)
     }

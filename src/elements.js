@@ -14,7 +14,6 @@ export class Element {
   }
 
   get inputs () {
-    console.log('input atom', this.data.atom)
     return this.data.atom.init['arguments']
   }
 
@@ -35,17 +34,17 @@ export class Element {
     try {
       teoria.note(this.value)
       identity = 'note'
-    } catch (e) {}
+    } catch (_) {}
 
     try {
       teoria.scale(this.value)
       identity = 'scale'
-    } catch (e) {}
+    } catch (_) {}
 
     try {
       teoria.chord(this.value)
       identity = 'chord'
-    } catch (e) {}
+    } catch (_) {}
 
     return identity
   }
@@ -64,7 +63,7 @@ export class Beat {
   }
 
   get duration () {
-    return !this.empty ? this.data.duration : 1 // TODO: need to think about using 1 as fallback more
+    return !this.empty ? this.data.duration : 0 // TODO: need to think about using 1 as fallback more
   }
 
   get items () {
