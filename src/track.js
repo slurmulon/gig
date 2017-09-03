@@ -4,6 +4,7 @@ import { setStatefulDynterval } from 'stateful-dynamic-interval'
 // import fs from 'fs'
 
 // TODO: integrate `warble-json-schema` validation
+// TODO: add `loop` parameter (default to true)
 export class Track {
 
   constructor ({ source, audio, loop, volume, tempo, delay, on }) {
@@ -122,13 +123,11 @@ export class Track {
   step (interval) {
     const beat  = this.state.beat
     const next  = this.next.bind(this)
-    const play  = this.on.step.play // TODO: should also add `step.start`, that way `lay` only gets called when a note is actually played
+    const play  = this.on.step.play
     const start = this.on.step.start
     const stop  = this.on.step.stop
     const wait  = this.interval
     const duration = wait * beat.duration
-
-    console.log('\n\n^^^^^^ step (index, exists, duration)', this.index, beat.exists, duration)
 
     if (start instanceof Function) {
       start(beat)
@@ -138,62 +137,29 @@ export class Track {
       play(beat)
     }
 
-    console.log('----- after beat play', duration)
-
-    // FIXME: sometimes this doesn't get called
-    // I think what's happening is the parent interval is getting cleared before this can
-    // Evidence to suggest this:
-    // - each step is running for the exact same amount of time, and this fails when
-    //   then inner setTimeout called here has a duration longer than the parent (like, 2 measures)
     setTimeout(() => {
-      console.log('&&&&& about to call stop')
-
       if (stop instanceof Function) {
         stop(beat)
       }
 
-      console.log('&&&&& about to call next')
-
-      // next() // ideal, but since this timeout doesn't kick off sometimes, experimenting with other options
+      next()
     }, duration)
 
-    console.log('----- after timeout invocation', duration)
-
-    next()
-
-    // if (beat.exists) {
-    //   if (play instanceof Function) {
-    //     play(beat)
-    //   }
-
-    //   // TODO: break this out so it gets called regardless if a note was played (next, in particular)
-    //   // FIXME: this is getting called on empty notes
-    //   setTimeout(() => {
-    //     if (stop instanceof Function) {
-    //       stop(beat)
-    //     }
-
-    //     next()
-    //   }, duration)
-    // } else {
-    //   next()
-    // }
+    // TODO: this is an alternative impl. it avoids timing issues but
+    // it prematurely bumps the cursor, before `stop` is called
+    // next()
 
     return Object.assign(interval || {}, { wait: duration })
   }
 
   next () {
     const limit = {
-      measure : Math.max(this.data.length    - 1, 1),
-      beat    : Math.max(this.data[0].length - 1, 1)
+      measure : Math.max(this.data.length, 1),
+      beat    : Math.max(this.data[0].length, 1)
     }
-
-    console.log('[next] measure limits', limit)
 
     this.index.measure = (this.index.measure + 1) % limit.measure
     this.index.beat    = (this.index.beat    + 1) % limit.beat
-
-    console.log('[next] updated measure, beat', this.index.measure, this.index.beat)
   }
 
   // static read (path) {

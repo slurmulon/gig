@@ -44,7 +44,7 @@ describe('Track', () => {
     it.only('should recursively step through the track\'s measures and beats', done => {
       const source = fixtures.slow.json
       const audio  = fixtures.slow.audio
-      const track  = new Track({ source, audio, tempo: 140 })
+      const track  = new Track({ source, audio, tempo: 240 })
       const limit  = track.data.length * track.data[0].length
 
       let steps  = 0
@@ -58,9 +58,7 @@ describe('Track', () => {
       }
 
       track.on.step.stop = beat => {
-        console.log('!!!! stopping (steps, limit)', steps, limit, beat)
         if (beat && steps === limit) {
-          console.log('ABOUT TO EVALUATE BROOOOO')
           true.should.equal(true)
           done()
         }
