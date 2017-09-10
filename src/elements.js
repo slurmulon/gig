@@ -63,7 +63,7 @@ export class Beat {
   }
 
   get duration () {
-    return !this.empty ? this.data.duration : 0 // TODO: need to think about using 1 as fallback more
+    return !this.empty ? this.data.duration : 0
   }
 
   get items () {

@@ -126,8 +126,7 @@ export class Track {
     const play  = this.on.step.play
     const start = this.on.step.start
     const stop  = this.on.step.stop
-    const wait  = this.interval
-    const duration = wait * beat.duration
+    const wait  = this.interval * beat.duration
 
     if (start instanceof Function) {
       start(beat)
@@ -154,19 +153,17 @@ export class Track {
     // it prematurely bumps the cursor, before `stop` is called
     next()
 
-    return Object.assign(interval || {}, { wait: duration })
+    return Object.assign(interval || {}, { wait })
   }
 
   next () {
     const limit = {
-      measure : Math.max(this.data.length, 1),
+      measure : Math.max(this.data.length,    1),
       beat    : Math.max(this.data[0].length, 1)
     }
 
     this.index.measure = (this.index.measure + 1) % limit.measure
     this.index.beat    = (this.index.beat    + 1) % limit.beat
-
-    console.log('[juke] updated cursor index (measure, beat(', this.index.measure, this.index.beat)
   }
 
   // static read (path) {
