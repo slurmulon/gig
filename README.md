@@ -2,7 +2,7 @@
 > :speaker: Official Warble interpreter for NodeJS
 ---
 
-[`warble`](https://github.comm/slurmulon/warble) is a dynamic notation for representing musical tracks with a focus on human readibility and productivity.
+[`warble`](https://github.com/slurmulon/warble) is a dynamic notation for representing musical tracks with a focus on human readibility and productivity.
 
 `juke` consumes and renders `warble` tracks against audio files (mp3, wav, etc.).
 
