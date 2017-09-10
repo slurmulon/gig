@@ -120,16 +120,25 @@ export class Track {
   /**
    * The action to perform on next interval
    */
+  // FIXME: this has a bug where if the duration is 0 it still ends up waiting
+  // - I believe this is based on lack of use of `interval`
+  // FIXME: when paused on elements with a duration greater than the default interval
+  //        then pause and resume doesn't work, it ends up playing the empty beat
+  //        for the default interval instead of 0 (diverges from beat)
+  //        - I think this might be happening because when we resume, the `step` function is run again, which ends up bumping the next tick!!!!!
   step (interval) {
+    console.log('[juke] ~~~~~~~~~~~~~~~~~~~~~~~~~ stepping (interval)!', interval)
+
     const beat  = this.state.beat
     const next  = this.next.bind(this)
     const play  = this.on.step.play
     const start = this.on.step.start
     const stop  = this.on.step.stop
     const wait  = this.interval
+    // const wait  = (interval && interval.wait >= 0) ? interval.wait : this.interval
     const duration = wait * beat.duration
 
-    console.log('[juke] step duration', beat, duration)
+    console.log('[juke] step duration (interval, beat, wait, duration)', interval, beat, wait, duration)
 
     if (start instanceof Function) {
       start(beat)
@@ -139,17 +148,24 @@ export class Track {
       play(beat)
     }
 
-    setTimeout(() => {
-      if (stop instanceof Function) {
-        stop(beat)
-      }
+    // FIXME: this needs to be pauseable, or just avoid the need for it
+    //  - could just call stop at the beginning of the next beat, but requires
+    //    tracking the previous beat (bleh)
+    // setTimeout(() => {
+    //   console.log('[juke] stopping', beat, duration)
 
-      next()
-    }, duration)
+    //   if (stop instanceof Function) {
+    //     stop(beat)
+    //   }
+
+    //   // next()
+    // }, duration)
+
+    console.log('[juke] step, about to bump next (next duration)', duration)
 
     // TODO: this is an alternative impl. it avoids timing issues but
     // it prematurely bumps the cursor, before `stop` is called
-    // next()
+    next()
 
     return Object.assign(interval || {}, { wait: duration })
   }
@@ -162,6 +178,8 @@ export class Track {
 
     this.index.measure = (this.index.measure + 1) % limit.measure
     this.index.beat    = (this.index.beat    + 1) % limit.beat
+
+    console.log('[juke] updated cursor index (measure, beat(', this.index.measure, this.index.beat)
   }
 
   // static read (path) {
