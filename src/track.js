@@ -4,6 +4,7 @@ import { setStatefulDynterval } from 'stateful-dynamic-interval'
 // import fs from 'fs'
 
 // TODO: integrate `warble-json-schema` validation
+// TODO: add `loop` parameter (default to true)
 export class Track {
 
   constructor ({ source, audio, loop, volume, tempo, delay, on }) {
@@ -23,8 +24,6 @@ export class Track {
 
   get data () {
     return this.source.data.map(Beat.from)
-    // return Beat.from(this.source.data)
-    // return this.source.data
   }
 
   get headers () {
@@ -54,7 +53,7 @@ export class Track {
 
     const diff = tempos.user / tempos.init
 
-    return this.headers['ms-per-beat'] * diff
+    return this.headers['ms-per-beat'] / diff
   }
 
   listen () {
@@ -78,7 +77,6 @@ export class Track {
   start () {
     const delay = this.delay * this.interval
 
-    // FIXME: this should be pauseable (use setStatefulDynterval)
     setTimeout(() => {
       this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
       this.heart = setStatefulDynterval(this.step.bind(this), { wait: this.interval })
@@ -123,35 +121,52 @@ export class Track {
    * The action to perform on next interval
    */
   step (interval) {
-    const beat = this.state.beat
-    const next = this.next.bind(this)
-    const play = this.on.step.play
-    const stop = this.on.step.stop
-    const wait = this.interval
-    // const duration = wait * ((!beat.empty && beat.duration) || 1)
+    const beat  = this.state.beat
+    const next  = this.next.bind(this)
+    const play  = this.on.step.play
+    const start = this.on.step.start
+    const stop  = this.on.step.stop
+    const wait  = this.interval
     const duration = wait * beat.duration
+
+    if (start instanceof Function) {
+      start(beat)
+    }
 
     if (beat.exists && play instanceof Function) {
       play(beat)
     }
 
+    // FIXME: this needs to be pauseable, or just avoid the need for it
+    //  - could just call stop at the beginning of the next beat, but requires
+    //    tracking the previous beat (bleh)
+    // setTimeout(() => {
+    //   console.log('[juke] stopping', beat, duration)
+
+    //   if (stop instanceof Function) {
+    //     stop(beat)
+    //   }
+
+    //   // next()
+    // }, duration)
+
+    // TODO: this is an alternative impl. it avoids timing issues but
+    // it prematurely bumps the cursor, before `stop` is called
     next()
 
-    // stop playing the note after its duration has surpassed
-    // note that this can go beyond `wait`, or the duration of the lowest common beat
-    setTimeout(() => stop instanceof Function && stop(beat), duration)
-
-    return Object.assign(interval || {}, { wait })
+    return Object.assign(interval || {}, { wait: duration })
   }
 
   next () {
     const limit = {
-      measure : Math.max(this.data.length    - 1, 1),
-      beat    : Math.max(this.data[0].length - 1, 1)
+      measure : Math.max(this.data.length, 1),
+      beat    : Math.max(this.data[0].length, 1)
     }
 
     this.index.measure = (this.index.measure + 1) % limit.measure
     this.index.beat    = (this.index.beat    + 1) % limit.beat
+
+    console.log('[juke] updated cursor index (measure, beat(', this.index.measure, this.index.beat)
   }
 
   // static read (path) {
