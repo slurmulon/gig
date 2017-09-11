@@ -5,6 +5,7 @@ import { setStatefulDynterval } from 'stateful-dynamic-interval'
 
 // TODO: integrate `warble-json-schema` validation
 // TODO: add `loop` parameter (default to true)
+// TODO: check for `Audio` header of warble track
 export class Track {
 
   constructor ({ source, audio, loop, volume, tempo, delay, on }) {
@@ -79,13 +80,13 @@ export class Track {
 
     setTimeout(() => {
       this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
-      this.heart = setStatefulDynterval(this.step.bind(this), { wait: this.interval })
+      this.clock = setStatefulDynterval(this.step.bind(this), { wait: this.interval })
     }, delay || 0)
   }
 
   play () {
     this.music.once('load', () => {
-      if (!this.heart) this.start()
+      if (!this.clock) this.start()
 
       this.music.play()
       this.emit('play')
@@ -94,17 +95,17 @@ export class Track {
 
   stop () {
     this.music.stop()
-    this.heart.clear()
+    this.clock.clear()
   }
 
   pause () {
     this.music.pause()
-    this.heart.pause()
+    this.clock.pause()
   }
 
   resume () {
     this.music.play()
-    this.heart.resume()
+    this.clock.resume()
   }
 
   mute () {
