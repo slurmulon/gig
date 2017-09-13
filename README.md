@@ -222,11 +222,11 @@ Here is the compiled `warble.json` version of the previous example:
 }
 ```
 
-Note how the nested array `data`, which represents the actual notes to play, is a normalized matrix. Each row has the same number of columns regardless of whether or not there are any beats to play in that column.
+Note how the nested array `data`, which contains the actual beats/notes to play, is a normalized matrix. Each row (measure) has the same number of columns (beats) regardless of whether or not there are any notes/beats to play in a column.
 
 We also have the `lowest-beat`, `ms-per-beat` and `total-beats` pre-calculated and easily accessible.
 
-All of this makes interpreting `warble.json` insanely easy. You can simply step through the track in evenly sized intervals and everything else just sort of flows.
+All of this makes interpreting `warble.json` insanely easy. You can simply step through the track in evenly sized intervals (`lowest-beat` for `ms-per-beat`) and everything else just sort of flows together and aligns.
 
 To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/juke/blob/master/src/track.js).
 
