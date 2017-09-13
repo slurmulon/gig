@@ -57,7 +57,7 @@ The previous example is uncompiled, vanilla `warble`.
 
 In order to be interpreted, tracks in the `warble` format must first be converted into `warble.json`. This is an intermediary JSON micro-format that is much easier for `warble` engines to parse.
 
-This is the **only** format that `juke` understands. It **cannot** compile the warble track itself.
+This is the **only** format that `juke` understands. It **cannot** compile the `warble` track itself.
 
 As of now, only the [core Clojure library](https://github.com/slurmulon/warble#usage) can compile `warble` into `warble.json`.
 
@@ -220,11 +220,11 @@ Here is the compiled `warble.json` version of the previous example:
 }
 ```
 
-Note how the nested array `data`, which represents the actual notes to play, is a normalized matrix.
+Note how the nested array `data`, which represents the actual notes to play, is a normalized matrix. Each row has the same number of columns regardless of whether or not there is anything to play in that column (i.e. beat).
 
-Each row has the same number of columns regardless of whether or not there is anything to play in that column (i.e. beat).
+We also have the `lowest-beat`, `ms-per-beat` and `total-beats` pre-calculated and easily accessible.
 
-This makes interpreting `warble.json` insanely easy. To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/juke/blob/master/src/track.js).
+All of this makes interpreting `warble.json` insanely easy. To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/juke/blob/master/src/track.js).
 
 ## License
 
