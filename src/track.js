@@ -1,11 +1,8 @@
 import { Beat } from './elements'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
-// import fs from 'fs'
+import fs from 'fs'
 
-// TODO: integrate `warble-json-schema` validation
-// TODO: add `loop` parameter (default to true)
-// TODO: check for `Audio` header of warble track
 export class Track {
 
   constructor ({ source, audio, loop, volume, tempo, delay, on }) {
@@ -150,8 +147,6 @@ export class Track {
     //   // next()
     // }, duration)
 
-    // TODO: this is an alternative impl. it avoids timing issues but
-    // it prematurely bumps the cursor, before `stop` is called
     next()
 
     return Object.assign(interval || {}, { wait })
@@ -167,8 +162,8 @@ export class Track {
     this.index.beat    = (this.index.beat    + 1) % limit.beat
   }
 
-  // static read (path) {
-  //   return new Track({ source: fs.readFileSync(path) })
-  // }
+  static read (path) {
+    return new Track({ source: fs.readFileSync(path) })
+  }
 
 }
