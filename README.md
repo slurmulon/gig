@@ -230,6 +230,13 @@ All of this makes interpreting `warble.json` insanely easy. You can simply step 
 
 To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/juke/blob/master/src/track.js).
 
+## Todo
+
+- [ ] Integraate `warble-json-schema` for validation
+- [ ] Support general `loop` parameter
+- [ ] Support custom looping contexts
+- [ ] Automatically follow `@Audio` URL and load bytestream into memory
+
 ## License
 
 MIT
