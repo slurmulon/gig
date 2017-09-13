@@ -18,7 +18,7 @@ In other words, `juke` syncronizes the time between the musical notation defined
 
 The following represents a blues song (written in `warble`) that is intended to be improvised over.
 
-It simply defines a sequence of scale progressions (i.e. a harmony), with each progression lasting from 1 to 2 measures.
+It defines a sequence of scale progressions (i.e. a harmony), with each progression lasting from 1 to 2 measures.
 
 ```
 @Audio = 'http://api.madhax.io/track/q2IBRPmMq9/audio/mp3'
@@ -44,12 +44,12 @@ It simply defines a sequence of scale progressions (i.e. a harmony), with each p
 !Play :Track
 ```
 
-There are only a couple of entities being utilized here, and this should be true for most songs:
+There are only a couple of entities being utilized here, and this should be the case for most songs:
 
-- Headers / Meta-data (`@`)
-- Loops (`[]`)
+- Headers (`@`)
+- Sequence (`[]`)
 - Scale (in [scientific notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation))
-- Export / Main (`!Play`)
+- Export (`!Play`)
 
 ---
 
