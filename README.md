@@ -51,6 +51,8 @@ There are only a couple of entities being utilized here, and this should be true
 - Scale (in [scientific notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation))
 - Export / Main (`!Play`)
 
+---
+
 ### `warble.json`
 
 The previous example is uncompiled, vanilla `warble`.
@@ -220,11 +222,13 @@ Here is the compiled `warble.json` version of the previous example:
 }
 ```
 
-Note how the nested array `data`, which represents the actual notes to play, is a normalized matrix. Each row has the same number of columns regardless of whether or not there is anything to play in that column (i.e. beat).
+Note how the nested array `data`, which represents the actual notes to play, is a normalized matrix. Each row has the same number of columns regardless of whether or not there are any beats to play in that column.
 
 We also have the `lowest-beat`, `ms-per-beat` and `total-beats` pre-calculated and easily accessible.
 
-All of this makes interpreting `warble.json` insanely easy. To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/juke/blob/master/src/track.js).
+All of this makes interpreting `warble.json` insanely easy. You can simply step through the track in evenly sized intervals and everything else just sort of flows.
+
+To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/juke/blob/master/src/track.js).
 
 ## License
 
