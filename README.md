@@ -6,7 +6,7 @@
 
 `juke` consumes and renders `warble` tracks against audio files (mp3, wav, etc.).
 
-In other words, `juke` syncronizes the time between the musical notation defined in a `warble` track and its accompanying audio.
+In other words, `juke` syncronizes the time between the musical track defined in a `warble` file and its accompanying audio.
 
 ## Install
 
@@ -236,6 +236,7 @@ To see an example of just how simple this is, take a look [here](https://github.
 - [ ] Support general `loop` parameter
 - [ ] Support custom looping contexts
 - [ ] Automatically follow `@Audio` URL and load bytestream into memory
+- [ ] Moar tests
 
 ## License
 
