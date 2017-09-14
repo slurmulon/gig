@@ -16,7 +16,7 @@ In other words, `juke` syncronizes the time between the musical track defined in
 
 ### `warble`
 
-The following represents a blues song (written in `warble`) that is intended to be improvised over.
+The following represents a blues song (written in `warble`) that is intended to be improvised over by a guitar player, in real life.
 
 It defines a sequence of scale progressions (i.e. a harmony), with each progression lasting from 1 to 2 measures.
 
@@ -57,11 +57,9 @@ There are only a couple of entities being utilized here, and this should be the 
 
 The previous example is uncompiled, vanilla `warble`.
 
-In order to be interpreted, tracks in the `warble` format must first be converted into `warble.json`. This is an intermediary JSON micro-format that is much easier for `warble` engines to parse.
+In order to be interpreted, tracks in the `warble` format must first be converted into [`warble.json`](https://github.com/slurmulon/warble-json-schema). This is an intermediary JSON micro-format that is much easier for `warble` engines to parse.
 
 This is the **only** format that `juke` understands. It **cannot** compile the `warble` track itself.
-
-As of now, only the [core Clojure library](https://github.com/slurmulon/warble#usage) can compile `warble` into `warble.json`.
 
 Here is the compiled `warble.json` version of the previous example:
 
@@ -229,6 +227,12 @@ We also have the `lowest-beat`, `ms-per-beat` and `total-beats` pre-calculated a
 All of this makes interpreting `warble.json` insanely easy. You can simply step through the track in evenly sized intervals (`lowest-beat` for `ms-per-beat`) and everything else just sort of flows together and aligns.
 
 To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/juke/blob/master/src/track.js).
+
+### Support
+
+As of now, only the [core Clojure library](https://github.com/slurmulon/warble#usage) can compile `warble` into `warble.json`.
+
+If using the Clojure library or CLI is not an option, a [RESTful HTTP API](https://github.com/slurmulon/warble-rest-api) is also available.
 
 ## Todo
 
