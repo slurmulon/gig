@@ -11,7 +11,7 @@ chai.use(chaiThings)
 describe('Element', () => {
   describe('value', () => {
     it('should return the first input of the element instance/atom', () => {
-      const data = fixtures.slow.json
+      const data = fixtures.slow.json.data[0][0].notes
       const elem = new Element(data)
 
       elem.value.should.equal(elem.inputs[0])

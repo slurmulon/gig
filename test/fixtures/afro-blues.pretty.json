@@ -1,0 +1,124 @@
+{
+    "data": [
+        [
+            {
+                "duration": 4,
+                "notes": {
+                    "atom": {
+                        "init": {
+                            "arguments": [
+                                "F2 dorian"
+                            ]
+                        },
+                        "keyword": "Mode"
+                    }
+                }
+            }
+        ],
+        [
+            null
+        ],
+        [
+            null
+        ],
+        [
+            null
+        ],
+        [
+            {
+                "duration": 2,
+                "notes": [
+                    {
+                        "atom": {
+                            "init": {
+                                "arguments": [
+                                    "F2 aeolian"
+                                ]
+                            },
+                            "keyword": "Mode"
+                        }
+                    },
+                    {
+                        "atom": {
+                            "init": {
+                                "arguments": [
+                                    "Bb2min7"
+                                ]
+                            },
+                            "keyword": "Chord"
+                        }
+                    }
+                ]
+            }
+        ],
+        [
+            null
+        ],
+        [
+            {
+                "duration": 2,
+                "notes": {
+                    "atom": {
+                        "init": {
+                            "arguments": [
+                                "F2 dorian"
+                            ]
+                        },
+                        "keyword": "Mode"
+                    }
+                }
+            }
+        ],
+        [
+            null
+        ],
+        [
+            {
+                "duration": 2,
+                "notes": {
+                    "atom": {
+                        "init": {
+                            "arguments": [
+                                "F2 aeolian"
+                            ]
+                        },
+                        "keyword": "Mode"
+                    }
+                }
+            }
+        ],
+        [
+            null
+        ],
+        [
+            {
+                "duration": 1,
+                "notes": {
+                    "atom": {
+                        "init": {
+                            "arguments": [
+                                "F2 melodicminor"
+                            ]
+                        },
+                        "keyword": "Mode"
+                    }
+                }
+            }
+        ]
+    ],
+    "headers": {
+        "audio": "",
+        "desc": "",
+        "link": "",
+        "lowest-beat": 1,
+        "ms-per-beat": 2093.0232,
+        "tags": [],
+        "tempo": 86,
+        "time": [
+            3,
+            4
+        ],
+        "title": "Afro Blues: Afro-Cuban Fusion Backing Track",
+        "total-beats": 11
+    }
+}
