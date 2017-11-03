@@ -1,7 +1,7 @@
 import teoria from 'teoria'
 
 /**
- * Represents a single playable element (Note, Scale, Chord or Rest)
+ * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
  */
 export class Element {
 
@@ -18,7 +18,7 @@ export class Element {
   }
 
   get kind () {
-    const explicits = ['Note', 'Scale', 'Chord', 'Rest']
+    const explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Rest']
     const keyword = this.data.atom.keyword
 
     if (explicits.includes(keyword)) {
