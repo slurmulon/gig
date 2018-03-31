@@ -1,5 +1,5 @@
 # juke
-> :speaker: Official bach interpreter for NodeJS
+> :speaker: Official Bach interpreter for NodeJS
 ---
 
 [`bach`](https://github.com/slurmulon/bach) is a dynamic notation for representing musical tracks with a focus on human readibility and productivity.
