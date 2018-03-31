@@ -1,12 +1,12 @@
 # juke
-> :speaker: Official Warble interpreter for NodeJS
+> :speaker: Official bach interpreter for NodeJS
 ---
 
-[`warble`](https://github.com/slurmulon/warble) is a dynamic notation for representing musical tracks with a focus on human readibility and productivity.
+[`bach`](https://github.com/slurmulon/bach) is a dynamic notation for representing musical tracks with a focus on human readibility and productivity.
 
-`juke` consumes and renders `warble` tracks against audio files (mp3, wav, etc.).
+`juke` consumes and renders `bach` tracks against audio files (mp3, wav, etc.).
 
-In other words, `juke` syncronizes the time between the musical track defined in a `warble` file and its accompanying audio.
+In other words, `juke` syncronizes the time between the musical track defined in a `bach` file and its accompanying audio.
 
 ## Install
 
@@ -14,9 +14,9 @@ In other words, `juke` syncronizes the time between the musical track defined in
 
 ## Example
 
-### `warble`
+### `bach`
 
-The following represents a blues song (written in `warble`) that is intended to be improvised over by a guitar player, in real life.
+The following represents a blues song (written in `bach`) that is intended to be improvised over by a guitar player, in real life.
 
 It defines a sequence of scale progressions (i.e. a harmony), with each progression lasting from 1 to 2 measures.
 
@@ -53,170 +53,170 @@ There are only a couple of entities being utilized here, and this should be the 
 
 ---
 
-### `warble.json`
+### `bach.json`
 
-The previous example is uncompiled, vanilla `warble`.
+The previous example is uncompiled, vanilla `bach`.
 
-In order to be interpreted, tracks in the `warble` format must first be converted into [`warble.json`](https://github.com/slurmulon/warble-json-schema). This is an intermediary JSON micro-format that is much easier for `warble` engines to parse.
+In order to be interpreted, tracks in the `bach` format must first be converted into [`bach.json`](https://github.com/slurmulon/bach-json-schema). This is an intermediary JSON micro-format that is much easier for `bach` engines to parse.
 
-This is the **only** format that `juke` understands. It **cannot** compile the `warble` track itself.
+This is the **only** format that `juke` understands. It **cannot** compile the `bach` track itself.
 
-Here is the compiled `warble.json` version of the previous example:
+Here is the compiled `bach.json` version of the previous example:
 
 ```
 {
-    "data": [
-        [
-            {
-                "duration": 1,
-                "notes": {
-                    "atom": {
-                        "init": {
-                            "arguments": [
-                                "A minorpentatonic"
-                            ]
-                        },
-                        "keyword": "Scale"
-                    }
-                }
-            }
-        ],
-        [
-            {
-                "duration": 1,
-                "notes": {
-                    "atom": {
-                        "init": {
-                            "arguments": [
-                                "D minorpentatonic"
-                            ]
-                        },
-                        "keyword": "Scale"
-                    }
-                }
-            }
-        ],
-        [
-            {
-                "duration": 2,
-                "notes": {
-                    "atom": {
-                        "init": {
-                            "arguments": [
-                                "A minorpentatonic"
-                            ]
-                        },
-                        "keyword": "Scale"
-                    }
-                }
-            }
-        ],
-        [
-            null
-        ],
-        [
-            {
-                "duration": 2,
-                "notes": {
-                    "atom": {
-                        "init": {
-                            "arguments": [
-                                "D minorpentatonic"
-                            ]
-                        },
-                        "keyword": "Scale"
-                    }
-                }
-            }
-        ],
-        [
-            null
-        ],
-        [
-            {
-                "duration": 2,
-                "notes": {
-                    "atom": {
-                        "init": {
-                            "arguments": [
-                                "A minorpentatonic"
-                            ]
-                        },
-                        "keyword": "Scale"
-                    }
-                }
-            }
-        ],
-        [
-            null
-        ],
-        [
-            {
-                "duration": 1,
-                "notes": {
-                    "atom": {
-                        "init": {
-                            "arguments": [
-                                "E minorpentatonic"
-                            ]
-                        },
-                        "keyword": "Scale"
-                    }
-                }
-            }
-        ],
-        [
-            {
-                "duration": 1,
-                "notes": {
-                    "atom": {
-                        "init": {
-                            "arguments": [
-                                "D minorpentatonic"
-                            ]
-                        },
-                        "keyword": "Scale"
-                    }
-                }
-            }
-        ],
-        [
-            {
-                "duration": 2,
-                "notes": {
-                    "atom": {
-                        "init": {
-                            "arguments": [
-                                "A minorpentatonic"
-                            ]
-                        },
-                        "keyword": "Scale"
-                    }
-                }
-            }
-        ],
-        [
-            null
-        ]
+  "data": [
+    [
+      {
+        "duration": 1,
+        "notes": {
+          "atom": {
+            "init": {
+              "arguments": [
+                "A minorpentatonic"
+              ]
+            },
+            "keyword": "Scale"
+          }
+        }
+      }
     ],
-    "headers": {
-        "lowest-beat": 1,
-        "ms-per-beat": 5714.2856,
-        "tags": [
-            "list",
-            "blues",
-            "rock",
-            "slow"
-        ],
-        "tempo": 42,
-        "time": [
-            4,
-            4
-        ],
-        "audio": "http://api.madhax.io/track/q2IBRPmMq9/audio/mp3",
-        "title": "The Absolute Slowest Jimi Style 12-Bar-Blues Backing Track in A",
-        "total-beats": 12
-    }
+    [
+      {
+        "duration": 1,
+        "notes": {
+          "atom": {
+            "init": {
+              "arguments": [
+                "D minorpentatonic"
+              ]
+            },
+            "keyword": "Scale"
+          }
+        }
+      }
+    ],
+    [
+      {
+        "duration": 2,
+        "notes": {
+          "atom": {
+            "init": {
+              "arguments": [
+                "A minorpentatonic"
+              ]
+            },
+            "keyword": "Scale"
+          }
+        }
+      }
+    ],
+    [
+      null
+    ],
+    [
+      {
+        "duration": 2,
+        "notes": {
+          "atom": {
+            "init": {
+              "arguments": [
+                "D minorpentatonic"
+              ]
+            },
+            "keyword": "Scale"
+          }
+        }
+      }
+    ],
+    [
+      null
+    ],
+    [
+      {
+        "duration": 2,
+        "notes": {
+          "atom": {
+            "init": {
+              "arguments": [
+                "A minorpentatonic"
+              ]
+            },
+            "keyword": "Scale"
+          }
+        }
+      }
+    ],
+    [
+      null
+    ],
+    [
+      {
+        "duration": 1,
+        "notes": {
+          "atom": {
+            "init": {
+              "arguments": [
+                "E minorpentatonic"
+              ]
+            },
+            "keyword": "Scale"
+          }
+        }
+      }
+    ],
+    [
+      {
+        "duration": 1,
+        "notes": {
+          "atom": {
+            "init": {
+              "arguments": [
+                "D minorpentatonic"
+              ]
+            },
+            "keyword": "Scale"
+          }
+        }
+      }
+    ],
+    [
+      {
+        "duration": 2,
+        "notes": {
+          "atom": {
+            "init": {
+              "arguments": [
+                "A minorpentatonic"
+              ]
+            },
+            "keyword": "Scale"
+          }
+        }
+      }
+    ],
+    [
+      null
+    ]
+  ],
+  "headers": {
+    "lowest-beat": 1,
+    "ms-per-beat": 5714.2856,
+    "tags": [
+      "list",
+      "blues",
+      "rock",
+      "slow"
+    ],
+    "tempo": 42,
+    "time": [
+      4,
+      4
+    ],
+    "audio": "http://api.madhax.io/track/q2IBRPmMq9/audio/mp3",
+    "title": "The Absolute Slowest Jimi Style 12-Bar-Blues Backing Track in A",
+    "total-beats": 12
+  }
 }
 ```
 
@@ -224,19 +224,19 @@ Note how the nested array `data`, which contains the actual beats/notes to play,
 
 We also have the `lowest-beat`, `ms-per-beat` and `total-beats` pre-calculated and easily accessible.
 
-All of this makes interpreting `warble.json` insanely easy. You can simply step through the track in evenly sized intervals (`lowest-beat` for `ms-per-beat`) and everything else just sort of flows together and aligns.
+All of this makes interpreting `bach.json` insanely easy. You can simply step through the track in evenly sized intervals (`lowest-beat` for `ms-per-beat`) and everything else just sort of flows together and aligns.
 
 To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/juke/blob/master/src/track.js).
 
 ### Support
 
-As of now, only the [core Clojure library](https://github.com/slurmulon/warble#usage) can compile `warble` into `warble.json`.
+As of now, only the [core Clojure library](https://github.com/slurmulon/bach#usage) can compile `bach` into `bach.json`.
 
-If using the Clojure library or CLI is not an option, a [RESTful HTTP API](https://github.com/slurmulon/warble-rest-api) is also available.
+If using the Clojure library or CLI is not an option, a [RESTful HTTP API](https://github.com/slurmulon/bach-rest-api) is also available.
 
 ## Todo
 
-- [ ] Integrate `warble-json-schema` for validation
+- [ ] Integrate `bach-json-schema` for validation
 - [ ] Support general `loop` parameter
 - [ ] Support custom looping contexts
 - [ ] Automatically follow `@Audio` URL and load bytestream into memory
