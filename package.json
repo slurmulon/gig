@@ -1,7 +1,7 @@
 {
   "name": "juke",
   "version": "0.0.0",
-  "description": "warble player for JS",
+  "description": "Bach player for JS",
   "main": "src/index.js",
   "scripts": {
     "build": "rollup -c",
@@ -18,7 +18,7 @@
     "jam",
     "audio",
     "mp3",
-    "warble",
+    "bach",
     "player"
   ],
   "author": "MadHax, LLC",
