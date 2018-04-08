@@ -39,14 +39,47 @@ describe('Element', () => {
 
   describe('identify', () => {
     describe('note', () => {
+      it('should return `"note"` for Note elements', () => {
+        const elem = new Element({
+          atom: {
+            init: {
+              'arguments': ['C2']
+            }
+          }
+        })
 
+        elem.identify(elem).should.equal('note')
+      })
     })
 
-    describe('scale', () => {
+    // FIXME
+    xdescribe('scale', () => {
+      it('should return `"scale"` for Scale elements', () => {
+        const elem = new Element({
+          atom: {
+            init: {
+              'arguments': ['C2 Major']
+            }
+          }
+        })
 
+        elem.identify(elem).should.equal('scale')
+      })
     })
 
-    describe('chord', () => {
+    // FIXME
+    xdescribe('chord', () => {
+      it('should return `"chord"` for Chord elements', () => {
+        const elem = new Element({
+          atom: {
+            init: {
+              'arguments': ['C2maj7']
+            }
+          }
+        })
+
+        elem.identify(elem).should.equal('chord')
+      })
 
     })
   })
