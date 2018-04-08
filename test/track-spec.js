@@ -17,9 +17,9 @@ describe('Track', () => {
     let audio  = fixtures.fast.audio
 
     it('should play the current beat', done => {
-      const track  = new Track({ source, audio })
-      const wait   = source.headers['ms-per-beat']
-      const stop   = sinon.spy()
+      const track = new Track({ source, audio })
+      const wait  = source.headers['ms-per-beat']
+      const stop  = sinon.spy()
 
       track.step = sinon.spy()
 
@@ -33,9 +33,9 @@ describe('Track', () => {
     }).timeout(0)
 
     it('should wait ms-per-beat between each step', done => {
-      const track  = new Track({ source, audio })
-      const wait   = source.headers['ms-per-beat']
-      const steps  = 3
+      const track = new Track({ source, audio })
+      const wait = source.headers['ms-per-beat']
+      const steps = 3
       const startTime = Date.now()
       let lastTime
 
@@ -57,6 +57,7 @@ describe('Track', () => {
     it('should recursively step through the track\'s measures and beats', done => {
       const track = new Track({ source, audio, tempo: 240 })
       const wait  = source.headers['ms-per-beat']
+      const steps = 2
 
       track.step = sinon.spy()
 
@@ -66,7 +67,23 @@ describe('Track', () => {
         track.step.should.have.been.calledThrice
 
         done()
-      }, wait * 2)
+      }, wait * steps)
+    }).timeout(0)
+
+    it('should call the step\'s stop callback at the end of each beat', done => {
+      const track = new Track({ source, audio, tempo: 240 })
+      const wait  = source.headers['ms-per-beat']
+      const steps = 2
+
+      track.on.step.stop = sinon.spy()
+
+      track.start()
+
+      setTimeout(() => {
+        track.on.step.stop.should.have.been.calledTwice
+
+        done()
+      }, wait * steps)
     }).timeout(0)
   })
 
