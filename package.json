@@ -1,5 +1,5 @@
 {
-  "name": "juke",
+  "name": "bach-player",
   "version": "0.0.0",
   "description": "Bach player for JS",
   "main": "src/index.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/slurmulon/juke.git"
+    "url": "git+https://github.com/slurmulon/bach-player.git"
   },
   "keywords": [
     "song",
@@ -19,14 +19,15 @@
     "audio",
     "mp3",
     "bach",
+    "player",
     "player"
   ],
   "author": "MadHax, LLC",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/slurmulon/juke/issues"
+    "url": "https://github.com/slurmulon/bach-player/issues"
   },
-  "homepage": "https://github.com/slurmulon/juke#readme",
+  "homepage": "https://github.com/slurmulon/bach-player#readme",
   "dependencies": {
     "howler": "^2.0.4",
     "stateful-dynamic-interval": "github:slurmulon/stateful-dynamic-interval",

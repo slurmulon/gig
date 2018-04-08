@@ -138,8 +138,6 @@ export class Track {
     //  - could just call stop at the beginning of the next beat, but requires
     //    tracking the previous beat (bleh)
     // setTimeout(() => {
-    //   console.log('[juke] stopping', beat, duration)
-
     //   if (stop instanceof Function) {
     //     stop(beat)
     //   }
