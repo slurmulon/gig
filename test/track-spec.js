@@ -1,5 +1,7 @@
 import chai from 'chai'
 import chaiThings from 'chai-things'
+import sinon from 'sinon'
+import sinonChai from 'sinon-chai'
 import fs from 'fs'
 import { Track } from '../dist/bundle'
 import fixtures from './fixtures'
@@ -7,6 +9,7 @@ import fixtures from './fixtures'
 const should = chai.should()
 
 chai.use(chaiThings)
+chai.use(sinonChai)
 
 // const fixtures = {
 //   slow: {
@@ -18,24 +21,23 @@ chai.use(chaiThings)
 describe('Track', () => {
   // FIXME: this is failing because setInterval doesn't kick off UNTIl 2000 ms, not starts and then waits until 2000 ms.
   describe('step', () => {
-    xit('should play the current beat', done => {
+    it('should play the current beat', done => {
       const source = fixtures.slow.json
       const audio  = fixtures.slow.audio
       const track  = new Track({ source, audio })
       const wait   = source.headers['ms-per-beat']
-      let passes   = false
+      const stop   = sinon.spy()
 
-      track.on.step.stop = beat => {
-        passes = true
-      }
+      track.step = sinon.spy()
 
       track.start()
 
       setTimeout(() => {
-        passes.should.equal(true)
+        track.step.should.have.been.called
+
         done()
       }, wait + 5)
-    })//.timeout(0)
+    }).timeout(0)
 
     it('should wait ms-per-beat between each step', () => {
 
