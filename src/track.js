@@ -68,7 +68,7 @@ export class Track {
   emit (topic, data) {
     const action = this.on instanceof Object && this.on[topic]
 
-    if (action instanceof Function) {
+      if (action instanceof Function) {
       action(data)
     }
   }
@@ -119,6 +119,7 @@ export class Track {
   /**
    * The action to perform on next interval
    */
+  // TODO: support `bach.Set` (i.e. concurrent elements)
   step (interval) {
     const beat  = this.state.beat
     const next  = this.next.bind(this)
@@ -135,17 +136,20 @@ export class Track {
       play(beat)
     }
 
-    const after = setStatefulDynterval(() => {
-      if (stop instanceof Function) {
-        stop(beat)
-      }
+    const finish = () => {
+      const after = setStatefulDynterval(() => {
+        if (stop instanceof Function) {
+          stop(beat)
+        }
 
-      after.clear()
-    })
+        after.clear()
+      }, { wait, defer: false })
 
-    this.clock.add(after)
+      this.clock.add(after)
+    }
 
     next()
+    finish()
 
     return Object.assign(interval || {}, { wait })
   }
