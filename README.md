@@ -4,7 +4,7 @@
 
 [`bach`](https://github.com/slurmulon/bach) is a dynamic notation for representing musical tracks with a focus on human readability and productivity.
 
-`gig` consumes, renders and synchronizes `bach` tracks against audio files (mp3, wav, etc.) in a browser or browser-like environment.
+`gig` consumes, renders and synchronizes `bach` tracks with audio files (or really anything) in a browser or browser-like environment.
 
 ## Install
 
