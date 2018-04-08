@@ -49,15 +49,13 @@ There are only a couple of entities being utilized here, and this should be the 
 - Scale (in [scientific notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation))
 - Export (`!Play`)
 
----
-
 ### `bach.json`
 
-The previous example contained uncompiled, vanilla `bach`.
+The previous snippet contained uncompiled, vanilla `bach`.
 
 In order to be interpreted, tracks in the `bach` format must first be converted into [`bach.json`](https://github.com/slurmulon/bach-json-schema). This is an intermediary JSON micro-format that is much easier for `bach` engines to parse.
 
-This is the **only** format that `gig` understands. It **cannot** compile the `bach` track itself.
+This is the **only** format that `gig` understands. It **cannot** compile the `bach` track itself. You can use the CLI provided by the [core `bach` library](https://github.com/slurmulon/bach#cli) for this.
 
 Here is the compiled `bach.json` version of the previous example:
 
