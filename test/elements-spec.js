@@ -52,8 +52,7 @@ describe('Element', () => {
       })
     })
 
-    // FIXME
-    xdescribe('scale', () => {
+    describe('scale', () => {
       it('should return `"scale"` for Scale elements', () => {
         const elem = new Element({
           atom: {
@@ -67,8 +66,7 @@ describe('Element', () => {
       })
     })
 
-    // FIXME
-    xdescribe('chord', () => {
+    describe('chord', () => {
       it('should return `"chord"` for Chord elements', () => {
         const elem = new Element({
           atom: {

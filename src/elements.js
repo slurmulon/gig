@@ -33,17 +33,24 @@ export class Element {
 
     try {
       teoria.note(this.value)
-      identity = 'note'
+
+      return 'note'
     } catch (_) {}
 
     try {
-      teoria.scale(this.value)
-      identity = 'scale'
+      const [key, scale] = this.value.split(' ')
+
+      teoria.note(key).scale(scale.toLowerCase())
+
+      return 'scale'
     } catch (_) {}
 
     try {
-      teoria.chord(this.value)
-      identity = 'chord'
+      const [key, chord] = [this.value.substring(0,2), this.value.substring(2)]
+
+      teoria.note(key).chord(chord.toLowerCase())
+
+      return 'chord'
     } catch (_) {}
 
     return identity
