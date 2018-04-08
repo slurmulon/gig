@@ -32,8 +32,27 @@ describe('Track', () => {
       }, wait + 5)
     }).timeout(0)
 
-    it('should wait ms-per-beat between each step', () => {
-    })
+    it('should wait ms-per-beat between each step', done => {
+      const track  = new Track({ source, audio })
+      const wait   = source.headers['ms-per-beat']
+      const steps  = 3
+      const startTime = Date.now()
+      let lastTime
+
+      track.step = () => {
+        lastTime = Date.now()
+      }
+
+      track.start()
+
+      setTimeout(() => {
+        const targetTime = startTime + (wait * steps)
+
+        lastTime.should.be.closeTo(targetTime, 10)
+
+        done()
+      }, (wait * steps) + 5)
+    }).timeout(0)
 
     it('should recursively step through the track\'s measures and beats', done => {
       const track = new Track({ source, audio, tempo: 240 })
