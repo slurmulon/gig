@@ -1,14 +1,14 @@
-# bach-player
+# gig
 > :speaker: Official Bach player for JS
 ---
 
 [`bach`](https://github.com/slurmulon/bach) is a dynamic notation for representing musical tracks with a focus on human readability and productivity.
 
-`bach-player` consumes, renders and synchronizes `bach` tracks against audio files (mp3, wav, etc.) in a browser or browser-like environment.
+`gig` consumes, renders and synchronizes `bach` tracks against audio files (mp3, wav, etc.) in a browser or browser-like environment.
 
 ## Install
 
-`npm install --save slurmulon/bach-player`
+`npm install --save slurmulon/gig`
 
 ## Example
 
@@ -53,11 +53,11 @@ There are only a couple of entities being utilized here, and this should be the 
 
 ### `bach.json`
 
-The previous example is uncompiled, vanilla `bach`.
+The previous example contained uncompiled, vanilla `bach`.
 
 In order to be interpreted, tracks in the `bach` format must first be converted into [`bach.json`](https://github.com/slurmulon/bach-json-schema). This is an intermediary JSON micro-format that is much easier for `bach` engines to parse.
 
-This is the **only** format that `bach-player` understands. It **cannot** compile the `bach` track itself.
+This is the **only** format that `gig` understands. It **cannot** compile the `bach` track itself.
 
 Here is the compiled `bach.json` version of the previous example:
 
@@ -224,16 +224,29 @@ We also have the `lowest-beat`, `ms-per-beat` and `total-beats` pre-calculated a
 
 All of this makes interpreting `bach.json` trivial. You can simply step through the track in evenly sized intervals (`lowest-beat` for `ms-per-beat`) and everything else just sort of flows together and aligns.
 
-To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/bach-player/blob/master/src/track.js).
+To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/gig/blob/master/src/track.js).
 > **Caveat**
 >
-> Due to the single-threaded nature of JavaScript, it's imperative that you provide `bach-player` with an alternative timing API that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
+> Due to the single-threaded nature of JavaScript, it's imperative that you provide `gig` with an alternative timing API that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
 >
 > You can find a list of such timers that help minimize drift [here](https://github.com/slurmulon/dynamic-interval#related).
 
 An alternative implementation strategy is to preemptively schedule every `bach` element ahead of time, and then frequently poll for the target time of each element within context.
 
-`bach-player` takes the interval approach for now but will soon support both implementation strategies.
+`gig` takes the interval approach for now but will soon support both implementation strategies.
+
+---
+
+Once your track has been compiled into `bach.json`, it may now be consumed and rendered by `gig`.
+
+```js
+import { Track } from 'gig'
+import source from './bouree.bach.json'
+
+const track = new Track({ source })
+
+track.play()
+```
 
 ### Support
 
