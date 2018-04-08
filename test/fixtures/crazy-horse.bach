@@ -1,0 +1,12 @@
+@Title = 'Psychedelic Crazy Horse Backing Track'
+@Time = 6|8
+
+:Track = [
+  2 -> Scale('A2 Minor')
+  2 -> Scale('G2 Major')
+  2 -> Scale('F2 Major')
+  1 -> Scale('E2 Minor')
+  1 -> Scale('G2 Major')
+]
+
+!Play :Track
