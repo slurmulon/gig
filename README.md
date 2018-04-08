@@ -1,16 +1,14 @@
-# juke
+# bach-player
 > :speaker: Official Bach interpreter for NodeJS
 ---
 
-[`bach`](https://github.com/slurmulon/bach) is a dynamic notation for representing musical tracks with a focus on human readibility and productivity.
+[`bach`](https://github.com/slurmulon/bach) is a dynamic notation for representing musical tracks with a focus on human readability and productivity.
 
-`juke` consumes and renders `bach` tracks against audio files (mp3, wav, etc.).
-
-In other words, `juke` syncronizes the time between the musical track defined in a `bach` file and its accompanying audio.
+`bach-player` consumes, renders and synchronizes `bach` tracks against audio files (mp3, wav, etc.) in a browser or browser-like environment.
 
 ## Install
 
-`npm install --save slurmulon/juke`
+`npm install --save slurmulon/bach-player`
 
 ## Example
 
@@ -59,7 +57,7 @@ The previous example is uncompiled, vanilla `bach`.
 
 In order to be interpreted, tracks in the `bach` format must first be converted into [`bach.json`](https://github.com/slurmulon/bach-json-schema). This is an intermediary JSON micro-format that is much easier for `bach` engines to parse.
 
-This is the **only** format that `juke` understands. It **cannot** compile the `bach` track itself.
+This is the **only** format that `bach-player` understands. It **cannot** compile the `bach` track itself.
 
 Here is the compiled `bach.json` version of the previous example:
 
@@ -224,9 +222,18 @@ Note how the nested array `data`, which contains the actual beats/notes to play,
 
 We also have the `lowest-beat`, `ms-per-beat` and `total-beats` pre-calculated and easily accessible.
 
-All of this makes interpreting `bach.json` insanely easy. You can simply step through the track in evenly sized intervals (`lowest-beat` for `ms-per-beat`) and everything else just sort of flows together and aligns.
+All of this makes interpreting `bach.json` trivial. You can simply step through the track in evenly sized intervals (`lowest-beat` for `ms-per-beat`) and everything else just sort of flows together and aligns.
 
-To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/juke/blob/master/src/track.js).
+To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/bach-player/blob/master/src/track.js).
+> **Caveat**
+>
+> Due to the single-threaded nature of JavaScript, it's imperative that you provide `bach-player` with an alternative timing API that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
+>
+> You can find a list of such timers that help minimize drift [here](https://github.com/slurmulon/dynamic-interval#related).
+
+An alternative implementation strategy is to preemptively schedule every `bach` element ahead of time, and then frequently poll for the target time of each element within context.
+
+`bach-player` takes the interval approach for now but will soon support both implementation strategies.
 
 ### Support
 
