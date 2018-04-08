@@ -45,6 +45,8 @@
     "mocha": "^3.5.0",
     "rollup": "^0.45.2",
     "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-json": "^2.3.0"
+    "rollup-plugin-json": "^2.3.0",
+    "sinon": "^4.5.0",
+    "sinon-chai": "^3.0.0"
   }
 }
