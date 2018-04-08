@@ -5,13 +5,14 @@ import fs from 'fs'
 
 export class Track {
 
-  constructor ({ source, audio, loop, volume, tempo, delay, on }) {
+  constructor ({ source, audio, loop, volume, tempo, delay, timer, on }) {
     this.source = source
     this.audio  = audio
     this.loop   = loop
     this.volume = volume
     this.tempo  = tempo
     this.delay  = delay
+    this.timer  = timer
     this.on     = on || { step: { } }
 
     this.index = { measure: 0, beat: 0 }
@@ -73,11 +74,11 @@ export class Track {
   }
 
   start () {
-    const delay = this.delay * this.interval
+    const delay  = this.delay * this.interval
+    const config = { wait: this.interval, defer: false }
 
     setTimeout(() => {
-      this.step() // simulates an immediately invoked interval (TODO: add core support for this to setDynterval)
-      this.clock = setStatefulDynterval(this.step.bind(this), { wait: this.interval })
+      this.clock = setStatefulDynterval(this.step.bind(this), config, this.timer)
     }, delay || 0)
   }
 
@@ -134,16 +135,15 @@ export class Track {
       play(beat)
     }
 
-    // FIXME: this needs to be pauseable, or just avoid the need for it
-    //  - could just call stop at the beginning of the next beat, but requires
-    //    tracking the previous beat (bleh)
-    // setTimeout(() => {
-    //   if (stop instanceof Function) {
-    //     stop(beat)
-    //   }
+    const after = setStatefulDynterval(() => {
+      if (stop instanceof Function) {
+        stop(beat)
+      }
 
-    //   // next()
-    // }, duration)
+      after.clear()
+    })
+
+    this.clock.add(after)
 
     next()
 
