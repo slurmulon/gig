@@ -68,7 +68,7 @@ export class Track {
   emit (topic, data) {
     const action = this.on instanceof Object && this.on[topic]
 
-      if (action instanceof Function) {
+    if (action instanceof Function) {
       action(data)
     }
   }
@@ -136,6 +136,8 @@ export class Track {
       play(beat)
     }
 
+    // FIXME: a way simpler way to do this is to just see if the index is greater than the first
+    // if so, just call stop with the previous beat
     const finish = () => {
       if (stop instanceof Function) {
         const after = setStatefulDynterval(() => {
