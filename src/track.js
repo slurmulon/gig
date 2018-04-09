@@ -137,15 +137,15 @@ export class Track {
     }
 
     const finish = () => {
-      const after = setStatefulDynterval(() => {
-        if (stop instanceof Function) {
+      if (stop instanceof Function) {
+        const after = setStatefulDynterval(() => {
           stop(beat)
-        }
 
-        after.clear()
-      }, { wait, defer: false })
+          after.clear()
+        }, { wait, defer: false })
 
-      this.clock.add(after)
+        this.clock.add(after)
+      }
     }
 
     next()
