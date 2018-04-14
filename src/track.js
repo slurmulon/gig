@@ -121,6 +121,8 @@ export class Track {
   /**
    * Determines the measure and beat found at the provided indices
    *
+   * @param {number} measureIndex
+   * @param {number} beatIndex
    * @returns {Object}
    */
   at (measureIndex, beatIndex) {
@@ -231,17 +233,17 @@ export class Track {
   /**
    * Invokes the action to perform on each interval
    *
-   * @param {Object} interval context of the stateful dynamic interval
+   * @param {Object} [context] stateful dynamic interval context
    * @returns {Object} updated interval context
    */
   // TODO: support `bach.Set` (i.e. concurrent elements)
-  step (interval) {
-    const { last } = this
+  step (context) {
+    const { last, interval } = this
     const { beat } = this.state
     const { play, start, stop } = this.on.step
 
     const bump = this.bump.bind(this)
-    const wait = this.interval * beat.duration
+    const wait = interval * beat.duration
 
     if (stop instanceof Function && last) {
       stop(last)
@@ -257,7 +259,7 @@ export class Track {
 
     bump()
 
-    return Object.assign(interval || {}, { wait })
+    return Object.assign(context || {}, { wait })
   }
 
   /**
