@@ -65,10 +65,7 @@ export class Track {
    * @returns {Object}
    */
   get before () {
-    const measure = Math.min(0, this.cursor.measure - 1)
-    const beat = Math.min(0, this.cursor.beat - 1)
-
-    return this.at(measure, beat)
+    return this.at(this.cursor.measure - 1, this.cursor.beat - 1)
   }
 
   /**
@@ -77,10 +74,7 @@ export class Track {
    * @returns {Object}
    */
   get after () {
-    const measure = Math.min(0, this.cursor.measure + 1)
-    const beat = Math.min(0, this.cursor.beat + 1)
-
-    return this.at(measure, beat)
+    return this.at(this.cursor.measure + 1, this.cursor.beat + 1)
   }
 
   /**
@@ -118,10 +112,14 @@ export class Track {
    * @returns {Object}
    */
   at (measureIndex, beatIndex) {
-    const measure = this.data[measureIndex || 0]
-    const beat = measure[beatIndex || 0]
+    try {
+      const measure = this.data[measureIndex]
+      const beat = measure[beatIndex]
 
-    return { measure, beat }
+      return { measure, beat }
+    } catch (e) {
+      return null
+    }
   }
 
   /**
@@ -225,12 +223,15 @@ export class Track {
    */
   // TODO: support `bach.Set` (i.e. concurrent elements)
   step (interval) {
-    const beat  = this.state.beat
-    const next  = this.next.bind(this)
-    const play  = this.on.step.play
-    const start = this.on.step.start
-    const stop  = this.on.step.stop
-    const wait  = this.interval * beat.duration
+    const beat = this.state.beat
+    const last = this.before
+    const next = this.next.bind(this)
+    const wait = this.interval * beat.duration
+    const { play, start, stop } = this.on.step
+
+    if (stop instanceof Function && last) {
+      stop(last)
+    }
 
     if (start instanceof Function) {
       start(beat)
@@ -240,22 +241,7 @@ export class Track {
       play(beat)
     }
 
-    // FIXME: a way simpler way to do this is to just see if the index is greater than the first
-    // if so, just call stop with the previous beat
-    const finish = () => {
-      if (stop instanceof Function) {
-        const after = setStatefulDynterval(() => {
-          stop(beat)
-
-          after.clear()
-        }, { wait, defer: false })
-
-        this.clock.add(after)
-      }
-    }
-
     next()
-    finish()
 
     return Object.assign(interval || {}, { wait })
   }
