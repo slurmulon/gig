@@ -12,9 +12,24 @@
 
 ## Example
 
+### Node
+
+Once your `bach` track has been [compiled into `bach.json`](https://github.com/slurmulon/bach#usage), it can then be consumed and rendered by `gig`.
+
+```js
+import { Track } from 'gig'
+import source from './bouree.bach.json'
+
+const track = new Track({ source })
+
+track.play()
+```
+
+The following sections provide examples of both a `bach` track and its compiled `bach.json` output.
+
 ### `bach`
 
-The following represents a blues song (written in `bach`) that is intended to be improvised over by a guitar player, in real life.
+Here we have a blues song (written in `bach`) that is intended to be improvised over by a guitar player.
 
 It defines a sequence of scale progressions (i.e. a harmony), with each progression lasting from 1 to 2 measures.
 
@@ -23,6 +38,7 @@ It defines a sequence of scale progressions (i.e. a harmony), with each progress
 @Title = 'The Absolute Slowest Jimi Style 12-Bar-Blues Backing Track in A'
 @Tempo = 42
 @Tags  = ['blues', 'rock', 'slow']
+@Instrument = 'guitar'
 
 :A = Scale('A3 minorpentatonic')
 :D = Scale('D3 minorpentatonic')
@@ -232,19 +248,6 @@ To see an example of just how simple this is, take a look [here](https://github.
 An alternative implementation strategy is to preemptively schedule every `bach` element ahead of time, and then frequently poll for the target time of each element within context.
 
 `gig` takes the interval approach for now but will soon support both implementation strategies.
-
----
-
-Once your track has been compiled into `bach.json`, it may now be consumed and rendered by `gig`.
-
-```js
-import { Track } from 'gig'
-import source from './bouree.bach.json'
-
-const track = new Track({ source })
-
-track.play()
-```
 
 ### Support
 
