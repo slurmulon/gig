@@ -3,8 +3,19 @@ import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 import fs from 'fs'
 
+/**
+ * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
+ */
 export class Track {
 
+  /**
+   * @param {Object} source track represented in Bach.JSON
+   * @param {Audio} [audio] track audio
+   * @param {boolean} [loop] enable track looping
+   * @param {number} [delay] wait a duration before starting to play
+   * @param {Object} [timer] alternative timer/interval API
+   * @param {Object} [on] event hooks
+   */
   constructor ({ source, audio, loop, volume, tempo, delay, timer, on }) {
     this.source = source
     this.audio  = audio
@@ -21,21 +32,62 @@ export class Track {
     // this.listen()
   }
 
+  /**
+   * Parses and returns the source track data as Beat elements
+   *
+   * @returns {Array<Object>}
+   */
   get data () {
     return this.source.data.map(Beat.from)
   }
 
+  /**
+   * Provides the source header data of the track
+   *
+   * @returns {Object}
+   */
   get headers () {
     return this.source.headers
   }
 
+  /**
+   * Provides the measure and beat found at the track's cursor
+   *
+   * @returns {Object}
+   */
   get state () {
-    const measure = this.data[this.cursor.measure]
-    const beat = measure[this.cursor.beat]
-
-    return { measure, beat }
+    return this.at(this.cursor.measure, this.cursor.beat)
   }
 
+  /**
+   * Provides the measure and beat found one step behind the track's cursor
+   *
+   * @returns {Object}
+   */
+  get before () {
+    const measure = Math.min(0, this.cursor.measure - 1)
+    const beat = Math.min(0, this.cursor.beat - 1)
+
+    return this.at(measure, beat)
+  }
+
+  /**
+   * Provides the measure and beat found one step ahead of the track's cursor
+   *
+   * @returns {Object}
+   */
+  get after () {
+    const measure = Math.min(0, this.cursor.measure + 1)
+    const beat = Math.min(0, this.cursor.beat + 1)
+
+    return this.at(measure, beat)
+  }
+
+  /**
+   * Determines the cursors of both the current measure and beat of the track
+   *
+   * @returns {Object}
+   */
   get cursor () {
     return {
       measure : Math.min(Math.max(this.index.measure, 0), this.data.length),
@@ -43,6 +95,11 @@ export class Track {
     }
   }
 
+  /**
+   * Determines how long to wait between each interval based on the track and user tempo
+   *
+   * @returns {number}
+   */
   get interval () {
     const global = this.headers.tempo
     const tempos = {
@@ -55,6 +112,21 @@ export class Track {
     return this.headers['ms-per-beat'] / diff
   }
 
+  /**
+   * Determines the measure and beat found at the provided indices
+   *
+   * @returns {Object}
+   */
+  at (measureIndex, beatIndex) {
+    const measure = this.data[measureIndex || 0]
+    const beat = measure[beatIndex || 0]
+
+    return { measure, beat }
+  }
+
+  /**
+   * Synchronizes track with the Howler API
+   */
   listen () {
     this.music.on('play',  this.play)
     this.music.on('pause', this.pause)
@@ -63,6 +135,12 @@ export class Track {
     this.music.on('seek',  this.seek)
   }
 
+  /**
+   * Emits an event to a topic
+   *
+   * @param {string} topic calls an event (by key) defined in `this.on`
+   * @param {*} data
+   */
   // TODO: integrate core Howler event handler
   // load, loaderror, play, end, pause, stop, mute, volume, rate, seek, fade
   emit (topic, data) {
@@ -73,6 +151,9 @@ export class Track {
     }
   }
 
+  /**
+   * Initializes a new stateful dynamic interval, the primary synchronization mechanism
+   */
   start () {
     const delay  = this.delay * this.interval
     const config = { wait: this.interval, defer: false }
@@ -82,6 +163,9 @@ export class Track {
     }, delay || 0)
   }
 
+  /**
+   * Loads the audio data and kicks off the synchronization clock
+   */
   play () {
     this.music.once('load', () => {
       if (!this.clock) this.start()
@@ -91,33 +175,53 @@ export class Track {
     })
   }
 
+  /**
+   * Stops the audio and the synchronization clock (no resume)
+   */
   stop () {
     this.music.stop()
     this.clock.clear()
   }
 
+  /**
+   * Pauses the audio and the synchronization clock
+   */
   pause () {
     this.music.pause()
     this.clock.pause()
   }
 
+  /**
+   * Resumes the audio and the synchronization clock
+   */
   resume () {
     this.music.play()
     this.clock.resume()
   }
 
+  /**
+   * Mutes the track audio
+   */
   mute () {
     this.music.mute()
   }
 
+  /**
+   * Seek to a new position in the track
+   *
+   * @param {number} to position in the track in seconds
+   */
   // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
   // NOTE: if we assume every interval is the same, relative to tempo, this could work
-  seek (to) { // in seconds
+  seek (to) {
     this.music.seek(to)
   }
 
   /**
-   * The action to perform on next interval
+   * Invokes the action to perform on each interval
+   *
+   * @param {Object} interval context of the stateful dynamic interval
+   * @returns {Object} updated interval context
    */
   // TODO: support `bach.Set` (i.e. concurrent elements)
   step (interval) {
@@ -156,6 +260,9 @@ export class Track {
     return Object.assign(interval || {}, { wait })
   }
 
+  /**
+   * Bumps the cursor to the next measure and beat of the track
+   */
   next () {
     const limit = {
       measure : Math.max(this.data.length,    1),
@@ -166,6 +273,11 @@ export class Track {
     this.index.beat    = (this.index.beat    + 1) % limit.beat
   }
 
+  /**
+   * Reads and parses Bach.JSON data from the file system
+   *
+   * @param {string} path
+   */
   static read (path) {
     return new Track({ source: fs.readFileSync(path) })
   }
