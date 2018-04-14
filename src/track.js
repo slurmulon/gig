@@ -64,7 +64,7 @@ export class Track {
    *
    * @returns {Object}
    */
-  get before () {
+  get last () {
     return this.at(this.cursor.measure - 1, this.cursor.beat - 1)
   }
 
@@ -73,7 +73,7 @@ export class Track {
    *
    * @returns {Object}
    */
-  get after () {
+  get next () {
     return this.at(this.cursor.measure + 1, this.cursor.beat + 1)
   }
 
@@ -223,11 +223,12 @@ export class Track {
    */
   // TODO: support `bach.Set` (i.e. concurrent elements)
   step (interval) {
-    const beat = this.state.beat
-    const last = this.before
-    const next = this.next.bind(this)
-    const wait = this.interval * beat.duration
+    const { last } = this
+    const { beat } = this.state
     const { play, start, stop } = this.on.step
+
+    const bump = this.bump.bind(this)
+    const wait = this.interval * beat.duration
 
     if (stop instanceof Function && last) {
       stop(last)
@@ -241,15 +242,15 @@ export class Track {
       play(beat)
     }
 
-    next()
+    bump()
 
     return Object.assign(interval || {}, { wait })
   }
 
   /**
-   * Bumps the cursor to the next measure and beat of the track
+   * Increases the cursor to the next measure and beat of the track
    */
-  next () {
+  bump () {
     const limit = {
       measure : Math.max(this.data.length,    1),
       beat    : Math.max(this.data[0].length, 1)
