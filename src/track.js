@@ -176,6 +176,7 @@ export class Track {
   /**
    * Loads the audio data and kicks off the synchronization clock
    */
+  // FIXME: sync audio playback with `start` delay
   play () {
     this.music.once('load', () => {
       if (!this.clock) this.start()
