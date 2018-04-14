@@ -12,6 +12,12 @@ chai.use(chaiThings)
 chai.use(sinonChai)
 
 describe('Track', () => {
+  describe('constructor', () => {
+    it('should throw a TypeError if the source data is not in Bach.JSON', () => {
+      (() => new Track({ source: { foo: 'bar' } })).should.throw(TypeError)
+    })
+  })
+
   describe('step', () => {
     let source = fixtures.fast.json
     let audio  = fixtures.fast.audio

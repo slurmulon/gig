@@ -1,7 +1,15 @@
 import { Beat } from './elements'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
+import schema from 'bach-json-schema'
+import Ajv from 'ajv'
 import fs from 'fs'
+
+const ajv = new Ajv()
+
+ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
+
+export const validate = ajv.compile(schema)
 
 /**
  * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
@@ -17,6 +25,10 @@ export class Track {
    * @param {Object} [on] event hooks
    */
   constructor ({ source, audio, loop, volume, tempo, delay, timer, on }) {
+    if (!validate(source)) {
+      throw TypeError('Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}')
+    }
+
     this.source = source
     this.audio  = audio
     this.loop   = loop
