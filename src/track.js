@@ -26,7 +26,7 @@ export class Track {
    */
   constructor ({ source, audio, loop, volume, tempo, delay, timer, on }) {
     if (!validate(source)) {
-      throw TypeError('Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}')
+      throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
     }
 
     this.source = source
