@@ -29,7 +29,7 @@ The following sections provide examples of both a `bach` track and its compiled 
 
 ### `bach`
 
-Here we have a blues song (written in `bach`) that is intended to be improvised over by a guitar player.
+Here we have a blues song that is intended to be improvised over by a guitar player.
 
 It defines a sequence of scale progressions (i.e. a harmony), with each progression lasting from 1 to 2 measures.
 
