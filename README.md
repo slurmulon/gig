@@ -238,7 +238,6 @@ We also have the `lowest-beat`, `ms-per-beat` and `total-beats` pre-calculated a
 
 All of this makes interpreting `bach.json` trivial. You can simply step through the track in evenly sized intervals (`lowest-beat` for `ms-per-beat`) and everything else just sort of flows together and aligns.
 
-To see an example of just how simple this is, take a look [here](https://github.com/slurmulon/gig/blob/master/src/track.js).
 > **Caveat**
 >
 > Due to the single-threaded nature of JavaScript, it's imperative that you provide `gig` with an alternative timing API that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
