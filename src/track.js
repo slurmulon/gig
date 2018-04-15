@@ -107,10 +107,10 @@ export class Track {
    * @returns {number}
    */
   get interval () {
-    const global = this.headers.tempo
+    const header = this.headers.tempo
     const tempos = {
-      init: global,
-      user: this.tempo || global
+      init: header,
+      user: this.tempo || header
     }
 
     const diff = tempos.user / tempos.init
