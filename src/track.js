@@ -241,8 +241,6 @@ export class Track {
     const { last, interval } = this
     const { beat } = this.state
     const { play, start, stop } = this.on.step
-
-    const bump = this.bump.bind(this)
     const wait = interval * beat.duration
 
     if (stop instanceof Function && last) {
@@ -257,7 +255,7 @@ export class Track {
       play(beat)
     }
 
-    bump()
+    this.bump()
 
     return Object.assign(context || {}, { wait })
   }

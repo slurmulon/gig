@@ -25,7 +25,6 @@ describe('Track', () => {
     it('should play the current beat', done => {
       const track = new Track({ source, audio })
       const wait  = source.headers['ms-per-beat']
-      const stop  = sinon.spy()
 
       track.step = sinon.spy()
 
