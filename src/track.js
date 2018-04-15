@@ -1,15 +1,8 @@
 import { Beat } from './elements'
+import { validate } from './validate'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
-import schema from 'bach-json-schema'
-import Ajv from 'ajv'
 import fs from 'fs'
-
-const ajv = new Ajv()
-
-ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
-
-export const validate = ajv.compile(schema)
 
 /**
  * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
