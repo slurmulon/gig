@@ -2,7 +2,7 @@
 > :speaker: Official Bach player for JS
 ---
 
-[`bach`](https://github.com/slurmulon/bach) is a dynamic notation for representing musical tracks with a focus on human readability and productivity.
+[`bach`](https://github.com/slurmulon/bach) is a musical notation with a focus on human readability and productivity.
 
 `gig` consumes, renders and synchronizes `bach` tracks with audio files (or really anything) in a browser or browser-like environment.
 
@@ -242,7 +242,7 @@ All of this makes interpreting `bach.json` trivial. You can simply step through 
 >
 > Due to the single-threaded nature of JavaScript, it's imperative that you provide `gig` with an alternative timing API that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
 >
-> You can find a list of such timers that help minimize drift [here](https://github.com/slurmulon/dynamic-interval#related).
+> You can find a list of such timers that help minimize drift [here](https://github.com/slurmulon/dynamic-interval#related). `gig` will eventually provide a default timer that best alleviates this problem.
 
 An alternative implementation strategy is to preemptively schedule every `bach` element ahead of time, and then frequently poll for the target time of each element within context.
 
@@ -256,7 +256,7 @@ If using the Clojure library or CLI is not an option, a [RESTful HTTP API](https
 
 ## Todo
 
-- [ ] Integrate `bach-json-schema` for validation
+- [x] Integrate `bach-json-schema` for validation
 - [ ] Support general `loop` parameter
 - [ ] Support custom looping contexts
 - [ ] Automatically follow `@Audio` URL and load bytestream into memory
