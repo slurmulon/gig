@@ -29,10 +29,14 @@ export class Track {
     this.tempo  = tempo
     this.delay  = delay
     this.timer  = timer
+    this.host   = host
     this.on     = on || { step: { } }
 
     this.index = { measure: 0, beat: 0 }
-    this.music = new Howl({ src: audio, loop })
+    this.music = new Howl({
+      src: this.resolve(audio || this.headers.audio),
+      loop
+    })
 
     // this.listen()
   }
@@ -264,6 +268,25 @@ export class Track {
 
     this.index.measure = (this.index.measure + 1) % limit.measure
     this.index.beat    = (this.index.beat    + 1) % limit.beat
+  }
+
+  /**
+   * Normalizes the audio data into a single point of access.
+   *
+   * Prepends `host` value onto any audio URLs.
+   */
+  resolve (audio = this.audio) {
+    const remote = url => this.host + url
+
+    if (audio) {
+      if (audio instanceof Array) {
+        return audio.map(remote)
+      } else if (audio && audio.constructor === String) {
+        return remote(audio)
+      }
+    }
+
+    return audio
   }
 
   /**
