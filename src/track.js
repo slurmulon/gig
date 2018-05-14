@@ -17,7 +17,7 @@ export class Track {
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [on] event hooks
    */
-  constructor ({ source, audio, loop, volume, tempo, delay, timer, on }) {
+  constructor ({ source, audio, loop, volume, tempo, delay, host, timer, on }) {
     if (!validate(source)) {
       throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
     }
