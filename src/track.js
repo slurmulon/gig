@@ -1,7 +1,8 @@
 import { Beat } from './elements'
 import { validate } from './validate'
 import { Howl } from 'howler'
-import { setStatefulDynterval } from 'stateful-dynamic-interval'
+// import { setStatefulDynterval } from 'stateful-dynamic-interval'
+import { QuartzPoll } from 'quartz'
 import fs from 'fs'
 
 /**
@@ -34,7 +35,8 @@ export class Track {
 
     this.index = { measure: 0, beat: 0 }
     this.music = new Howl({
-      src: this.resolve(audio || this.headers.audio),
+      // src: this.resolve(audio || this.headers.audio),
+      src: audio,
       loop
     })
 
@@ -168,7 +170,14 @@ export class Track {
     const config = { wait: this.interval, defer: false }
 
     setTimeout(() => {
-      this.clock = setStatefulDynterval(this.step.bind(this), config, this.timer)
+      // this.clock = setStatefulDynterval(this.step.bind(this), config, this.timer)
+      // TODO: make Quartz support the `setInterval` and `clearInterval` API, then just
+      // pass it as a timer into `setStatefulDynterval` (avoids the need to mess with the `target` calculation
+      this.clock = new QuartzPoll({
+        action: this.step.bind(this),
+        every: config.wait,
+        defer: config.defer
+      }).play()
     }, delay || 0)
   }
 
@@ -235,6 +244,8 @@ export class Track {
    */
   // TODO: support `bach.Set` (i.e. concurrent elements)
   step (context) {
+    console.log('[gig:step]')
+
     const { last, interval } = this
     const { beat } = this.state
     const { play, start, stop } = this.on.step
