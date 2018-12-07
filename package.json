@@ -2,7 +2,7 @@
   "name": "gig",
   "version": "0.0.0",
   "description": "Bach player for JS",
-  "main": "src/index.js",
+  "main": "dist/bundle.js",
   "scripts": {
     "build": "rollup -c",
     "prepublish": "npm run build",
@@ -31,7 +31,8 @@
     "ajv": "^6.4.0",
     "bach-json-schema": "github:slurmulon/bach-json-schema",
     "howler": "^2.0.4",
-    "stateful-dynamic-interval": "github:slurmulon/stateful-dynamic-interval",
+    "quartz": "file:../web-timing/quartz-timers",
+    "stateful-dynamic-interval": "0.0.1",
     "teoria": "^2.5.0"
   },
   "devDependencies": {
