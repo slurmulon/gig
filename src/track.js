@@ -1,7 +1,7 @@
 import { Beat } from './elements'
 import { validate } from './validate'
 import { Howl } from 'howler'
-// import { setStatefulDynterval } from 'stateful-dynamic-interval'
+import { setStatefulDynterval } from 'stateful-dynamic-interval'
 import { QuartzPoll } from 'quartz'
 import fs from 'fs'
 
@@ -169,8 +169,12 @@ export class Track {
     const delay  = this.delay * this.interval
     const config = { wait: this.interval, defer: false }
 
+    console.log('[gig:delay] delay', delay)
+    console.log('[gig:interval] interval', config.wait)
+
     setTimeout(() => {
       // this.clock = setStatefulDynterval(this.step.bind(this), config, this.timer)
+
       // TODO: make Quartz support the `setInterval` and `clearInterval` API, then just
       // pass it as a timer into `setStatefulDynterval` (avoids the need to mess with the `target` calculation
       this.clock = new QuartzPoll({
@@ -178,6 +182,12 @@ export class Track {
         every: config.wait,
         defer: config.defer
       }).play()
+
+      // TODO: accept QuartzPoll from jelli instead (make it generic)
+      // FIXME: this is off by the initial delay, strangely enough
+      // FIXME: this re-introduces the drift... sigh. it's because we have to re-create the interval each time. need to persist the state even with `setTimeout`
+      //  - could also just allow `stateful-dynamic-interval` (or even `dynamic-interval` to have a non-dynamic/static mode (this way it doesn't need to clear the timeout/interval on each step)
+      // this.clock = setStatefulDynterval(this.step.bind(this), config, QuartzPoll.asInterval)
     }, delay || 0)
   }
 
@@ -244,12 +254,13 @@ export class Track {
    */
   // TODO: support `bach.Set` (i.e. concurrent elements)
   step (context) {
-    console.log('[gig:step]')
+    console.log('\n[gig:step]')
 
     const { last, interval } = this
     const { beat } = this.state
     const { play, start, stop } = this.on.step
     const wait = interval * beat.duration
+    // const wait = interval * (beat.duration || 1) // NOTE: makes no difference
 
     if (stop instanceof Function && last) {
       stop(last)
@@ -265,20 +276,49 @@ export class Track {
 
     this.bump()
 
+    console.log('[gig:step] beat duration', beat.duration)
+    console.log('[gig:step] interval, next wait', interval, wait)
+
     return Object.assign(context || {}, { wait })
   }
 
   /**
    * Increases the cursor to the next measure and beat of the track
    */
+  // FIXME: we need to first iterate through every beat WITHIN a measure before iterating through to the next measure
   bump () {
-    const limit = {
-      measure : Math.max(this.data.length,    1),
-      beat    : Math.max(this.data[0].length, 1)
+    console.log('[gig:bump] measure length (in beats)', this.data[0].length)
+
+    const num = {
+      measures : this.data.length,
+      beats    : this.data[0].length
     }
 
-    this.index.measure = (this.index.measure + 1) % limit.measure
-    this.index.beat    = (this.index.beat    + 1) % limit.beat
+    // const limit = {
+    //   measure : Math.max(this.data.length,    1),
+    //   beat    : Math.max(this.data[0].length, 1)
+    // }
+
+    const limit = {
+      measure : Math.max(num.measures, 1),
+      beat    : Math.max(num.beats, 1)
+    }
+
+    const increment = {
+      // measure : limit.measures % this.index.beat,
+      measure : this.index.beat === (limit.beat - 1) ? 1 : 0,
+      beat    : 1
+    }
+
+    console.log('[gig:bump] increments [measure, beat]', increment.measure, increment.beat)
+
+    // this.index.measure = (this.index.measure + 1) % limit.measure
+    // this.index.beat    = (this.index.beat    + 1) % limit.beat
+
+    this.index.measure = (this.index.measure + increment.measure) % limit.measure
+    this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
+
+    console.log('[gig:bump] updated index [measure, beat]', this.index.measure, this.index.beat)
   }
 
   /**
