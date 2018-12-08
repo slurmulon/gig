@@ -283,42 +283,27 @@ export class Track {
   }
 
   /**
-   * Increases the cursor to the next measure and beat of the track
+   * Increases the cursor to the next beat of the track and, if we're on the last beat,
+   * also increases the cursor to the next measure.
    */
-  // FIXME: we need to first iterate through every beat WITHIN a measure before iterating through to the next measure
   bump () {
-    console.log('[gig:bump] measure length (in beats)', this.data[0].length)
-
-    const num = {
+    const numOf = {
       measures : this.data.length,
       beats    : this.data[0].length
     }
 
-    // const limit = {
-    //   measure : Math.max(this.data.length,    1),
-    //   beat    : Math.max(this.data[0].length, 1)
-    // }
-
     const limit = {
-      measure : Math.max(num.measures, 1),
-      beat    : Math.max(num.beats, 1)
+      measure : Math.max(numOf.measures, 1),
+      beat    : Math.max(numOf.beats,    1)
     }
 
     const increment = {
-      // measure : limit.measures % this.index.beat,
       measure : this.index.beat === (limit.beat - 1) ? 1 : 0,
       beat    : 1
     }
 
-    console.log('[gig:bump] increments [measure, beat]', increment.measure, increment.beat)
-
-    // this.index.measure = (this.index.measure + 1) % limit.measure
-    // this.index.beat    = (this.index.beat    + 1) % limit.beat
-
     this.index.measure = (this.index.measure + increment.measure) % limit.measure
     this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
-
-    console.log('[gig:bump] updated index [measure, beat]', this.index.measure, this.index.beat)
   }
 
   /**
