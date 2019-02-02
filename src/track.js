@@ -175,6 +175,7 @@ export class Track {
     setTimeout(() => {
       // this.clock = setStatefulDynterval(this.step.bind(this), config, this.timer)
 
+      // FIXME: restart this clock from the beginning when the track loops again, based on `onend` Howler event (should almost completely eliminate drift regardless of where it's stemming from)
       // TODO: allow users to provide their own clock factory, that way they aren't boxed into using QuartzPoll
       // TODO: make Quartz support the `setInterval` and `clearInterval` API, then just
       // pass it as a timer into `setStatefulDynterval` (avoids the need to mess with the `target` calculation

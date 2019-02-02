@@ -3,6 +3,7 @@ import teoria from 'teoria'
 /**
  * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
  */
+// FIXME: Support rests (~)
 export class Element {
 
   constructor (data) {
@@ -73,7 +74,7 @@ export class Beat {
   get items () {
     if (this.empty) return []
 
-    const notes = this.data.notes
+    const { notes } = this.data
     const items = notes instanceof Array ? notes : [notes]
 
     return items.map(item => new Element(item))
