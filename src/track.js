@@ -152,6 +152,7 @@ export class Track {
    * @param {string} topic calls an event (by key) defined in `this.on`
    * @param {*} data
    */
+  // TODO: Use EventEmitter instead
   // TODO: integrate core Howler event handler
   // load, loaderror, play, end, pause, stop, mute, volume, rate, seek, fade
   emit (topic, data) {
@@ -306,26 +307,34 @@ export class Track {
 
     this.index.measure = (this.index.measure + increment.measure) % limit.measure
     this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
-  }
+  },
+
+  /**
+   * Determines if the track's music is loading
+   */
+  loading () {
+    return this.music.state() === 'loading'
+  },
 
   /**
    * Normalizes the audio data into a single point of access.
    *
    * Prepends `host` value onto any audio URLs.
    */
-  resolve (audio = this.audio) {
-    const remote = url => this.host + url
+  // TODO: Remove - Howler does this already
+  // resolve (audio = this.audio) {
+  //   const remote = url => this.host + url
 
-    if (audio) {
-      if (audio instanceof Array) {
-        return audio.map(remote)
-      } else if (audio && audio.constructor === String) {
-        return remote(audio)
-      }
-    }
+  //   if (audio) {
+  //     if (audio instanceof Array) {
+  //       return audio.map(remote)
+  //     } else if (audio && audio.constructor === String) {
+  //       return remote(audio)
+  //     }
+  //   }
 
-    return audio
-  }
+  //   return audio
+  // }
 
   /**
    * Reads and parses Bach.JSON data from the file system
