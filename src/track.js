@@ -2,8 +2,9 @@ import { Beat } from './elements'
 import { validate } from './validate'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
-import { QuartzPoll } from 'quartz'
+// import { QuartzPoll } from 'quartz'
 import fs from 'fs'
+
 
 /**
  * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
@@ -18,7 +19,7 @@ export class Track {
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [on] event hooks
    */
-  constructor ({ source, audio, loop, volume, tempo, delay, host, timer, on }) {
+  constructor ({ source, audio, loop, volume, tempo, delay, timer, on }) {
     if (!validate(source)) {
       throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
     }
@@ -29,9 +30,10 @@ export class Track {
     this.volume = volume
     this.tempo  = tempo
     this.delay  = delay
-    this.timer  = timer
-    this.host   = host
-    this.on     = on || { step: { } }
+    // WARN: Being refactored to act as a factory for generating the clock
+    // TODO: Ensure resulting object adheres to interface, containing essential methods for control
+    this.timer = timer || defaultTimer
+    this.on = on || { step: { } }
 
     this.index = { measure: 0, beat: 0 }
     this.music = new Howl({
@@ -180,11 +182,13 @@ export class Track {
       // TODO: allow users to provide their own clock factory, that way they aren't boxed into using QuartzPoll
       // TODO: make Quartz support the `setInterval` and `clearInterval` API, then just
       // pass it as a timer into `setStatefulDynterval` (avoids the need to mess with the `target` calculation
-      this.clock = new QuartzPoll({
-        action: this.step.bind(this),
-        every: config.wait,
-        defer: config.defer
-      }).play()
+      // this.clock = new QuartzPoll({
+      //   action: this.step.bind(this),
+      //   every: config.wait,
+      //   defer: config.defer
+      // }).play()
+
+      this.clock = this.timer(this)
 
       // TODO: accept QuartzPoll from jelli instead (make it generic)
       // FIXME: this is off by the initial delay, strangely enough
@@ -307,14 +311,14 @@ export class Track {
 
     this.index.measure = (this.index.measure + increment.measure) % limit.measure
     this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
-  },
+  }
 
   /**
    * Determines if the track's music is loading
    */
   loading () {
     return this.music.state() === 'loading'
-  },
+  }
 
   /**
    * Normalizes the audio data into a single point of access.
@@ -346,3 +350,5 @@ export class Track {
   }
 
 }
+
+const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, defer: false })
