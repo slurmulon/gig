@@ -2,9 +2,6 @@ import { Beat } from './elements'
 import { validate } from './validate'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
-// import { QuartzPoll } from 'quartz'
-import fs from 'fs'
-
 
 /**
  * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
@@ -30,14 +27,13 @@ export class Track {
     this.volume = volume
     this.tempo  = tempo
     this.delay  = delay
-    // WARN: Being refactored to act as a factory for generating the clock
     // TODO: Ensure resulting object adheres to interface, containing essential methods for control
     this.timer = timer || defaultTimer
     this.on = on || { step: { } }
 
     this.index = { measure: 0, beat: 0 }
+    // TODO: Allow user to override Howler config
     this.music = new Howl({
-      // src: this.resolve(audio || this.headers.audio),
       src: audio,
       loop
     })
@@ -166,35 +162,14 @@ export class Track {
   }
 
   /**
-   * Initializes a new stateful dynamic interval, the primary synchronization mechanism
+   * Instantiates a new clock which acts as the primary synchronization mechanism
    */
+  // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
   start () {
     const delay  = this.delay * this.interval
-    const config = { wait: this.interval, defer: false }
-
-    console.log('[gig:delay] delay', delay)
-    console.log('[gig:interval] interval', config.wait)
 
     setTimeout(() => {
-      // this.clock = setStatefulDynterval(this.step.bind(this), config, this.timer)
-
-      // FIXME: restart this clock from the beginning when the track loops again, based on `onend` Howler event (should almost completely eliminate drift regardless of where it's stemming from)
-      // TODO: allow users to provide their own clock factory, that way they aren't boxed into using QuartzPoll
-      // TODO: make Quartz support the `setInterval` and `clearInterval` API, then just
-      // pass it as a timer into `setStatefulDynterval` (avoids the need to mess with the `target` calculation
-      // this.clock = new QuartzPoll({
-      //   action: this.step.bind(this),
-      //   every: config.wait,
-      //   defer: config.defer
-      // }).play()
-
       this.clock = this.timer(this)
-
-      // TODO: accept QuartzPoll from jelli instead (make it generic)
-      // FIXME: this is off by the initial delay, strangely enough
-      // FIXME: this re-introduces the drift... sigh. it's because we have to re-create the interval each time. need to persist the state even with `setTimeout`
-      //  - could also just allow `stateful-dynamic-interval` (or even `dynamic-interval` to have a non-dynamic/static mode (this way it doesn't need to clear the timeout/interval on each step)
-      // this.clock = setStatefulDynterval(this.step.bind(this), config, QuartzPoll.asInterval)
     }, delay || 0)
   }
 
@@ -215,8 +190,10 @@ export class Track {
    * Stops the audio and the synchronization clock (no resume)
    */
   stop () {
+    if (!this.clock) return
+
     this.music.stop()
-    this.clock.clear()
+    this.clock.stop()
   }
 
   /**
@@ -320,35 +297,6 @@ export class Track {
     return this.music.state() === 'loading'
   }
 
-  /**
-   * Normalizes the audio data into a single point of access.
-   *
-   * Prepends `host` value onto any audio URLs.
-   */
-  // TODO: Remove - Howler does this already
-  // resolve (audio = this.audio) {
-  //   const remote = url => this.host + url
-
-  //   if (audio) {
-  //     if (audio instanceof Array) {
-  //       return audio.map(remote)
-  //     } else if (audio && audio.constructor === String) {
-  //       return remote(audio)
-  //     }
-  //   }
-
-  //   return audio
-  // }
-
-  /**
-   * Reads and parses Bach.JSON data from the file system
-   *
-   * @param {string} path
-   */
-  static read (path) {
-    return new Track({ source: fs.readFileSync(path) })
-  }
-
 }
 
-const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, defer: false })
+const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }).run()
