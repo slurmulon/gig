@@ -299,4 +299,4 @@ export class Track {
 
 }
 
-const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }).run()
+export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }).run()
