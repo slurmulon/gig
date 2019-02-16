@@ -16,7 +16,7 @@ export class Track {
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [on] event hooks
    */
-  constructor ({ source, audio, loop, volume, tempo, delay, timer, on }) {
+  constructor ({ source, audio, loop, volume, tempo, delay, timer, on, howler }) {
     if (!validate(source)) {
       throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
     }
@@ -32,11 +32,10 @@ export class Track {
     this.on = on || { step: { } }
 
     this.index = { measure: 0, beat: 0 }
-    // TODO: Allow user to override Howler config
-    this.music = new Howl({
+    this.music = new Howl(Object.assign({
       src: audio,
       loop
-    })
+    }, howler))
 
     // this.listen()
   }
