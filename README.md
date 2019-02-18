@@ -44,7 +44,7 @@ interface GigTimer {
 }
 ```
 
-Your resulting timer **must** use `track.step.bind(track)` as its interval callback/action. Otherwise `gig` has no way to accurately manage its cursor.
+Your resulting timer **must** use `track.step.bind(track)` as its interval callback/action. Otherwise `gig` has no way to know when each step should be called (after all, that's the job of the timer)!
 
 It's also advised that you use `track.interval` as the duration or your interval, especially if your timer supports dynamic durations.
 
@@ -52,7 +52,7 @@ It's also advised that you use `track.interval` as the duration or your interval
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 
 // A properly configured `gig` timer
-const timer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
+const timer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }).run()
 ```
 
 #### Implementation
@@ -73,7 +73,7 @@ import { Track } from 'gig'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 import * as workerTimers from 'worker-timers'
 
-const timer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }, workerTimers)
+const timer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }, workerTimers).run()
 const track = new Track({ source, timer })
 
 track.play()
@@ -83,7 +83,7 @@ You can find a list of timers that help minimize drift [here](https://github.com
 
 ### Events
 
-A `Track` will emit an event for each of its control behaviors:
+A `Track` will emit an event for each of its transitional behaviors:
 
  - `start`: The internal clock has been instantiated and invoked
  - `play`: The audio has finished loading and begins playing
