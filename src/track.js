@@ -227,8 +227,6 @@ export class Track extends EventEmitter {
    */
   // TODO: support `bach.Set` (i.e. concurrent elements)
   step (context) {
-    console.log('\n[gig:step]')
-
     const { last, interval, state } = this
     const { beat } = state
     const { duration, exists } = beat
@@ -238,9 +236,6 @@ export class Track extends EventEmitter {
     if (exists) this.emit('beat:play', beat)
 
     this.bump()
-
-    console.log('[gig:step] beat duration', beat.duration)
-    console.log('[gig:step] interval, next wait', interval, wait)
 
     return Object.assign(context || {}, { wait })
   }
