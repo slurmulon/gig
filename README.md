@@ -45,7 +45,6 @@ interface GigTimer {
   pause()
   resume()
 }
-
 ```
 
 ##### Implementation
