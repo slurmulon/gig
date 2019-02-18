@@ -98,9 +98,7 @@ track.play()
 
 ### `bach`
 
-[Bach](https://github.com/slurmulon/bach) is a semantic music notation that is focused on readability and understandability.
-
-Here we use it to define a blues backing track that is intended to be improvised over by a guitar player.
+Here we use `bach` to define a blues backing track that is intended to be improvised over by a guitar player.
 
 It defines a sequence of scale progressions (i.e. a harmony), with each progression lasting from 1 to 2 measures.
 
