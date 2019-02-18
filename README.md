@@ -49,10 +49,10 @@ Your resulting timer **must** use `track.step.bind(track)` as its interval callb
 It's also advised that you use `track.interval` as the duration or your interval, especially if your timer supports dynamic durations.
 
 ```js
-import { setStatefulDynterval } from 'stateful-dynamic-interval'
+import { setStatefulDynterval as clock } from 'stateful-dynamic-interval'
 
 // A properly configured `gig` timer
-const timer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }).run()
+const timer = track => clock(track.step.bind(track), { wait: track.interval, immediate: true }).run()
 ```
 
 #### Implementation
@@ -70,10 +70,10 @@ In this example, we're using `worker-timers`, which runs the interval inside of 
 ```js
 import source from './lullaby.bach.json'
 import { Track } from 'gig'
-import { setStatefulDynterval } from 'stateful-dynamic-interval'
+import { setStatefulDynterval as clock } from 'stateful-dynamic-interval'
 import * as workerTimers from 'worker-timers'
 
-const timer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }, workerTimers).run()
+const timer = track => clock(track.step.bind(track), { wait: track.interval, immediate: true }, workerTimers).run()
 const track = new Track({ source, timer })
 
 track.play()
@@ -99,7 +99,7 @@ You can subscribe to a `Track` event using the `on` method:
 const track = new Track({ /* ... */ })
 
 track.on('beat:play', beat => console.log('starting to play beat', beat))
-track.on('beat:stop', beat => console.log('finished playing beat', beat)
+track.on('beat:stop', beat => console.log('finished playing beat', beat))
 
 track.play()
 ```
