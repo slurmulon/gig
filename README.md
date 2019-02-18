@@ -29,7 +29,7 @@ To see examples of both a `bach` track and its compiled `back.json`, see the [Da
 
 Because the timing needs of each music application are different, `gig` allows you to provide your own custom timers.
 
-Due to the single-threaded nature of JavaScript, it's often imperative that you provide `gig` with an alternative timing API that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
+Due to the single-threaded nature of JavaScript, it's often imperative that you provide `gig` with an alternative [timing API](https://github.com/slurmulon/dynamic-interval#api) that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
 
 #### Interface
 
@@ -61,9 +61,9 @@ Timers must invoke their first step immediately, unlike the behavior of `setInte
 
 An open-source timer that supports this interface is [`stateful-dynamic-interval`](https://github.com/slurmulon/stateful-dynamic-interval), and `gig` has established it as its default.
 
-However, it still uses the `WindowOrGlobalScope.setTimeout` timer API by default, which is problematic in most situations because it does not correct for drift.
+However, it still uses the `WindowOrGlobalScope.setTimeout` timer by default, which is problematic in most situations because it does not correct for drift.
 
-Therefore, even if you are satisfied with `stateful-dynamic-interval` and how it manages the clock's internal state, it's suggested that you provide it with a timing API that minimizes drift.
+Therefore, even if you are satisfied with `stateful-dynamic-interval` and how it manages the clock's internal state, it's suggested that you provide it with a [timing API](https://github.com/slurmulon/dynamic-interval#api) that minimizes drift.
 
 In this example, we're using `worker-timers`, which runs the interval inside of a dedicated Web Worker thread:
 
