@@ -12,8 +12,6 @@
 
 ## Usage
 
-### Node
-
 Once your `bach` track has been [compiled into `bach.json`](https://github.com/slurmulon/bach#usage), it can then be consumed and rendered by `gig`.
 
 ```js
@@ -27,14 +25,14 @@ track.play()
 
 To see examples of both a `bach` track and its compiled `back.json`, see the [Data](#data) section.
 
-#### Timers
+### Timers
 
 Because the timing needs of each music application are different, `gig` allows you to provide your own custom timers.
 
 Due to the single-threaded nature of JavaScript, it's usually imperative that you provide `gig` with an alternative timing API that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
 
 
-##### Interface
+#### Interface
 
 Timers are provided as a factory function (accepting the current `track`) which is expected to return an object with the following interface:
 
@@ -47,7 +45,7 @@ interface GigTimer {
 }
 ```
 
-##### Implementation
+#### Implementation
 
 Timers must invoke their first step immediately, unlike the behavior of `setInterval` where a full interval takes place before the first step is run. This constraint ultimately makes aligning the music with the audio much simpler.
 
@@ -73,7 +71,7 @@ track.play()
 
 You can find a list of timers that help minimize drift [here](https://github.com/slurmulon/dynamic-interval#related). `gig` will eventually provide a default timer API that best alleviates this problem.
 
-#### Events
+### Events
 
 A `Track` will emit an event for each of its control behaviors:
 
