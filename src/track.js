@@ -2,11 +2,12 @@ import { Beat } from './elements'
 import { validate } from './validate'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
+import EventEmitter from 'events'
 
 /**
  * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
  */
-export class Track {
+export class Track extends EventEmitter {
 
   /**
    * @param {Object} source track represented in Bach.JSON
@@ -16,7 +17,9 @@ export class Track {
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [on] event hooks
    */
-  constructor ({ source, audio, loop, volume, tempo, delay, timer, on, howler }) {
+  constructor ({ source, audio, loop, volume, tempo, delay, timer, howler }) {
+    super()
+
     if (!validate(source)) {
       throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
     }
@@ -29,13 +32,12 @@ export class Track {
     this.delay  = delay
     // TODO: Ensure resulting object adheres to interface, containing essential methods for control
     this.timer = timer || defaultTimer
-    this.on = on || { step: { } }
 
     this.index = { measure: 0, beat: 0 }
     this.music = new Howl(Object.assign({
       src: audio,
       loop
-    }, howler))
+    }), howler)
 
     // this.listen()
   }
@@ -144,23 +146,6 @@ export class Track {
   }
 
   /**
-   * Emits an event to a topic
-   *
-   * @param {string} topic calls an event (by key) defined in `this.on`
-   * @param {*} data
-   */
-  // TODO: Use EventEmitter instead
-  // TODO: integrate core Howler event handler
-  // load, loaderror, play, end, pause, stop, mute, volume, rate, seek, fade
-  emit (topic, data) {
-    const action = this.on instanceof Object && this.on[topic]
-
-    if (action instanceof Function) {
-      action(data)
-    }
-  }
-
-  /**
    * Instantiates a new clock which acts as the primary synchronization mechanism
    */
   // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
@@ -169,6 +154,7 @@ export class Track {
 
     setTimeout(() => {
       this.clock = this.timer(this)
+      this.emit('start')
     }, delay || 0)
   }
 
@@ -193,6 +179,7 @@ export class Track {
 
     this.music.stop()
     this.clock.stop()
+    this.emit('stop')
   }
 
   /**
@@ -201,6 +188,7 @@ export class Track {
   pause () {
     this.music.pause()
     this.clock.pause()
+    this.emit('pause')
   }
 
   /**
@@ -209,6 +197,7 @@ export class Track {
   resume () {
     this.music.play()
     this.clock.resume()
+    this.emit('resume')
   }
 
   /**
@@ -216,6 +205,7 @@ export class Track {
    */
   mute () {
     this.music.mute()
+    this.emit('mute')
   }
 
   /**
@@ -227,6 +217,7 @@ export class Track {
   // NOTE: if we assume every interval is the same, relative to tempo, this could work
   seek (to) {
     this.music.seek(to)
+    this.emit('seek')
   }
 
   /**
@@ -241,21 +232,11 @@ export class Track {
 
     const { last, interval } = this
     const { beat } = this.state
-    const { play, start, stop } = this.on.step
-    const wait = interval * beat.duration
-    // const wait = interval * (beat.duration || 1) // NOTE: makes no difference
+    const { duration, exists } = beat
+    const wait = interval * duration
 
-    if (stop instanceof Function && last) {
-      stop(last)
-    }
-
-    if (start instanceof Function) {
-      start(beat)
-    }
-
-    if (beat.exists && play instanceof Function) {
-      play(beat)
-    }
+    if (last)   this.emit('step:stop', last)
+    if (exists) this.emit('step:play', beat)
 
     this.bump()
 
