@@ -234,8 +234,8 @@ export class Track extends EventEmitter {
     const { duration, exists } = beat
     const wait = interval * duration
 
-    if (last)   this.emit('step:stop', last)
-    if (exists) this.emit('step:play', beat)
+    if (last)   this.emit('beat:stop', last)
+    if (exists) this.emit('beat:play', beat)
 
     this.bump()
 
