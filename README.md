@@ -52,7 +52,7 @@ It's also advised that you use `track.interval` as the duration or your interval
 import { setStatefulDynterval as clock } from 'stateful-dynamic-interval'
 
 // A properly configured `gig` timer
-const timer = track => clock(track.step.bind(track), { wait: track.interval, immediate: true }).run()
+const timer = track => clock(track.step.bind(track), { wait: track.interval, immediate: true })
 ```
 
 #### Implementation
@@ -73,7 +73,7 @@ import { Track } from 'gig'
 import { setStatefulDynterval as clock } from 'stateful-dynamic-interval'
 import * as workerTimers from 'worker-timers'
 
-const timer = track => clock(track.step.bind(track), { wait: track.interval, immediate: true }, workerTimers).run()
+const timer = track => clock(track.step.bind(track), { wait: track.interval, immediate: true }, workerTimers)
 const track = new Track({ source, timer })
 
 track.play()
