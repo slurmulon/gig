@@ -29,8 +29,7 @@ To see examples of both a `bach` track and its compiled `back.json`, see the [Da
 
 Because the timing needs of each music application are different, `gig` allows you to provide your own custom timers.
 
-Due to the single-threaded nature of JavaScript, it's usually imperative that you provide `gig` with an alternative timing API that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
-
+Due to the single-threaded nature of JavaScript, it's often imperative that you provide `gig` with an alternative timing API that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
 
 #### Interface
 
@@ -64,9 +63,9 @@ An open-source timer that supports this interface is [`stateful-dynamic-interval
 
 However, it still uses the `WindowOrGlobalScope.setTimeout` timer API by default, which is problematic in most situations because it does not correct for drift.
 
-Therefore, even if you are satisfied with `stateful-dynamic-interval` and how it manages the clock's internal state, it is suggested that you provided it with a custom timing API that reduces or partially corrects for drift.
+Therefore, even if you are satisfied with `stateful-dynamic-interval` and how it manages the clock's internal state, it's suggested that you provide it with a timing API that minimizes drift.
 
-In this example, we're using `worker-timers`, which runs the interval inside of a dedicated Service Worker thread:
+In this example, we're using `worker-timers`, which runs the interval inside of a dedicated Web Worker thread:
 
 ```js
 import source from './lullaby.bach.json'
@@ -87,7 +86,7 @@ You can find a list of timers that help minimize drift [here](https://github.com
 A `Track` will emit an event for each of its control behaviors:
 
  - `start`: The internal clock has been instantiated and invoked
- - `play`: The audio has finished loading and begins playiing
+ - `play`: The audio has finished loading and begins playing
  - `stop`: The audio and clock have been stopped and deconstructed
  - `mute`: The audio has been muted
  - `seek`: The position of the track (both data and audio) has been modified
