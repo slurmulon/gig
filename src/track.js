@@ -2,12 +2,12 @@ import { Beat } from './elements'
 import { validate } from './validate'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
-import fs from 'fs'
+import EventEmitter from 'events'
 
 /**
  * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
  */
-export class Track {
+export class Track extends EventEmitter {
 
   /**
    * @param {Object} source track represented in Bach.JSON
@@ -17,7 +17,9 @@ export class Track {
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [on] event hooks
    */
-  constructor ({ source, audio, loop, volume, tempo, delay, host, timer, on }) {
+  constructor ({ source, audio, loop, volume, tempo, delay, timer, howler }) {
+    super()
+
     if (!validate(source)) {
       throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
     }
@@ -28,15 +30,13 @@ export class Track {
     this.volume = volume
     this.tempo  = tempo
     this.delay  = delay
-    this.timer  = timer
-    this.host   = host
-    this.on     = on || { step: { } }
+    this.timer  = timer || defaultTimer
 
     this.index = { measure: 0, beat: 0 }
-    this.music = new Howl({
-      src: this.resolve(audio || this.headers.audio),
+    this.music = new Howl(Object.assign({
+      src: audio,
       loop
-    })
+    }), howler)
 
     // this.listen()
   }
@@ -145,30 +145,15 @@ export class Track {
   }
 
   /**
-   * Emits an event to a topic
-   *
-   * @param {string} topic calls an event (by key) defined in `this.on`
-   * @param {*} data
+   * Instantiates a new clock which acts as the primary synchronization mechanism
    */
-  // TODO: integrate core Howler event handler
-  // load, loaderror, play, end, pause, stop, mute, volume, rate, seek, fade
-  emit (topic, data) {
-    const action = this.on instanceof Object && this.on[topic]
-
-    if (action instanceof Function) {
-      action(data)
-    }
-  }
-
-  /**
-   * Initializes a new stateful dynamic interval, the primary synchronization mechanism
-   */
+  // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
   start () {
     const delay  = this.delay * this.interval
-    const config = { wait: this.interval, defer: false }
 
     setTimeout(() => {
-      this.clock = setStatefulDynterval(this.step.bind(this), config, this.timer)
+      this.clock = this.timer(this)
+      this.emit('start')
     }, delay || 0)
   }
 
@@ -189,8 +174,11 @@ export class Track {
    * Stops the audio and the synchronization clock (no resume)
    */
   stop () {
+    if (!this.clock) return
+
     this.music.stop()
-    this.clock.clear()
+    this.clock.stop()
+    this.emit('stop')
   }
 
   /**
@@ -199,6 +187,7 @@ export class Track {
   pause () {
     this.music.pause()
     this.clock.pause()
+    this.emit('pause')
   }
 
   /**
@@ -207,6 +196,7 @@ export class Track {
   resume () {
     this.music.play()
     this.clock.resume()
+    this.emit('resume')
   }
 
   /**
@@ -214,6 +204,7 @@ export class Track {
    */
   mute () {
     this.music.mute()
+    this.emit('mute')
   }
 
   /**
@@ -225,6 +216,7 @@ export class Track {
   // NOTE: if we assume every interval is the same, relative to tempo, this could work
   seek (to) {
     this.music.seek(to)
+    this.emit('seek')
   }
 
   /**
@@ -235,22 +227,13 @@ export class Track {
    */
   // TODO: support `bach.Set` (i.e. concurrent elements)
   step (context) {
-    const { last, interval } = this
-    const { beat } = this.state
-    const { play, start, stop } = this.on.step
-    const wait = interval * beat.duration
+    const { last, interval, state } = this
+    const { beat } = state
+    const { duration, exists } = beat
+    const wait = interval * duration
 
-    if (stop instanceof Function && last) {
-      stop(last)
-    }
-
-    if (start instanceof Function) {
-      start(beat)
-    }
-
-    if (beat.exists && play instanceof Function) {
-      play(beat)
-    }
+    if (last)   this.emit('beat:stop', last)
+    if (exists) this.emit('beat:play', beat)
 
     this.bump()
 
@@ -258,44 +241,36 @@ export class Track {
   }
 
   /**
-   * Increases the cursor to the next measure and beat of the track
+   * Increases the cursor to the next beat of the track and, if we're on the last beat,
+   * also increases the cursor to the next measure.
    */
   bump () {
+    const numOf = {
+      measures : this.data.length,
+      beats    : this.data[0].length
+    }
+
     const limit = {
-      measure : Math.max(this.data.length,    1),
-      beat    : Math.max(this.data[0].length, 1)
+      measure : Math.max(numOf.measures, 1),
+      beat    : Math.max(numOf.beats,    1)
     }
 
-    this.index.measure = (this.index.measure + 1) % limit.measure
-    this.index.beat    = (this.index.beat    + 1) % limit.beat
+    const increment = {
+      measure : this.index.beat === (limit.beat - 1) ? 1 : 0,
+      beat    : 1
+    }
+
+    this.index.measure = (this.index.measure + increment.measure) % limit.measure
+    this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
   }
 
   /**
-   * Normalizes the audio data into a single point of access.
-   *
-   * Prepends `host` value onto any audio URLs.
+   * Determines if the track's music is loading
    */
-  resolve (audio = this.audio) {
-    const remote = url => this.host + url
-
-    if (audio) {
-      if (audio instanceof Array) {
-        return audio.map(remote)
-      } else if (audio && audio.constructor === String) {
-        return remote(audio)
-      }
-    }
-
-    return audio
-  }
-
-  /**
-   * Reads and parses Bach.JSON data from the file system
-   *
-   * @param {string} path
-   */
-  static read (path) {
-    return new Track({ source: fs.readFileSync(path) })
+  loading () {
+    return this.music.state() === 'loading'
   }
 
 }
+
+export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }).run()
