@@ -30,8 +30,7 @@ export class Track extends EventEmitter {
     this.volume = volume
     this.tempo  = tempo
     this.delay  = delay
-    // TODO: Ensure resulting object adheres to interface, containing essential methods for control
-    this.timer = timer || defaultTimer
+    this.timer  = timer || defaultTimer
 
     this.index = { measure: 0, beat: 0 }
     this.music = new Howl(Object.assign({
@@ -230,8 +229,8 @@ export class Track extends EventEmitter {
   step (context) {
     console.log('\n[gig:step]')
 
-    const { last, interval } = this
-    const { beat } = this.state
+    const { last, interval, state } = this
+    const { beat } = state
     const { duration, exists } = beat
     const wait = interval * duration
 
