@@ -90,8 +90,8 @@ A `Track` will emit an event for each of its transitional behaviors:
  - `stop`: The audio and clock have been stopped and deconstructed
  - `mute`: The audio has been muted
  - `seek`: The position of the track (both data and audio) has been modified
- - `step:stop`: The beat that was just playing has ended
- - `step:play`: The next beat in the queue has begun playing
+ - `beat:stop`: The beat that was just playing has ended
+ - `beat:play`: The next beat in the queue has begun playing
 
 You can subscribe to a `Track` event using the `on` method:
 
