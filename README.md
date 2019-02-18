@@ -45,6 +45,17 @@ interface GigTimer {
 }
 ```
 
+Your resulting timer **must** use `track.step.bind(track)` as its interval callback/action. Otherwise `gig` has no way to accurately manage its cursor.
+
+It's also advised that you use `track.interval` as the duration or your interval, especially if your timer supports dynamic durations.
+
+```js
+import { setStatefulDynterval } from 'stateful-dynamic-interval'
+
+// A properly configured `gig` timer
+const timer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
+```
+
 #### Implementation
 
 Timers must invoke their first step immediately, unlike the behavior of `setInterval` where a full interval takes place before the first step is run. This constraint ultimately makes aligning the music with the audio much simpler.
