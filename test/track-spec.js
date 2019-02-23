@@ -139,7 +139,50 @@ describe('Track', () => {
   })
 
   describe('stop', () => {
+    const source = fixtures.fast.json
 
+    it('should return early if no clock is provided', () => {
+      const track = new Track({ source })
+      const stopped = track.stop()
+
+      should.not.exist(stopped)
+    })
+
+    it('should stop the audio', done => {
+      const track = new Track({ source })
+
+      track.clock = { stop: sinon.spy() }
+      track.music = { once: (topic, func) => func(), play: sinon.spy(), stop: sinon.spy() }
+
+      track.on('play', () => {
+        track.stop()
+
+        track.music.stop.should.have.been.called
+
+        done()
+      })
+
+      track.play()
+    }).timeout(0)
+
+    it('should stop the clock', done => {
+      const track = new Track({ source })
+
+      track.clock = { stop: sinon.spy() }
+      track.music = { once: (topic, func) => func(), play: sinon.spy(), stop: sinon.spy() }
+
+      track.on('play', () => {
+        track.stop()
+
+        track.clock.stop.should.have.been.called
+
+        done()
+      })
+
+      track.play()
+    }).timeout(0)
+
+    // TODO: emit test
   })
 
   describe('interval', () => {
