@@ -273,4 +273,4 @@ export class Track extends EventEmitter {
 
 }
 
-export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true }).run()
+export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
