@@ -2,7 +2,6 @@ import chai from 'chai'
 import chaiThings from 'chai-things'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
-import fs from 'fs'
 import { Track } from '../dist/bundle'
 import fixtures from './fixtures'
 
@@ -71,10 +70,10 @@ describe('Track', () => {
       track.start()
 
       setTimeout(() => {
-        track.step.should.have.been.calledThrice
+        track.step.callCount.should.equal(4)
 
         done()
-      }, duration)
+      }, duration - 5)
     }).timeout(0)
 
     it('should call the step\'s stop callback at the end of each beat', done => {
@@ -82,13 +81,15 @@ describe('Track', () => {
       const wait  = source.headers['ms-per-beat']
       const steps = 2
       const duration = wait * steps
+      const callback = sinon.spy()
 
-      track.on.step.stop = sinon.spy()
+      track.on('beat:stop', callback)
 
       track.start()
 
       setTimeout(() => {
-        track.on.step.stop.should.have.been.calledTwice
+        // track.on.step.stop.should.have.been.calledTwice
+        callback.should.have.been.calledTwice
 
         done()
       }, duration)

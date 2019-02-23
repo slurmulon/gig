@@ -1,6 +1,5 @@
 import chai from 'chai'
 import chaiThings from 'chai-things'
-import fs from 'fs'
 import { Element, Beat } from '../dist/bundle'
 import fixtures from './fixtures'
 
