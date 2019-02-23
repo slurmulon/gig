@@ -88,7 +88,6 @@ describe('Track', () => {
       track.start()
 
       setTimeout(() => {
-        // track.on.step.stop.should.have.been.calledTwice
         callback.should.have.been.calledTwice
 
         done()
@@ -101,7 +100,42 @@ describe('Track', () => {
   })
 
   describe('start', () => {
+    const source = fixtures.fast.json
 
+    it('should instantiate the clock after an optional delay', done => {
+      const timer = sinon.spy()
+      const delay = 2
+      const track = new Track({ source, delay, timer })
+      const wait = track.interval * delay
+
+      track.start()
+
+      timer.should.not.have.been.called
+
+      setTimeout(() => {
+        timer.should.have.been.calledWith(track)
+
+        done()
+      }, wait)
+    }).timeout(0)
+
+    it('should emit the start event after an optional delay', done => {
+      const emit = sinon.spy()
+      const delay = 2
+      const track = new Track({ source, delay })
+      const wait = track.interval * delay
+
+      track.on('start', emit)
+      track.start()
+
+      emit.should.not.have.been.called
+
+      setTimeout(() => {
+        emit.should.have.been.called
+
+        done()
+      }, wait)
+    }).timeout(0)
   })
 
   describe('stop', () => {
