@@ -1,5 +1,5 @@
 # gig
-> :speaker: Bach player for JS
+> :sound: Bach player for JS
 ---
 
 [`bach`](https://github.com/slurmulon/bach) is a semantic music notation with a focus on human readability and productivity.
@@ -154,7 +154,7 @@ track.play()
 Instantiates a new clock from the provided timer, acting as the primary synchronization mechanism between the music and audio data.
 
 > **Warning**
-
+> 
 > This method is primarily for internal use, and `play()` is usually the method you want to use instead.
 > 
 > Until `play()` is called, **no audio** will play at all, and, if there's any delay between the `start()` and `play()` calls, the internal clock will get out of sync!
