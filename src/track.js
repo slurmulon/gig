@@ -13,11 +13,12 @@ export class Track extends EventEmitter {
    * @param {Object} source track represented in Bach.JSON
    * @param {Audio} [audio] track audio
    * @param {boolean} [loop] enable track looping
+   * @param {boolean} [tempo] in beats per minute
    * @param {number} [delay] wait a duration before starting to play
    * @param {Object} [timer] alternative timer/interval API
-   * @param {Object} [on] event hooks
+   * @param {Object} [howler] optional Howler configuration overrides
    */
-  constructor ({ source, audio, loop, volume, tempo, delay, timer, howler }) {
+  constructor ({ source, audio, loop, tempo, delay, timer, howler }) {
     super()
 
     if (!validate(source)) {
@@ -27,8 +28,7 @@ export class Track extends EventEmitter {
     this.source = source
     this.audio  = audio
     this.loop   = loop
-    this.volume = volume
-    this.tempo  = tempo
+    this.tempo  = tempo // FIXME: Sync with Howler's rate property
     this.delay  = delay
     this.timer  = timer || defaultTimer
 
