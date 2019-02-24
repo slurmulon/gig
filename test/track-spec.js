@@ -76,6 +76,22 @@ describe('Track', () => {
       }, duration - 5)
     }).timeout(0)
 
+    it('should call the step\'s play callback at the beginning of each beat', done => {
+      const track = new Track({ source, audio, tempo: 240 })
+      const wait  = source.headers['ms-per-beat']
+      const callback = sinon.spy()
+
+      track.on('beat:play', callback)
+
+      track.start()
+
+      setTimeout(() => {
+        callback.should.have.been.calledTwice
+
+        done()
+      }, wait)
+    }).timeout(0)
+
     it('should call the step\'s stop callback at the end of each beat', done => {
       const track = new Track({ source, audio, tempo: 240 })
       const wait  = source.headers['ms-per-beat']
