@@ -4,7 +4,7 @@
 
 [`bach`](https://github.com/slurmulon/bach) is a semantic music notation with a focus on human readability and productivity.
 
-`gig` consumes and synchronizes `bach` tracks with audio files (or really anything) in a browser or browser-like environment.
+`gig` consumes and synchronizes `bach` tracks with audio data (or any kind of data) in a browser or browser-like environment.
 
 ## Sections
 
@@ -27,7 +27,9 @@
 
 `npm install --save slurmulon/gig`
 
-In order compile your `bach` tracks, you will also want to install the [core `bach` library](https://github.com/slurmulon/bach#install).
+In order to compile your `bach` tracks, you will also need to install the [core `bach` library](https://github.com/slurmulon/bach#install).
+
+A ClojureScript module will be introduced soon so that this step becomes unnecessary.
 
 ## Usage
 
