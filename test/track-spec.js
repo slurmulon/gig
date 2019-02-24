@@ -18,8 +18,8 @@ describe('Track', () => {
   })
 
   describe('step', () => {
-    let source = fixtures.fast.json
-    let audio  = fixtures.fast.audio
+    const source = fixtures.fast.json
+    const audio  = fixtures.fast.audio
 
     it('should play the current beat', done => {
       const track = new Track({ source, audio })
@@ -101,11 +101,12 @@ describe('Track', () => {
 
   describe('start', () => {
     const source = fixtures.fast.json
+    const audio  = fixtures.fast.audio
 
     it('should instantiate the clock after an optional delay', done => {
       const timer = sinon.spy()
       const delay = 2
-      const track = new Track({ source, delay, timer })
+      const track = new Track({ source, audio, delay, timer })
       const wait = track.interval * delay
 
       track.start()
@@ -122,7 +123,7 @@ describe('Track', () => {
     it('should emit the start event after an optional delay', done => {
       const emit = sinon.spy()
       const delay = 2
-      const track = new Track({ source, delay })
+      const track = new Track({ source, audio, delay })
       const wait = track.interval * delay
 
       track.on('start', emit)
@@ -139,21 +140,24 @@ describe('Track', () => {
   })
 
   describe('stop', () => {
+    let track
     const source = fixtures.fast.json
+    const audio  = fixtures.fast.audio
+
+    beforeEach(() => {
+      track = new Track({ source, audio })
+      track.clock = { stop: sinon.spy() }
+      track.music = { once: (topic, func) => func(), play: sinon.spy(), stop: sinon.spy() }
+    })
 
     it('should return early if no clock is provided', () => {
-      const track = new Track({ source })
       const stopped = track.stop()
 
       should.not.exist(stopped)
     })
 
     it('should stop the audio', done => {
-      const track = new Track({ source })
-
-      track.clock = { stop: sinon.spy() }
-      track.music = { once: (topic, func) => func(), play: sinon.spy(), stop: sinon.spy() }
-
+      console.log('wut')
       track.on('play', () => {
         track.stop()
 
@@ -163,14 +167,11 @@ describe('Track', () => {
       })
 
       track.play()
+
+      console.log('played')
     }).timeout(0)
 
     it('should stop the clock', done => {
-      const track = new Track({ source })
-
-      track.clock = { stop: sinon.spy() }
-      track.music = { once: (topic, func) => func(), play: sinon.spy(), stop: sinon.spy() }
-
       track.on('play', () => {
         track.stop()
 
@@ -182,7 +183,19 @@ describe('Track', () => {
       track.play()
     }).timeout(0)
 
-    // TODO: emit test
+    it('should emit a \'stop\' event', done => {
+      track.on('play', () => {
+        track.emit = sinon.spy()
+
+        track.stop()
+
+        track.emit.should.have.been.calledWith('stop')
+
+        done()
+      })
+
+      track.play()
+    }).timeout(0)
   })
 
   describe('interval', () => {
