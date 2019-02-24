@@ -1,14 +1,16 @@
 # gig
-> :speaker: Official Bach player for JS
+> :speaker: Bach player for JS
 ---
 
-[`bach`](https://github.com/slurmulon/bach) is a musical notation with a focus on human readability and productivity.
+[`bach`](https://github.com/slurmulon/bach) is a semantic music notation with a focus on human readability and productivity.
 
-`gig` consumes, renders and synchronizes `bach` tracks with audio files (or really anything) in a browser or browser-like environment.
+`gig` consumes and synchronizes `bach` tracks with audio files (or really anything) in a browser or browser-like environment.
 
 ## Install
 
 `npm install --save slurmulon/gig`
+
+In order compile your `bach` tracks, you will also want to install the [core `bach` library](https://github.com/slurmulon/bach#install).
 
 ## Usage
 
@@ -25,11 +27,106 @@ track.play()
 
 To see examples of both a `bach` track and its compiled `back.json`, see the [Data](#data) section.
 
+### Options
+
+#### `source`
+
+Defines the core musical data of the track in [`bach.json`](https://github.com/slurmulon/bach-json-schema).
+
+ - **Type**: [`bach.json`](https://github.com/slurmulon/bach-json-schema)
+ - **Required**: `true`
+
+```js
+import { Track } from 'gig'
+
+const track = new Track({
+  source: {
+    headers: { /* ... */ },
+    data: [ /* ... */ ]
+  }
+})
+```
+
+#### `audio`
+
+Specifies the audio data to synchronize the musical `bach.json` data with.
+
+ - **Type**: `String`, `Blob`, `Array`
+ - **Required**: `false` (may be inherited from `source` headers)
+
+```js
+import { Track } from 'gig'
+
+const track = new Track({
+  source: { /* ... */ },
+  audio: 'http://api.madhax.io/track/q2IBRPmMq9/audio/mp3'
+})
+```
+
+#### `loop`
+
+Determines if the audio and music data should loop forever.
+
+ - **Type**: `Boolean`
+ - **Required**: `false`
+ - **Default**: `false`
+
+```js
+import { Track } from 'gig'
+
+const track = new Track({
+  source: { /* ... */ },
+  audio: 'http://api.madhax.io/track/q2IBRPmMq9/audio/mp3',
+  loop: true
+})
+```
+#### `tempo`
+
+Specifies the tempo at which the music and audio data should be played at.
+
+ - **Type**: `Number` (beats per minute)
+ - **Required**: `true` (may be inherited from `source` headers)
+
+```js
+import { Track } from 'gig'
+
+const track = new Track({
+  source: { /* ... */ },
+  audio: 'http://api.madhax.io/track/q2IBRPmMq9/audio/mp3',
+  tempo: 120
+})
+```
+
+#### `delay`
+
+Determines how much of a delay there should be (in beats) between when the user plays the track and the clock/audio actually starts.
+
+Useful for supporting count-ins to tracks.
+
+ - **Type**`: `Number` (beats)
+ - **Required**: `false`
+ - **Default**: `0`
+
+```js
+import { Track } from 'gig'
+
+const track = new Track({
+  source: { /* ... */ },
+  audio: 'http://api.madhax.io/track/q2IBRPmMq9/audio/mp3',
+  delay: 4 // starts playing after waiting for four beats
+})
+```
 ### Timers
 
 Because the timing needs of each music application are different, `gig` allows you to provide your own custom timers.
 
-Due to the single-threaded nature of JavaScript, it's often imperative that you provide `gig` with an alternative [timing API](https://github.com/slurmulon/dynamic-interval#api) that corrects for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
+It's also usually imperative that you [provide `gig`](#implementation) with an alternative [interval API](https://github.com/slurmulon/dynamic-interval#api) that helps correct for drift. Otherwise the track data (and anything depending on this data) will inevitably fall behind the audio.
+
+This is due to the single-threaded nature of JavaScript and the generally low precision of `setTimeout` and `setInterval`. Read Chris Wilson's article ["A Tale of Two Clocks: Scheduling Web Audio for Precision"](https://www.html5rocks.com/en/tutorials/audio/scheduling/) for detailed information on this limitation and a tutorial on how to create a more accurate clock in JavaScript.
+
+This limitation becomes particularly prominent in web applications that loop audio forever or play otherwise "long" streams of audio information.
+
+But this is simply a non-issue for many applications, and this is why `gig` allows custom timers and interval APIs to be provided.
 
 #### Interface
 
@@ -61,11 +158,11 @@ Timers must invoke their first step immediately, unlike the behavior of `setInte
 
 An open-source timer that supports this interface is [`stateful-dynamic-interval`](https://github.com/slurmulon/stateful-dynamic-interval), and `gig` has established it as its default.
 
-However, it still uses the `WindowOrGlobalScope.setTimeout` timer by default, which is problematic in most situations because it does not correct for drift.
+However, it still uses the `WindowOrWorkerGlobalScope.setTimeout` interval API by default, which is problematic in many situations because it does not correct for drift.
 
-Therefore, even if you are satisfied with `stateful-dynamic-interval` and how it manages the clock's internal state, it's suggested that you provide it with a [timing API](https://github.com/slurmulon/dynamic-interval#api) that minimizes drift.
+Therefore, even if you are satisfied with `stateful-dynamic-interval` and how it manages the clock's internal state, it's suggested that you provide it with an [interval API](https://github.com/slurmulon/dynamic-interval#api) that minimizes drift.
 
-In this example, we're using `worker-timers`, which runs the interval inside of a dedicated Web Worker thread:
+In this example, we're using [`worker-timers`](https://npmjs.com/worker-timers), which runs the interval inside of a dedicated Web Worker thread:
 
 ```js
 import source from './lullaby.bach.json'
@@ -79,7 +176,7 @@ const track = new Track({ source, timer })
 track.play()
 ```
 
-You can find a list of timers that help minimize drift [here](https://github.com/slurmulon/dynamic-interval#related). `gig` will eventually provide a default timer API that best alleviates this problem.
+You can find a list of timers that help minimize drift [here](https://github.com/slurmulon/dynamic-interval#related). `gig` will eventually provide a default interval API that best alleviates this problem for the general use case.
 
 ### Events
 
