@@ -6,6 +6,23 @@
 
 `gig` consumes and synchronizes `bach` tracks with audio files (or really anything) in a browser or browser-like environment.
 
+## Sections
+
+ - [Install](#install)
+ - [Usage](#usage)
+   * [Options](#options)
+   * [Methods](#methods)
+   * [Events](#events)
+   * [Timers](#timers)
+     - [Interface](#interface)
+     - [Implementation](#implementation)
+ - [Data](#data)
+   * [`bach`](#bach)
+   * [`bach.json`](#bachjson)
+   * [Support](#support)
+ - [Future](#future)
+ - [License](#license)
+
 ## Install
 
 `npm install --save slurmulon/gig`
@@ -103,7 +120,7 @@ Determines how much of a delay there should be (in beats) between when the user 
 
 Useful for supporting count-ins to tracks.
 
- - **Type**`: `Number` (beats)
+ - **Type**: `Number` (beats)
  - **Required**: `false`
  - **Default**: `0`
 
@@ -115,6 +132,134 @@ const track = new Track({
   audio: 'http://api.madhax.io/track/q2IBRPmMq9/audio/mp3',
   delay: 4 // starts playing after waiting for four beats
 })
+```
+
+### Methods
+
+#### `play()`
+
+Loads the audio data and kicks off the internal synchronization clock once everything is ready.
+
+```js
+import { Track } from 'gig'
+import source from './lullaby.bach.json'
+
+const track = new Track({ source })
+
+track.play()
+```
+
+#### `start()`
+
+Instantiates a new clock from the provided timer, acting as the primary synchronization mechanism between the music and audio data.
+
+> **Warning**
+
+> This method is primarily for internal use, and `play()` is usually the method you want to use instead.
+> 
+> Until `play()` is called, **no audio** will play at all, and, if there's any delay between the `start()` and `play()` calls, the internal clock will get out of sync!
+
+```js
+import { Track } from 'gig'
+import source from './lullaby.bach.json'
+
+const track = new Track({ source })
+
+track.start()
+```
+
+#### `stop()`
+
+Stops the audio and synchronization clock. Does not allow either of them to be resumed.
+
+```js
+import { Track } from 'gig'
+import source from './lullaby.bach.json'
+
+const track = new Track({ source })
+
+track.play()
+
+setTimeout(() => {
+  track.stop()
+}, 1000)
+```
+
+#### `pause()`
+
+Pauses the audio and synchronization clock. May be resumed at any point via the `resume()` method.
+
+```js
+import { Track } from 'gig'
+import source from './lullaby.bach.json'
+
+const track = new Track({ source })
+
+track.play()
+
+setTimeout(() => {
+  track.pause()
+}, 1000)
+```
+
+#### `resume()`
+
+Resumes a previously paused audio synchronization clock.
+
+```js
+import { Track } from 'gig'
+import source from './lullaby.bach.json'
+
+const track = new Track({ source })
+
+track.play()
+
+setTimeout(() => {
+  track.pause()
+
+  setTimeout(() => {
+    track.resume()
+  }, 1000)
+}, 1000)
+```
+
+#### `mute()`
+
+Mutes the track audio. Has no effect on the synchronization clock.
+
+```js
+import { Track } from 'gig'
+import source from './lullaby.bach.json'
+
+const track = new Track({ source })
+
+track.play()
+
+setTimeout(() => {
+  track.mute()
+}, 1000)
+```
+### Events
+
+A `Track` will emit an event for each of its transitional behaviors:
+
+ - `start`: The internal clock has been instantiated and invoked
+ - `play`: The audio has finished loading and begins playing
+ - `stop`: The audio and clock have been stopped and deconstructed
+ - `mute`: The audio has been muted
+ - `seek`: The position of the track (both data and audio) has been modified
+ - `beat:stop`: The beat that was just playing has ended
+ - `beat:play`: The next beat in the queue has begun playing
+
+You can subscribe to a `Track` event using the `on` method:
+
+```js
+const track = new Track({ /* ... */ })
+
+track.on('beat:play', beat => console.log('starting to play beat', beat))
+track.on('beat:stop', beat => console.log('finished playing beat', beat))
+
+track.play()
 ```
 ### Timers
 
@@ -177,29 +322,6 @@ track.play()
 ```
 
 You can find a list of timers that help minimize drift [here](https://github.com/slurmulon/dynamic-interval#related). `gig` will eventually provide a default interval API that best alleviates this problem for the general use case.
-
-### Events
-
-A `Track` will emit an event for each of its transitional behaviors:
-
- - `start`: The internal clock has been instantiated and invoked
- - `play`: The audio has finished loading and begins playing
- - `stop`: The audio and clock have been stopped and deconstructed
- - `mute`: The audio has been muted
- - `seek`: The position of the track (both data and audio) has been modified
- - `beat:stop`: The beat that was just playing has ended
- - `beat:play`: The next beat in the queue has begun playing
-
-You can subscribe to a `Track` event using the `on` method:
-
-```js
-const track = new Track({ /* ... */ })
-
-track.on('beat:play', beat => console.log('starting to play beat', beat))
-track.on('beat:stop', beat => console.log('finished playing beat', beat))
-
-track.play()
-```
 
 ## Data
 
@@ -416,7 +538,7 @@ As of now, only the [core Clojure library](https://github.com/slurmulon/bach#usa
 
 If using the Clojure library or CLI is not an option, a [RESTful HTTP API](https://github.com/slurmulon/bach-rest-api) is also available.
 
-## Todo
+## Future
 
 - [x] Integrate `bach-json-schema` for validation
 - [ ] Support general `loop` parameter
