@@ -269,7 +269,7 @@ describe('Track', () => {
         track.pause()
         track.resume()
 
-        track.music.pause.should.have.been.called
+        track.music.play.should.have.been.called
 
         done()
       })
