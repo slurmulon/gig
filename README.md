@@ -303,7 +303,7 @@ Timers must invoke their first step immediately, unlike the behavior of `setInte
 
 An open-source timer that supports this interface is [`stateful-dynamic-interval`](https://github.com/slurmulon/stateful-dynamic-interval), and `gig` has established it as its default.
 
-However, it still uses the `WindowOrWorkerGlobalScope.setTimeout` interval API by default, which is problematic in many situations because it does not correct for drift.
+However, it still uses the `WindowOrWorkerGlobalScope.setTimeout` interval API by default, which is problematic in many situations because it has inherent drift.
 
 Therefore, even if you are satisfied with `stateful-dynamic-interval` and how it manages the clock's internal state, it's suggested that you provide it with an [interval API](https://github.com/slurmulon/dynamic-interval#api) that minimizes drift.
 
