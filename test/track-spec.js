@@ -157,7 +157,6 @@ describe('Track', () => {
     })
 
     it('should stop the audio', done => {
-      console.log('wut')
       track.on('play', () => {
         track.stop()
 
@@ -167,8 +166,6 @@ describe('Track', () => {
       })
 
       track.play()
-
-      console.log('played')
     }).timeout(0)
 
     it('should stop the clock', done => {
@@ -190,6 +187,56 @@ describe('Track', () => {
         track.stop()
 
         track.emit.should.have.been.calledWith('stop')
+
+        done()
+      })
+
+      track.play()
+    }).timeout(0)
+  })
+
+  describe('pause', () => {
+    let track
+    const source = fixtures.fast.json
+    const audio  = fixtures.fast.audio
+
+    beforeEach(() => {
+      track = new Track({ source, audio })
+      track.clock = { pause: sinon.spy() }
+      track.music = { once: (topic, func) => func(), play: sinon.spy(), pause: sinon.spy() }
+    })
+
+    it('should pause the audio', done => {
+      track.on('play', () => {
+        track.pause()
+
+        track.music.pause.should.have.been.called
+
+        done()
+      })
+
+      track.play()
+    }).timeout(0)
+
+    it('should pause the clock', done => {
+      track.on('play', () => {
+        track.pause()
+
+        track.clock.pause.should.have.been.called
+
+        done()
+      })
+
+      track.play()
+    }).timeout(0)
+
+    it('should emit a \'pause\' event', done => {
+      track.on('play', () => {
+        track.emit = sinon.spy()
+
+        track.pause()
+
+        track.emit.should.have.been.calledWith('pause')
 
         done()
       })
