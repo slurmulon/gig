@@ -245,6 +245,67 @@ describe('Track', () => {
     }).timeout(0)
   })
 
+  describe('resume', () => {
+    let track
+    const source = fixtures.fast.json
+    const audio  = fixtures.fast.audio
+
+    beforeEach(() => {
+      track = new Track({ source, audio })
+      track.clock = {
+        pause: sinon.spy(),
+        resume: sinon.spy()
+      }
+      track.music = {
+        once: (topic, func) => func(),
+        play: sinon.spy(),
+        pause: sinon.spy(),
+        resume: sinon.spy()
+      }
+    })
+
+    it('should resume the audio', done => {
+      track.on('play', () => {
+        track.pause()
+        track.resume()
+
+        track.music.pause.should.have.been.called
+
+        done()
+      })
+
+      track.play()
+    }).timeout(0)
+
+    it('should resume/play the clock', done => {
+      track.on('play', () => {
+        track.pause()
+        track.resume()
+
+        track.clock.resume.should.have.been.called
+
+        done()
+      })
+
+      track.play()
+    }).timeout(0)
+
+    it('should emit a \'resume\' event', done => {
+      track.on('play', () => {
+        track.emit = sinon.spy()
+
+        track.pause()
+        track.resume()
+
+        track.emit.should.have.been.calledWith('resume')
+
+        done()
+      })
+
+      track.play()
+    }).timeout(0)
+  })
+
   describe('interval', () => {
     it('should return ms-per-beat by default', () => {
 
