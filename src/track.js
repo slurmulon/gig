@@ -36,7 +36,7 @@ export class Track extends EventEmitter {
     this.music = new Howl(Object.assign({
       src: audio,
       loop
-    }), howler)
+    }, howler))
 
     // this.listen()
   }
