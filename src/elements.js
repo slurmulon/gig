@@ -1,3 +1,5 @@
+// TODO: Extract all of this into its own module called `bach-js` or `bach-node`
+
 import teoria from 'teoria'
 
 /**
