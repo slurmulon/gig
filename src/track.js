@@ -1,13 +1,13 @@
-import { Beat } from './elements'
-import { validate } from './validate'
+import { Track as Bach, Beat, validate } from 'bach-js'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 import EventEmitter from 'events'
 
+// TODO: Probably just rename to Gig with latest work (bach-js)
 /**
  * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
  */
-export class Track extends EventEmitter {
+export class Track extends Bach {
 
   /**
    * @param {Object} source track represented in Bach.JSON
@@ -19,13 +19,10 @@ export class Track extends EventEmitter {
    * @param {Object} [howler] optional Howler configuration overrides
    */
   constructor ({ source, audio, loop, tempo, delay, timer, howler }) {
-    super()
+    super(source)
 
-    if (!validate(source)) {
-      throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
-    }
+    EventEmitter.call(this)
 
-    this.source = source
     this.audio  = audio
     this.loop   = loop
     this.tempo  = tempo // FIXME: Sync with Howler's rate property
@@ -39,24 +36,6 @@ export class Track extends EventEmitter {
     }, howler))
 
     // this.listen()
-  }
-
-  /**
-   * Parses and returns the source track data as Beat elements
-   *
-   * @returns {Array<Object>}
-   */
-  get data () {
-    return this.source.data.map(Beat.from)
-  }
-
-  /**
-   * Provides the source header data of the track
-   *
-   * @returns {Object}
-   */
-  get headers () {
-    return this.source.headers
   }
 
   /**
@@ -95,41 +74,6 @@ export class Track extends EventEmitter {
     return {
       measure : Math.min(Math.max(this.index.measure, 0), this.data.length),
       beat    : Math.min(Math.max(this.index.beat,    0), this.data[0].length)
-    }
-  }
-
-  /**
-   * Determines how long to wait between each interval based on the track and user tempo
-   *
-   * @returns {number}
-   */
-  get interval () {
-    const header = this.headers.tempo
-    const tempos = {
-      init: header,
-      user: this.tempo || header
-    }
-
-    const diff = tempos.user / tempos.init
-
-    return this.headers['ms-per-beat'] / diff
-  }
-
-  /**
-   * Determines the measure and beat found at the provided indices
-   *
-   * @param {number} measureIndex
-   * @param {number} beatIndex
-   * @returns {Object}
-   */
-  at (measureIndex, beatIndex) {
-    try {
-      const measure = this.data[measureIndex]
-      const beat = measure[beatIndex]
-
-      return { measure, beat }
-    } catch (e) {
-      return null
     }
   }
 
@@ -272,5 +216,7 @@ export class Track extends EventEmitter {
   }
 
 }
+
+Object.assign(Track.prototype, EventEmitter.prototype)
 
 export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
