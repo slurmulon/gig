@@ -28,11 +28,9 @@
   },
   "homepage": "https://github.com/slurmulon/gig#readme",
   "dependencies": {
-    "ajv": "^6.4.0",
-    "bach-json-schema": "github:slurmulon/bach-json-schema",
+    "bach-js": "file:../bach-js",
     "howler": "^2.0.4",
-    "stateful-dynamic-interval": "1.0.1",
-    "teoria": "^2.5.0"
+    "stateful-dynamic-interval": "1.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
