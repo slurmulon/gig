@@ -7,3 +7,4 @@ test/fixtures/**/*
 !test/fixtures/slow.bach.json
 *.wav
 *.mp3
+*_BAK/
