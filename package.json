@@ -1,6 +1,6 @@
 {
   "name": "gig",
-  "version": "0.0.0",
+  "version": "1.1.0",
   "description": "Bach player for JS",
   "main": "dist/bundle.js",
   "scripts": {
@@ -21,18 +21,16 @@
     "bach",
     "player"
   ],
-  "author": "MadHax, LLC",
-  "license": "ISC",
+  "author": "Erik Vavro",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/slurmulon/gig/issues"
   },
   "homepage": "https://github.com/slurmulon/gig#readme",
   "dependencies": {
-    "ajv": "^6.4.0",
-    "bach-json-schema": "github:slurmulon/bach-json-schema",
-    "howler": "^2.0.4",
-    "stateful-dynamic-interval": "1.0.1",
-    "teoria": "^2.5.0"
+    "bach-js": "github:slurmulon/bach-js",
+    "howler": "^2.1.3",
+    "stateful-dynamic-interval": "1.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

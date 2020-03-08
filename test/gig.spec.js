@@ -2,7 +2,7 @@ import chai from 'chai'
 import chaiThings from 'chai-things'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
-import { Track } from '../dist/bundle'
+import { Gig } from '../dist/bundle'
 import fixtures from './fixtures'
 
 const should = chai.should()
@@ -10,10 +10,10 @@ const should = chai.should()
 chai.use(chaiThings)
 chai.use(sinonChai)
 
-describe('Track', () => {
+describe('Gig', () => {
   describe('constructor', () => {
     it('should throw a TypeError if the source data is not in Bach.JSON', () => {
-      (() => new Track({ source: { foo: 'bar' } })).should.throw(TypeError)
+      (() => new Gig({ source: { foo: 'bar' } })).should.throw(TypeError)
     })
   })
 
@@ -22,33 +22,33 @@ describe('Track', () => {
     const audio  = fixtures.fast.audio
 
     it('should play the current beat', done => {
-      const track = new Track({ source, audio })
+      const gig = new Gig({ source, audio })
       const wait  = source.headers['ms-per-beat']
 
-      track.step = sinon.spy()
+      gig.step = sinon.spy()
 
-      track.start()
+      gig.start()
 
       setTimeout(() => {
-        track.step.should.have.been.called
+        gig.step.should.have.been.called
 
         done()
       }, wait + 5)
     }).timeout(0)
 
     it('should wait ms-per-beat between each step', done => {
-      const track = new Track({ source, audio })
+      const gig = new Gig({ source, audio })
       const wait = source.headers['ms-per-beat']
       const steps = 3
       const duration = wait * steps
       const startTime = Date.now()
       let lastTime
 
-      track.step = () => {
+      gig.step = () => {
         lastTime = Date.now()
       }
 
-      track.start()
+      gig.start()
 
       setTimeout(() => {
         const targetTime = startTime + duration
@@ -60,30 +60,30 @@ describe('Track', () => {
     }).timeout(0)
 
     it('should recursively step through the track\'s measures and beats', done => {
-      const track = new Track({ source, audio, tempo: 240 })
+      const gig = new Gig({ source, audio, tempo: 240 })
       const wait  = source.headers['ms-per-beat']
       const steps = 2
       const duration = wait * steps
 
-      track.step = sinon.spy()
+      gig.step = sinon.spy()
 
-      track.start()
+      gig.start()
 
       setTimeout(() => {
-        track.step.callCount.should.equal(4)
+        gig.step.callCount.should.equal(4)
 
         done()
       }, duration - 5)
     }).timeout(0)
 
     it('should call the step\'s play callback at the beginning of each beat', done => {
-      const track = new Track({ source, audio, tempo: 240 })
+      const gig = new Gig({ source, audio, tempo: 240 })
       const wait  = source.headers['ms-per-beat']
       const callback = sinon.spy()
 
-      track.on('beat:play', callback)
+      gig.on('beat:play', callback)
 
-      track.start()
+      gig.start()
 
       setTimeout(() => {
         callback.should.have.been.calledTwice
@@ -93,15 +93,15 @@ describe('Track', () => {
     }).timeout(0)
 
     it('should call the step\'s stop callback at the end of each beat', done => {
-      const track = new Track({ source, audio, tempo: 240 })
+      const gig = new Gig({ source, audio, tempo: 240 })
       const wait  = source.headers['ms-per-beat']
       const steps = 2
       const duration = wait * steps
       const callback = sinon.spy()
 
-      track.on('beat:stop', callback)
+      gig.on('beat:stop', callback)
 
-      track.start()
+      gig.start()
 
       setTimeout(() => {
         callback.should.have.been.calledTwice
@@ -112,7 +112,7 @@ describe('Track', () => {
   })
 
   describe('play', () => {
-
+    // TODO
   })
 
   describe('start', () => {
@@ -122,15 +122,15 @@ describe('Track', () => {
     it('should instantiate the clock after an optional delay', done => {
       const timer = sinon.spy()
       const delay = 2
-      const track = new Track({ source, audio, delay, timer })
-      const wait = track.interval * delay
+      const gig = new Gig({ source, audio, delay, timer })
+      const wait = gig.interval * delay
 
-      track.start()
+      gig.start()
 
       timer.should.not.have.been.called
 
       setTimeout(() => {
-        timer.should.have.been.calledWith(track)
+        timer.should.have.been.calledWith(gig)
 
         done()
       }, wait)
@@ -139,11 +139,11 @@ describe('Track', () => {
     it('should emit the start event after an optional delay', done => {
       const emit = sinon.spy()
       const delay = 2
-      const track = new Track({ source, audio, delay })
-      const wait = track.interval * delay
+      const gig = new Gig({ source, audio, delay })
+      const wait = gig.interval * delay
 
-      track.on('start', emit)
-      track.start()
+      gig.on('start', emit)
+      gig.start()
 
       emit.should.not.have.been.called
 
@@ -156,123 +156,123 @@ describe('Track', () => {
   })
 
   describe('stop', () => {
-    let track
+    let gig
     const source = fixtures.fast.json
     const audio  = fixtures.fast.audio
 
     beforeEach(() => {
-      track = new Track({ source, audio })
-      track.clock = { stop: sinon.spy() }
-      track.music = { once: (topic, func) => func(), play: sinon.spy(), stop: sinon.spy() }
+      gig = new Gig({ source, audio })
+      gig.clock = { stop: sinon.spy() }
+      gig.music = { once: (topic, func) => func(), play: sinon.spy(), stop: sinon.spy() }
     })
 
     it('should return early if no clock is provided', () => {
-      const stopped = track.stop()
+      const stopped = gig.stop()
 
       should.not.exist(stopped)
     })
 
     it('should stop the audio', done => {
-      track.on('play', () => {
-        track.stop()
+      gig.on('play', () => {
+        gig.stop()
 
-        track.music.stop.should.have.been.called
+        gig.music.stop.should.have.been.called
 
         done()
       })
 
-      track.play()
+      gig.play()
     }).timeout(0)
 
     it('should stop the clock', done => {
-      track.on('play', () => {
-        track.stop()
+      gig.on('play', () => {
+        gig.stop()
 
-        track.clock.stop.should.have.been.called
+        gig.clock.stop.should.have.been.called
 
         done()
       })
 
-      track.play()
+      gig.play()
     }).timeout(0)
 
     it('should emit a \'stop\' event', done => {
-      track.on('play', () => {
-        track.emit = sinon.spy()
+      gig.on('play', () => {
+        gig.emit = sinon.spy()
 
-        track.stop()
+        gig.stop()
 
-        track.emit.should.have.been.calledWith('stop')
+        gig.emit.should.have.been.calledWith('stop')
 
         done()
       })
 
-      track.play()
+      gig.play()
     }).timeout(0)
   })
 
   describe('pause', () => {
-    let track
+    let gig
     const source = fixtures.fast.json
     const audio  = fixtures.fast.audio
 
     beforeEach(() => {
-      track = new Track({ source, audio })
-      track.clock = { pause: sinon.spy() }
-      track.music = { once: (topic, func) => func(), play: sinon.spy(), pause: sinon.spy() }
+      gig = new Gig({ source, audio })
+      gig.clock = { pause: sinon.spy() }
+      gig.music = { once: (topic, func) => func(), play: sinon.spy(), pause: sinon.spy() }
     })
 
     it('should pause the audio', done => {
-      track.on('play', () => {
-        track.pause()
+      gig.on('play', () => {
+        gig.pause()
 
-        track.music.pause.should.have.been.called
+        gig.music.pause.should.have.been.called
 
         done()
       })
 
-      track.play()
+      gig.play()
     }).timeout(0)
 
     it('should pause the clock', done => {
-      track.on('play', () => {
-        track.pause()
+      gig.on('play', () => {
+        gig.pause()
 
-        track.clock.pause.should.have.been.called
+        gig.clock.pause.should.have.been.called
 
         done()
       })
 
-      track.play()
+      gig.play()
     }).timeout(0)
 
     it('should emit a \'pause\' event', done => {
-      track.on('play', () => {
-        track.emit = sinon.spy()
+      gig.on('play', () => {
+        gig.emit = sinon.spy()
 
-        track.pause()
+        gig.pause()
 
-        track.emit.should.have.been.calledWith('pause')
+        gig.emit.should.have.been.calledWith('pause')
 
         done()
       })
 
-      track.play()
+      gig.play()
     }).timeout(0)
   })
 
   describe('resume', () => {
-    let track
+    let gig
     const source = fixtures.fast.json
     const audio  = fixtures.fast.audio
 
     beforeEach(() => {
-      track = new Track({ source, audio })
-      track.clock = {
+      gig = new Gig({ source, audio })
+      gig.clock = {
         pause: sinon.spy(),
         resume: sinon.spy()
       }
-      track.music = {
+      gig.music = {
         once: (topic, func) => func(),
         play: sinon.spy(),
         pause: sinon.spy(),
@@ -281,50 +281,50 @@ describe('Track', () => {
     })
 
     it('should resume the audio', done => {
-      track.on('play', () => {
-        track.pause()
-        track.resume()
+      gig.on('play', () => {
+        gig.pause()
+        gig.resume()
 
-        track.music.play.should.have.been.called
+        gig.music.play.should.have.been.called
 
         done()
       })
 
-      track.play()
+      gig.play()
     }).timeout(0)
 
     it('should resume/play the clock', done => {
-      track.on('play', () => {
-        track.pause()
-        track.resume()
+      gig.on('play', () => {
+        gig.pause()
+        gig.resume()
 
-        track.clock.resume.should.have.been.called
+        gig.clock.resume.should.have.been.called
 
         done()
       })
 
-      track.play()
+      gig.play()
     }).timeout(0)
 
     it('should emit a \'resume\' event', done => {
-      track.on('play', () => {
-        track.emit = sinon.spy()
+      gig.on('play', () => {
+        gig.emit = sinon.spy()
 
-        track.pause()
-        track.resume()
+        gig.pause()
+        gig.resume()
 
-        track.emit.should.have.been.calledWith('resume')
+        gig.emit.should.have.been.calledWith('resume')
 
         done()
       })
 
-      track.play()
+      gig.play()
     }).timeout(0)
   })
 
   describe('interval', () => {
     it('should return ms-per-beat by default', () => {
-
+      // TODO
     })
   })
 })

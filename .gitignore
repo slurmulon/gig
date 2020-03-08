@@ -2,5 +2,9 @@ node_modules/
 npm-debug.log
 lib/
 dist/
+test/fixtures/**/*
+!test/fixtures/fast.bach.json
+!test/fixtures/slow.bach.json
 *.wav
 *.mp3
+*_BAK/
