@@ -1,6 +1,6 @@
 {
   "name": "gig",
-  "version": "0.0.0",
+  "version": "1.1.0",
   "description": "Bach player for JS",
   "main": "dist/bundle.js",
   "scripts": {
@@ -21,8 +21,8 @@
     "bach",
     "player"
   ],
-  "author": "MadHax, LLC",
-  "license": "ISC",
+  "author": "Erik Vavro",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/slurmulon/gig/issues"
   },
