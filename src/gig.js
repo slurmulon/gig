@@ -1,13 +1,12 @@
-import { Track as Bach, Beat, validate } from 'bach-js'
+import { Track, Beat, validate } from 'bach-js'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 import EventEmitter from 'events'
 
-// TODO: Probably just rename to Gig with latest work (bach-js)
 /**
  * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
  */
-export class Track extends Bach {
+export class Gig extends Track {
 
   /**
    * @param {Object} source track represented in Bach.JSON
