@@ -36,7 +36,7 @@ A ClojureScript module will be introduced soon so that this step becomes unneces
 Once your `bach` track has been [compiled into `bach.json`](https://github.com/slurmulon/bach#usage), it can then be consumed and rendered by `gig`.
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 import source from './bouree.bach.json'
 
 const track = new Track({ source })
@@ -56,7 +56,7 @@ Defines the core musical data of the track in [`bach.json`](https://github.com/s
  - **Required**: `true`
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 
 const track = new Track({
   source: {
@@ -74,7 +74,7 @@ Specifies the audio data to synchronize the musical `bach.json` data with.
  - **Required**: `false` (may be inherited from `source` headers)
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 
 const track = new Track({
   source: { /* ... */ },
@@ -91,7 +91,7 @@ Determines if the audio and music data should loop forever.
  - **Default**: `false`
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 
 const track = new Track({
   source: { /* ... */ },
@@ -107,7 +107,7 @@ Specifies the tempo at which the music and audio data should be played at.
  - **Required**: `true` (may be inherited from `source` headers)
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 
 const track = new Track({
   source: { /* ... */ },
@@ -127,7 +127,7 @@ Useful for supporting count-ins to tracks.
  - **Default**: `0`
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 
 const track = new Track({
   source: { /* ... */ },
@@ -143,7 +143,7 @@ const track = new Track({
 Loads the audio data and kicks off the internal synchronization clock once everything is ready.
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 import source from './lullaby.bach.json'
 
 const track = new Track({ source })
@@ -162,7 +162,7 @@ Instantiates a new clock from the provided timer, acting as the primary synchron
 > Until `play()` is called, **no audio** will play at all, and, if there's any delay between the `start()` and `play()` calls, the internal clock will get out of sync!
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 import source from './lullaby.bach.json'
 
 const track = new Track({ source })
@@ -175,7 +175,7 @@ track.start()
 Stops the audio and synchronization clock. Does not allow either of them to be resumed.
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 import source from './lullaby.bach.json'
 
 const track = new Track({ source })
@@ -192,7 +192,7 @@ setTimeout(() => {
 Pauses the audio and synchronization clock. May be resumed at any point via the `resume()` method.
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 import source from './lullaby.bach.json'
 
 const track = new Track({ source })
@@ -209,7 +209,7 @@ setTimeout(() => {
 Resumes a previously paused audio synchronization clock.
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 import source from './lullaby.bach.json'
 
 const track = new Track({ source })
@@ -230,7 +230,7 @@ setTimeout(() => {
 Mutes the track audio. Has no effect on the synchronization clock.
 
 ```js
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 import source from './lullaby.bach.json'
 
 const track = new Track({ source })
@@ -313,7 +313,7 @@ In this example, we're using [`worker-timers`](https://npmjs.com/worker-timers),
 
 ```js
 import source from './lullaby.bach.json'
-import { Track } from 'gig'
+import { Gig as Track } from 'gig'
 import { setStatefulDynterval as clock } from 'stateful-dynamic-interval'
 import * as workerTimers from 'worker-timers'
 
