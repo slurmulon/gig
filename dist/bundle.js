@@ -267,7 +267,7 @@ var Gig = function (_Track) {
 
       this.bump();
 
-      return Object.assign(context || {}, { wait: wait });
+      return Object.assign({}, context, { wait: wait });
     }
 
     /**

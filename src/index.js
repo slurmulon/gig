@@ -180,7 +180,7 @@ export class Gig extends Track {
 
     this.bump()
 
-    return Object.assign(context || {}, { wait })
+    return Object.assign({}, context, { wait })
   }
 
   /**
