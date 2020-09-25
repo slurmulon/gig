@@ -69,10 +69,12 @@ export class Gig extends Track {
    *
    * @returns {Object}
    */
+  // FIXME: May have an issue when track only has one measure
   get cursor () {
+    // console.log('[gig:cursor] this.index', this.index, this.data[this.index.measure].length - 1)
     return {
-      measure : Math.min(Math.max(this.index.measure, 0), this.data.length),
-      beat    : Math.min(Math.max(this.index.beat,    0), this.data[0].length)
+      measure : Math.min(Math.max(this.index.measure, 0), this.data.length - 1),
+      beat    : Math.min(Math.max(this.index.beat,    0), this.data[this.index.measure].length - 1)
     }
   }
 
@@ -190,7 +192,7 @@ export class Gig extends Track {
   bump () {
     const numOf = {
       measures : this.data.length,
-      beats    : this.data[0].length
+      beats    : this.data[this.index.measure].length
     }
 
     const limit = {
@@ -202,6 +204,8 @@ export class Gig extends Track {
       measure : this.index.beat === (limit.beat - 1) ? 1 : 0,
       beat    : 1
     }
+
+    // console.log('[gig:bump] numOf, limit, increment', numOf, limit, increment)
 
     this.index.measure = (this.index.measure + increment.measure) % limit.measure
     this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
