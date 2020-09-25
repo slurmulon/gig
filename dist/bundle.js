@@ -280,7 +280,6 @@ var Gig = function (_Track) {
     value: function bump() {
       var numOf = {
         measures: this.data.length,
-        // beats    : this.data[0].length
         beats: this.data[this.index.measure].length
       };
 
@@ -293,8 +292,6 @@ var Gig = function (_Track) {
         measure: this.index.beat === limit.beat - 1 ? 1 : 0,
         beat: 1
       };
-
-      console.log('[gig:bump] numOf, limit, increment', numOf, limit, increment);
 
       this.index.measure = (this.index.measure + increment.measure) % limit.measure;
       this.index.beat = (this.index.beat + increment.beat) % limit.beat;
@@ -344,6 +341,7 @@ var Gig = function (_Track) {
      *
      * @returns {Object}
      */
+    // FIXME: May have an issue when track only has one measure
 
   }, {
     key: 'cursor',
@@ -351,7 +349,6 @@ var Gig = function (_Track) {
       console.log('[gig:cursor] this.index', this.index, this.data[this.index.measure].length - 1);
       return {
         measure: Math.min(Math.max(this.index.measure, 0), this.data.length - 1),
-        // NOTE: Using index.measure here doesn't fix iterating through uneven matrices as expected/hoped
         beat: Math.min(Math.max(this.index.beat, 0), this.data[this.index.measure].length - 1)
       };
     }
