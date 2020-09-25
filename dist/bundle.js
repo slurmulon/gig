@@ -280,7 +280,7 @@ var Gig = function (_Track) {
     value: function bump() {
       var numOf = {
         measures: this.data.length,
-        beats: this.data[0].length
+        beats: this.data[this.index.measure].length
       };
 
       var limit = {
@@ -341,13 +341,15 @@ var Gig = function (_Track) {
      *
      * @returns {Object}
      */
+    // FIXME: May have an issue when track only has one measure
 
   }, {
     key: 'cursor',
     get: function get$$1() {
+      console.log('[gig:cursor] this.index', this.index, this.data[this.index.measure].length - 1);
       return {
-        measure: Math.min(Math.max(this.index.measure, 0), this.data.length),
-        beat: Math.min(Math.max(this.index.beat, 0), this.data[0].length)
+        measure: Math.min(Math.max(this.index.measure, 0), this.data.length - 1),
+        beat: Math.min(Math.max(this.index.beat, 0), this.data[this.index.measure].length - 1)
       };
     }
   }]);

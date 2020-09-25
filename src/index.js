@@ -71,8 +71,8 @@ export class Gig extends Track {
    */
   get cursor () {
     return {
-      measure : Math.min(Math.max(this.index.measure, 0), this.data.length),
-      beat    : Math.min(Math.max(this.index.beat,    0), this.data[0].length)
+      measure : Math.min(Math.max(this.index.measure, 0), this.data.length - 1),
+      beat    : Math.min(Math.max(this.index.beat,    0), this.data[this.index.measure].length - 1)
     }
   }
 
@@ -190,7 +190,7 @@ export class Gig extends Track {
   bump () {
     const numOf = {
       measures : this.data.length,
-      beats    : this.data[0].length
+      beats    : this.data[this.index.measure].length
     }
 
     const limit = {
