@@ -76,16 +76,30 @@ export class Gig extends Track {
     }
   }
 
-  get audioCursor () {
+  /**
+   * Determines how much time remains (in milliseconds) until the next tick.
+   *
+   * @returns {Number}
+   */
+  get until () {
+    return this.interval * (1 - (this.beatAt() % 1))
+  }
+
+  /**
+   * Determines the progress of the track's audio (in milliseconds).
+   *
+   * @returns {Number}
+   */
+  get progress () {
     return this.music.seek() * 1000
   }
 
   /**
-   * Determines the duration of the track's audio data (in milliseconds).
+   * Determines the duration of the track's audio (in milliseconds).
    *
    * @returns {Number}
    */
-  get audioDuration () {
+  get duration () {
     return this.music.duration() * 1000
   }
 
@@ -119,7 +133,6 @@ export class Gig extends Track {
   // FIXME: sync audio playback with `start` delay
   play () {
     this.music.on('load', () => {
-      console.log('[gig:play] music laoded!')
       if (!this.clock) this.start()
 
       this.music.play()
@@ -134,9 +147,7 @@ export class Gig extends Track {
     if (!this.clock) return
 
     this.music.stop()
-    // EXPERIMENT
     this.music.unload()
-    // END
     this.clock.stop()
     this.emit('stop')
   }
@@ -176,7 +187,7 @@ export class Gig extends Track {
   // NOTE: if we assume every interval is the same, relative to tempo, this could work
   seek (to) {
     this.music.seek(to)
-    // TODO: this.recover()
+    // TODO: this.reorient()
     this.emit('seek')
   }
 
@@ -186,7 +197,6 @@ export class Gig extends Track {
    * @param {Object} [context] stateful dynamic interval context
    * @returns {Object} updated interval context
    */
-  // TODO: support `bach.Set` (i.e. concurrent elements)
   step (context) {
     const { last, interval, state } = this
     const { beat } = state
@@ -223,36 +233,6 @@ export class Gig extends Track {
 
     this.index.measure = (this.index.measure + increment.measure) % limit.measure
     this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
-  }
-
-  destroy () {
-    this.stop()
-    this.music.unload()
-  }
-
-  beatAt (time) {
-    return time / this.interval
-  }
-
-  measureAt (time) {
-    return this.beatAt(time) / this.headers['pulse-beats-per-measure']
-  }
-
-  /*
-   * Re-orients the cursor based on the seek position of the audio.
-   * Useful for coming back to inactive tabs, and otherwise ensuring the clock is sync'd with audio (without relying on spinlocked frames).
-   */
-  // recover () {
-  // reorient () {
-  resync () {
-    const time = this.audioCursor()
-    // const duration = this.audioDuration()
-    // const interval = this.interval
-    // const beat = progress / this.interval
-    // const measure = this.headers['pulse-beats-per-measure']
-    const beat = this.beatAt(time)
-    const measure = this.measureAt(time)
-
   }
 
   /**
