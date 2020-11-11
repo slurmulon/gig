@@ -77,6 +77,33 @@ export class Gig extends Track {
   }
 
   /**
+   * Determines how much time remains (in milliseconds) until the next tick.
+   *
+   * @returns {Number}
+   */
+  get until () {
+    return this.interval * (1 - (this.beatAt() % 1))
+  }
+
+  /**
+   * Determines the progress of the track's audio (in milliseconds).
+   *
+   * @returns {Number}
+   */
+  get progress () {
+    return this.music.seek() * 1000
+  }
+
+  /**
+   * Determines the duration of the track's audio (in milliseconds).
+   *
+   * @returns {Number}
+   */
+  get duration () {
+    return this.music.duration() * 1000
+  }
+
+  /**
    * Synchronizes track with the Howler API
    */
   listen () {
@@ -105,7 +132,7 @@ export class Gig extends Track {
    */
   // FIXME: sync audio playback with `start` delay
   play () {
-    this.music.once('load', () => {
+    this.music.on('load', () => {
       if (!this.clock) this.start()
 
       this.music.play()
@@ -120,6 +147,7 @@ export class Gig extends Track {
     if (!this.clock) return
 
     this.music.stop()
+    this.music.unload()
     this.clock.stop()
     this.emit('stop')
   }
@@ -159,6 +187,7 @@ export class Gig extends Track {
   // NOTE: if we assume every interval is the same, relative to tempo, this could work
   seek (to) {
     this.music.seek(to)
+    // TODO: this.reorient()
     this.emit('seek')
   }
 
@@ -168,7 +197,6 @@ export class Gig extends Track {
    * @param {Object} [context] stateful dynamic interval context
    * @returns {Object} updated interval context
    */
-  // TODO: support `bach.Set` (i.e. concurrent elements)
   step (context) {
     const { last, interval, state } = this
     const { beat } = state
@@ -212,6 +240,13 @@ export class Gig extends Track {
    */
   loading () {
     return this.music.state() === 'loading'
+  }
+
+  /**
+   * Determines if the track's music is loaded
+   */
+  loaded () {
+    return this.music.state() === 'loaded'
   }
 
 }

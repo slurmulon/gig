@@ -170,7 +170,7 @@ var Gig = function (_Track) {
     value: function play() {
       var _this3 = this;
 
-      this.music.once('load', function () {
+      this.music.on('load', function () {
         if (!_this3.clock) _this3.start();
 
         _this3.music.play();
@@ -188,6 +188,7 @@ var Gig = function (_Track) {
       if (!this.clock) return;
 
       this.music.stop();
+      this.music.unload();
       this.clock.stop();
       this.emit('stop');
     }
@@ -239,6 +240,7 @@ var Gig = function (_Track) {
     key: 'seek',
     value: function seek(to) {
       this.music.seek(to);
+      // TODO: this.reorient()
       this.emit('seek');
     }
 
@@ -248,7 +250,6 @@ var Gig = function (_Track) {
      * @param {Object} [context] stateful dynamic interval context
      * @returns {Object} updated interval context
      */
-    // TODO: support `bach.Set` (i.e. concurrent elements)
 
   }, {
     key: 'step',
@@ -306,6 +307,16 @@ var Gig = function (_Track) {
     value: function loading() {
       return this.music.state() === 'loading';
     }
+
+    /**
+     * Determines if the track's music is loaded
+     */
+
+  }, {
+    key: 'loaded',
+    value: function loaded() {
+      return this.music.state() === 'loaded';
+    }
   }, {
     key: 'state',
     get: function get$$1() {
@@ -349,6 +360,42 @@ var Gig = function (_Track) {
         measure: Math.min(Math.max(this.index.measure, 0), this.data.length - 1),
         beat: Math.min(Math.max(this.index.beat, 0), this.data[this.index.measure].length - 1)
       };
+    }
+
+    /**
+     * Determines how much time remains (in milliseconds) until the next tick.
+     *
+     * @returns {Number}
+     */
+
+  }, {
+    key: 'until',
+    get: function get$$1() {
+      return this.interval * (1 - this.beatAt() % 1);
+    }
+
+    /**
+     * Determines the progress of the track's audio (in milliseconds).
+     *
+     * @returns {Number}
+     */
+
+  }, {
+    key: 'progress',
+    get: function get$$1() {
+      return this.music.seek() * 1000;
+    }
+
+    /**
+     * Determines the duration of the track's audio (in milliseconds).
+     *
+     * @returns {Number}
+     */
+
+  }, {
+    key: 'duration',
+    get: function get$$1() {
+      return this.music.duration() * 1000;
     }
   }]);
   return Gig;
