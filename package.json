@@ -29,7 +29,7 @@
   "homepage": "https://github.com/slurmulon/gig#readme",
   "dependencies": {
     "bach-js": "github:slurmulon/bach-js",
-    "howler": "^2.1.3",
+    "howler": "^2.2.0",
     "stateful-dynamic-interval": "1.0.1"
   },
   "devDependencies": {
