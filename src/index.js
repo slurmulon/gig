@@ -76,6 +76,19 @@ export class Gig extends Track {
     }
   }
 
+  get audioCursor () {
+    return this.music.seek() * 1000
+  }
+
+  /**
+   * Determines the duration of the track's audio data (in milliseconds).
+   *
+   * @returns {Number}
+   */
+  get audioDuration () {
+    return this.music.duration() * 1000
+  }
+
   /**
    * Synchronizes track with the Howler API
    */
@@ -105,7 +118,8 @@ export class Gig extends Track {
    */
   // FIXME: sync audio playback with `start` delay
   play () {
-    this.music.once('load', () => {
+    this.music.on('load', () => {
+      console.log('[gig:play] music laoded!')
       if (!this.clock) this.start()
 
       this.music.play()
@@ -120,6 +134,9 @@ export class Gig extends Track {
     if (!this.clock) return
 
     this.music.stop()
+    // EXPERIMENT
+    this.music.unload()
+    // END
     this.clock.stop()
     this.emit('stop')
   }
@@ -159,6 +176,7 @@ export class Gig extends Track {
   // NOTE: if we assume every interval is the same, relative to tempo, this could work
   seek (to) {
     this.music.seek(to)
+    // TODO: this.recover()
     this.emit('seek')
   }
 
@@ -207,11 +225,48 @@ export class Gig extends Track {
     this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
   }
 
+  destroy () {
+    this.stop()
+    this.music.unload()
+  }
+
+  beatAt (time) {
+    return time / this.interval
+  }
+
+  measureAt (time) {
+    return this.beatAt(time) / this.headers['pulse-beats-per-measure']
+  }
+
+  /*
+   * Re-orients the cursor based on the seek position of the audio.
+   * Useful for coming back to inactive tabs, and otherwise ensuring the clock is sync'd with audio (without relying on spinlocked frames).
+   */
+  // recover () {
+  // reorient () {
+  resync () {
+    const time = this.audioCursor()
+    // const duration = this.audioDuration()
+    // const interval = this.interval
+    // const beat = progress / this.interval
+    // const measure = this.headers['pulse-beats-per-measure']
+    const beat = this.beatAt(time)
+    const measure = this.measureAt(time)
+
+  }
+
   /**
    * Determines if the track's music is loading
    */
   loading () {
     return this.music.state() === 'loading'
+  }
+
+  /**
+   * Determines if the track's music is loaded
+   */
+  loaded () {
+    return this.music.state() === 'loaded'
   }
 
 }
