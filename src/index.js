@@ -28,7 +28,7 @@ export class Gig extends Track {
     this.delay  = delay
     this.timer  = timer || defaultTimer
 
-    this.index = { measure: 0, beat: 0 }
+    this.index = { measure: 0, beat: 0, step: 0 }
     this.music = new Howl(Object.assign({
       src: audio,
       loop
@@ -43,7 +43,7 @@ export class Gig extends Track {
    * @returns {Object}
    */
   get state () {
-    return this.at(this.cursor.measure, this.cursor.beat)
+    return this.at(this.current.measure, this.current.beat)
   }
 
   /**
@@ -52,7 +52,7 @@ export class Gig extends Track {
    * @returns {Object}
    */
   get last () {
-    return this.at(this.cursor.measure - 1, this.cursor.beat - 1)
+    return this.at(this.current.measure - 1, this.current.beat - 1)
   }
 
   /**
@@ -61,7 +61,17 @@ export class Gig extends Track {
    * @returns {Object}
    */
   get next () {
-    return this.at(this.cursor.measure + 1, this.cursor.beat + 1)
+    return this.at(this.current.measure + 1, this.current.beat + 1)
+  }
+
+  /**
+   * Determines the number of beats in a measure
+   *
+   * @returns {number}
+   */
+  // TODO: Move to bach-js
+  get unit () {
+    return this.headers['pulse-beats-per-measure'] || 4
   }
 
   /**
@@ -69,11 +79,20 @@ export class Gig extends Track {
    *
    * @returns {Object}
    */
-  get cursor () {
+  // TODO: Rename to `current`
+  //  - Lol, rename back to `cursor` actually
+  // get cursor () {
+  get current () {
     return {
       measure : Math.min(Math.max(this.index.measure, 0), this.data.length - 1),
-      beat    : Math.min(Math.max(this.index.beat,    0), this.data[this.index.measure].length - 1)
+      beat    : Math.min(Math.max(this.index.beat,    0), this.data[this.index.measure].length - 1),
+      // cursor  : (this.index.measure * this.unit) + this.index.beat
+      // cursor  : Math.min(this.index.cursor, this.total.beats)
+      step    : Math.min(Math.max(this.index.step,    0), this.total.beats)
     }
+  }
+  get cursor () {
+    return this.current
   }
 
   /**
@@ -101,6 +120,18 @@ export class Gig extends Track {
    */
   get duration () {
     return this.music.duration() * 1000
+  }
+
+  /**
+   * Translates a monotonic time position to a global pulse beat index (i.e. "cursor")
+   *
+   * @returns {Number}
+   */
+  translate (time) {
+    const progress = time / this.duration
+    const index = this.total.beats * progress
+
+    return index
   }
 
   /**
@@ -181,13 +212,14 @@ export class Gig extends Track {
   /**
    * Seek to a new position in the track
    *
-   * @param {number} to position in the track in seconds
+   * @param {number} to position in the track in milliseconds
    */
   // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
   // NOTE: if we assume every interval is the same, relative to tempo, this could work
   seek (to) {
-    this.music.seek(to)
-    // TODO: this.reorient()
+    this.music.seek(to / 1000)
+    this.jump(to)
+    // this.music.play()
     this.emit('seek')
   }
 
@@ -206,7 +238,7 @@ export class Gig extends Track {
     if (last)   this.emit('beat:stop', last)
     if (exists) this.emit('beat:play', beat)
 
-    this.bump()
+    this.bump(beat)
 
     return Object.assign({}, context, { wait })
   }
@@ -215,24 +247,46 @@ export class Gig extends Track {
    * Increases the cursor to the next beat of the track and, if we're on the last beat,
    * also increases the cursor to the next measure.
    */
-  bump () {
-    const numOf = {
+  bump (beat) {
+    const size = {
       measures : this.data.length,
       beats    : this.data[this.index.measure].length
     }
 
     const limit = {
-      measure : Math.max(numOf.measures, 1),
-      beat    : Math.max(numOf.beats,    1)
+      measure : Math.max(size.measures, 1),
+      beat    : Math.max(size.beats,    1),
+      step    : Math.max(this.total.beats)
     }
 
     const increment = {
-      measure : this.index.beat === (limit.beat - 1) ? 1 : 0,
-      beat    : 1
+      measure: this.index.beat === (limit.beat - 1) ? 1 : 0,
+      beat: 1,
+      step: beat.exists ? 1 : 0
     }
 
     this.index.measure = (this.index.measure + increment.measure) % limit.measure
     this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
+    this.index.step    = (this.index.step    + increment.step)    % limit.step
+
+    console.log('[gig] bumped!', JSON.stringify(this.index))
+  }
+
+  /**
+   * Moves the cursor to the provided time, translated to the global pulse beat index.
+   *
+   * @param {Object} [to] monotonic timestamp or time position of audio
+   */
+  jump (to) {
+    const { beats, measures } = this.total
+    // const index = Math.floor(this.translate(to))
+    const step = Math.floor(this.translate(to))
+    const measure = Math.floor(index / measures)
+    const beat = index % pbpm
+
+    console.log('[gig:jump] measure, beat', measure, beat)
+
+    Object.assign(this.index, { measure, beat, step })
   }
 
   /**
