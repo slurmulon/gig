@@ -1,5 +1,5 @@
 import { Track } from 'bach-js'
-import { Howl } from 'howler'
+import { Howl, Howler } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 import EventEmitter from 'events'
 
@@ -29,12 +29,17 @@ export class Gig extends Track {
     this.timer  = timer || defaultTimer
 
     this.index = { measure: 0, beat: 0, step: 0 }
+    // this.index = { measure: 0, beat: 0, step: 0, tick: 0 }
     this.music = new Howl(Object.assign({
       src: audio,
       loop
     }, howler))
 
     // this.listen()
+  }
+
+  get ctx () {
+    return Howler.ctx
   }
 
   /**
@@ -88,11 +93,16 @@ export class Gig extends Track {
       beat    : Math.min(Math.max(this.index.beat,    0), this.data[this.index.measure].length - 1),
       // cursor  : (this.index.measure * this.unit) + this.index.beat
       // cursor  : Math.min(this.index.cursor, this.total.beats)
-      step    : Math.min(Math.max(this.index.step,    0), this.total.beats)
+      step    : Math.min(Math.max(this.index.step,    0), this.total.beats),
+      tick    : this.index.tick
     }
   }
   get cursor () {
     return this.current
+  }
+
+  get sound () {
+    return this.music
   }
 
   /**
@@ -123,15 +133,24 @@ export class Gig extends Track {
   }
 
   /**
-   * Translates a monotonic time position to a global pulse beat index (i.e. "cursor")
+   * Translates a monotonic time position to a global pulse beat index (i.e. "step")
    *
-   * @returns {Number}
+   * @returns {Number} time in milliseconds
    */
+  // FIXME: Think this is just generally wrong
   translate (time) {
     const progress = time / this.duration
     const index = this.total.beats * progress
 
     return index
+
+    // return this.total.beats * this.progress
+  }
+
+  /**
+   * Translates a 
+  occurs (step) {
+
   }
 
   /**
@@ -265,9 +284,19 @@ export class Gig extends Track {
       step: beat.exists ? 1 : 0
     }
 
-    this.index.measure = (this.index.measure + increment.measure) % limit.measure
-    this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
-    this.index.step    = (this.index.step    + increment.step)    % limit.step
+    // this.index.measure = (this.index.measure + increment.measure) % limit.measure
+    // this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
+    // this.index.step    = (this.index.step    + increment.step)    % limit.step
+
+    this.index.measure = Math.floor(this.index.measure + increment.measure) % limit.measure
+    this.index.beat    = Math.floor(this.index.beat    + increment.beat)    % limit.beat
+    this.index.step    = Math.floor(this.index.step    + increment.step)    % limit.step
+    // this.index.tick++
+
+
+    // for (const key in this.index) {
+    //   this.index[key] = Math.floor(this.index[key] + increment[key]) % limit[key]
+    // }
 
     console.log('[gig] bumped!', JSON.stringify(this.index))
   }
@@ -279,12 +308,14 @@ export class Gig extends Track {
    */
   jump (to) {
     const { beats, measures } = this.total
-    // const index = Math.floor(this.translate(to))
     const step = Math.floor(this.translate(to))
-    const measure = Math.floor(index / measures)
-    const beat = index % pbpm
+    const measure = Math.floor(step / measures)
+    // TODO: Consider moving towards absolute values (e.g. 2.334 vs. 2), but requires refactoring/gaurds around .bump
+    // const step = this.translate(to)
+    // const measure = step / measures
+    const beat = step % this.pulses
 
-    console.log('[gig:jump] measure, beat', measure, beat)
+    console.log('[gig:jump] to, measure, beat, step', to, measure, beat, step)
 
     Object.assign(this.index, { measure, beat, step })
   }

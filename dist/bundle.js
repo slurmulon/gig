@@ -110,8 +110,9 @@ var Gig = function (_Track) {
     _this.delay = delay;
     _this.timer = timer || defaultTimer;
 
-    _this.index = { measure: 0, beat: 0 };
-    _this.music = new howler.Howl(Object.assign({
+    _this.index = { measure: 0, beat: 0, step: 0
+      // this.index = { measure: 0, beat: 0, step: 0, tick: 0 }
+    };_this.music = new howler.Howl(Object.assign({
       src: audio,
       loop: loop
     }, howler$$1));
@@ -120,20 +121,35 @@ var Gig = function (_Track) {
     return _this;
   }
 
-  /**
-   * Provides the measure and beat found at the track's cursor
-   *
-   * @returns {Object}
-   */
-
-
   createClass(Gig, [{
-    key: 'listen',
+    key: 'translate',
 
 
     /**
+     * Translates a monotonic time position to a global pulse beat index (i.e. "step")
+     *
+     * @returns {Number} time in milliseconds
+     */
+    // FIXME: Think this is just generally wrong
+    value: function translate(time) {
+      var progress = time / this.duration;
+      var index = this.total.beats * progress;
+
+      return index;
+
+      // return this.total.beats * this.progress
+    }
+
+    /**
+     * Translates a 
+    occurs (step) {
+     }
+     /**
      * Synchronizes track with the Howler API
      */
+
+  }, {
+    key: 'listen',
     value: function listen() {
       this.music.on('play', this.play);
       this.music.on('pause', this.pause);
@@ -231,7 +247,7 @@ var Gig = function (_Track) {
     /**
      * Seek to a new position in the track
      *
-     * @param {number} to position in the track in seconds
+     * @param {number} to position in the track in milliseconds
      */
     // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
     // NOTE: if we assume every interval is the same, relative to tempo, this could work
@@ -239,8 +255,9 @@ var Gig = function (_Track) {
   }, {
     key: 'seek',
     value: function seek(to) {
-      this.music.seek(to);
-      // TODO: this.reorient()
+      this.music.seek(to / 1000);
+      this.jump(to);
+      // this.music.play()
       this.emit('seek');
     }
 
@@ -266,7 +283,7 @@ var Gig = function (_Track) {
       if (last) this.emit('beat:stop', last);
       if (exists) this.emit('beat:play', beat);
 
-      this.bump();
+      this.bump(beat);
 
       return Object.assign({}, context, { wait: wait });
     }
@@ -278,24 +295,63 @@ var Gig = function (_Track) {
 
   }, {
     key: 'bump',
-    value: function bump() {
-      var numOf = {
+    value: function bump(beat) {
+      var size = {
         measures: this.data.length,
         beats: this.data[this.index.measure].length
       };
 
       var limit = {
-        measure: Math.max(numOf.measures, 1),
-        beat: Math.max(numOf.beats, 1)
+        measure: Math.max(size.measures, 1),
+        beat: Math.max(size.beats, 1),
+        step: Math.max(this.total.beats)
       };
 
       var increment = {
         measure: this.index.beat === limit.beat - 1 ? 1 : 0,
-        beat: 1
-      };
+        beat: 1,
+        step: beat.exists ? 1 : 0
 
-      this.index.measure = (this.index.measure + increment.measure) % limit.measure;
-      this.index.beat = (this.index.beat + increment.beat) % limit.beat;
+        // this.index.measure = (this.index.measure + increment.measure) % limit.measure
+        // this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
+        // this.index.step    = (this.index.step    + increment.step)    % limit.step
+
+      };this.index.measure = Math.floor(this.index.measure + increment.measure) % limit.measure;
+      this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat;
+      this.index.step = Math.floor(this.index.step + increment.step) % limit.step;
+      // this.index.tick++
+
+
+      // for (const key in this.index) {
+      //   this.index[key] = Math.floor(this.index[key] + increment[key]) % limit[key]
+      // }
+
+      console.log('[gig] bumped!', JSON.stringify(this.index));
+    }
+
+    /**
+     * Moves the cursor to the provided time, translated to the global pulse beat index.
+     *
+     * @param {Object} [to] monotonic timestamp or time position of audio
+     */
+
+  }, {
+    key: 'jump',
+    value: function jump(to) {
+      var _total = this.total,
+          beats = _total.beats,
+          measures = _total.measures;
+
+      var step = Math.floor(this.translate(to));
+      var measure = Math.floor(step / measures);
+      // TODO: Consider moving towards absolute values (e.g. 2.334 vs. 2), but requires refactoring/gaurds around .bump
+      // const step = this.translate(to)
+      // const measure = step / measures
+      var beat = step % this.pulses;
+
+      console.log('[gig:jump] to, measure, beat, step', to, measure, beat, step);
+
+      Object.assign(this.index, { measure: measure, beat: beat, step: step });
     }
 
     /**
@@ -318,9 +374,21 @@ var Gig = function (_Track) {
       return this.music.state() === 'loaded';
     }
   }, {
+    key: 'ctx',
+    get: function get$$1() {
+      return howler.Howler.ctx;
+    }
+
+    /**
+     * Provides the measure and beat found at the track's cursor
+     *
+     * @returns {Object}
+     */
+
+  }, {
     key: 'state',
     get: function get$$1() {
-      return this.at(this.cursor.measure, this.cursor.beat);
+      return this.at(this.current.measure, this.current.beat);
     }
 
     /**
@@ -332,7 +400,7 @@ var Gig = function (_Track) {
   }, {
     key: 'last',
     get: function get$$1() {
-      return this.at(this.cursor.measure - 1, this.cursor.beat - 1);
+      return this.at(this.current.measure - 1, this.current.beat - 1);
     }
 
     /**
@@ -344,7 +412,20 @@ var Gig = function (_Track) {
   }, {
     key: 'next',
     get: function get$$1() {
-      return this.at(this.cursor.measure + 1, this.cursor.beat + 1);
+      return this.at(this.current.measure + 1, this.current.beat + 1);
+    }
+
+    /**
+     * Determines the number of beats in a measure
+     *
+     * @returns {number}
+     */
+    // TODO: Move to bach-js
+
+  }, {
+    key: 'unit',
+    get: function get$$1() {
+      return this.headers['pulse-beats-per-measure'] || 4;
     }
 
     /**
@@ -352,14 +433,31 @@ var Gig = function (_Track) {
      *
      * @returns {Object}
      */
+    // TODO: Rename to `current`
+    //  - Lol, rename back to `cursor` actually
+    // get cursor () {
 
   }, {
-    key: 'cursor',
+    key: 'current',
     get: function get$$1() {
       return {
         measure: Math.min(Math.max(this.index.measure, 0), this.data.length - 1),
-        beat: Math.min(Math.max(this.index.beat, 0), this.data[this.index.measure].length - 1)
+        beat: Math.min(Math.max(this.index.beat, 0), this.data[this.index.measure].length - 1),
+        // cursor  : (this.index.measure * this.unit) + this.index.beat
+        // cursor  : Math.min(this.index.cursor, this.total.beats)
+        step: Math.min(Math.max(this.index.step, 0), this.total.beats),
+        tick: this.index.tick
       };
+    }
+  }, {
+    key: 'cursor',
+    get: function get$$1() {
+      return this.current;
+    }
+  }, {
+    key: 'sound',
+    get: function get$$1() {
+      return this.music;
     }
 
     /**
