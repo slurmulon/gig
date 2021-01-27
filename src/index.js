@@ -1,4 +1,4 @@
-import { Track } from 'bach-js'
+import { Track, Sections } from 'bach-js'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
 import EventEmitter from 'events'
@@ -28,13 +28,21 @@ export class Gig extends Track {
     this.delay  = delay
     this.timer  = timer || defaultTimer
 
-    this.index = { measure: 0, beat: 0 }
+    this.index = { measure: 0, beat: 0, section: 0 }
     this.music = new Howl(Object.assign({
       src: audio,
       loop
     }, howler))
 
     // this.listen()
+  }
+
+  /** Provides all of the sections (i.e. the identifiable parts/transitions) of a track
+   *
+   * @returns {Array}
+   */
+  get sections () {
+    return new Sections(this.source).all
   }
 
   /**
@@ -51,6 +59,7 @@ export class Gig extends Track {
    *
    * @returns {Object}
    */
+  // TODO: Remove/refactor, this is pointless (we just want to go back 1 cursor index, not both a measure and beat!)
   get last () {
     return this.at(this.cursor.measure - 1, this.cursor.beat - 1)
   }
@@ -60,24 +69,38 @@ export class Gig extends Track {
    *
    * @returns {Object}
    */
+  // TODO: Remove/refactor, this is pointless (we just want to go back 1 cursor index, not both a measure and beat!)
   get next () {
     return this.at(this.cursor.measure + 1, this.cursor.beat + 1)
   }
 
   /**
-   * Determines the cursors of both the current measure and beat of the track
+   * Determines the cursors of the current measure, beat and section of the track
    *
    * @returns {Object}
    */
   get cursor () {
     return {
-      measure : Math.min(Math.max(this.index.measure, 0), this.data.length - 1),
-      beat    : Math.min(Math.max(this.index.beat,    0), this.data[this.index.measure].length - 1)
+      measure : Math.min(Math.max(this.index.measure, 0), this.size.measures - 1),
+      beat    : Math.min(Math.max(this.index.beat,    0), this.size.beats    - 1),
+      section : Math.min(Math.max(this.index.section, 0), this.size.sections - 1)
     }
   }
 
   /**
-   * Determines how much time remains (in milliseconds) until the next tick.
+   * Detrmines the total number of measures, beats and sections in a track
+   */
+  // TODO: Consider moving to `bach-js/Track`
+  get size () {
+    return {
+      measures : this.data.length,
+      beats    : this.data[this.index.measure].length,
+      sections : this.sections.length,
+    }
+  }
+
+  /**
+   * Determines how much time remains (in milliseconds) until the next step.
    *
    * @returns {Number}
    */
@@ -138,6 +161,8 @@ export class Gig extends Track {
       this.music.play()
       this.emit('play')
     })
+
+    return this
   }
 
   /**
@@ -150,6 +175,8 @@ export class Gig extends Track {
     this.music.unload()
     this.clock.stop()
     this.emit('stop')
+
+    return this
   }
 
   /**
@@ -159,6 +186,8 @@ export class Gig extends Track {
     this.music.pause()
     this.clock.pause()
     this.emit('pause')
+
+    return this
   }
 
   /**
@@ -168,6 +197,8 @@ export class Gig extends Track {
     this.music.play()
     this.clock.resume()
     this.emit('resume')
+
+    return this
   }
 
   /**
@@ -176,6 +207,8 @@ export class Gig extends Track {
   mute () {
     this.music.mute()
     this.emit('mute')
+
+    return this
   }
 
   /**
@@ -189,6 +222,8 @@ export class Gig extends Track {
     this.music.seek(to)
     // TODO: this.reorient()
     this.emit('seek')
+
+    return this
   }
 
   /**
@@ -206,7 +241,7 @@ export class Gig extends Track {
     if (last)   this.emit('beat:stop', last)
     if (exists) this.emit('beat:play', beat)
 
-    this.bump()
+    this.bump(beat)
 
     return Object.assign({}, context, { wait })
   }
@@ -215,24 +250,39 @@ export class Gig extends Track {
    * Increases the cursor to the next beat of the track and, if we're on the last beat,
    * also increases the cursor to the next measure.
    */
-  bump () {
-    const numOf = {
-      measures : this.data.length,
-      beats    : this.data[this.index.measure].length
-    }
-
+  bump (beat) {
     const limit = {
-      measure : Math.max(numOf.measures, 1),
-      beat    : Math.max(numOf.beats,    1)
+      measure : Math.max(this.size.measures, 1),
+      beat    : Math.max(this.size.beats,    1),
+      section : Math.max(this.size.sections, 1)
     }
 
     const increment = {
-      measure : this.index.beat === (limit.beat - 1) ? 1 : 0,
-      beat    : 1
+      measure: this.index.beat === (limit.beat - 1) ? 1 : 0,
+      beat: 1,
+      section: beat.exists ? 1 : 0
     }
 
-    this.index.measure = (this.index.measure + increment.measure) % limit.measure
-    this.index.beat    = (this.index.beat    + increment.beat)    % limit.beat
+    this.index.measure = Math.floor(this.index.measure + increment.measure) % limit.measure
+    this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat
+    this.index.section = Math.floor(this.index.section + increment.section) % limit.section
+  }
+
+  /**
+   * Removes all active event listeners
+   *
+   * TODO: Consider automatically stopping the track here if already running
+   */
+  // purge
+  clear () {
+    return this.removeAllListeners()
+  }
+
+  /**
+   * Immediately stops the track, its clock, and removes all active event listeners
+   */
+  kill () {
+    return this.stop().clear()
   }
 
   /**
