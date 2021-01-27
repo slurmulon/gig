@@ -110,7 +110,7 @@ var Gig = function (_Track) {
     _this.delay = delay;
     _this.timer = timer || defaultTimer;
 
-    _this.index = { measure: 0, beat: 0 };
+    _this.index = { measure: 0, beat: 0, section: 0 };
     _this.music = new howler.Howl(Object.assign({
       src: audio,
       loop: loop
@@ -120,10 +120,9 @@ var Gig = function (_Track) {
     return _this;
   }
 
-  /**
-   * Provides the measure and beat found at the track's cursor
+  /** Provides all of the sections (i.e. the identifiable parts/transitions) of a track
    *
-   * @returns {Object}
+   * @returns {Array}
    */
 
 
@@ -176,6 +175,8 @@ var Gig = function (_Track) {
         _this3.music.play();
         _this3.emit('play');
       });
+
+      return this;
     }
 
     /**
@@ -191,6 +192,8 @@ var Gig = function (_Track) {
       this.music.unload();
       this.clock.stop();
       this.emit('stop');
+
+      return this;
     }
 
     /**
@@ -203,6 +206,8 @@ var Gig = function (_Track) {
       this.music.pause();
       this.clock.pause();
       this.emit('pause');
+
+      return this;
     }
 
     /**
@@ -215,6 +220,8 @@ var Gig = function (_Track) {
       this.music.play();
       this.clock.resume();
       this.emit('resume');
+
+      return this;
     }
 
     /**
@@ -226,6 +233,8 @@ var Gig = function (_Track) {
     value: function mute() {
       this.music.mute();
       this.emit('mute');
+
+      return this;
     }
 
     /**
@@ -242,6 +251,8 @@ var Gig = function (_Track) {
       this.music.seek(to);
       // TODO: this.reorient()
       this.emit('seek');
+
+      return this;
     }
 
     /**
@@ -266,7 +277,7 @@ var Gig = function (_Track) {
       if (last) this.emit('beat:stop', last);
       if (exists) this.emit('beat:play', beat);
 
-      this.bump();
+      this.bump(beat);
 
       return Object.assign({}, context, { wait: wait });
     }
@@ -278,24 +289,45 @@ var Gig = function (_Track) {
 
   }, {
     key: 'bump',
-    value: function bump() {
-      var numOf = {
-        measures: this.data.length,
-        beats: this.data[this.index.measure].length
-      };
-
+    value: function bump(beat) {
       var limit = {
-        measure: Math.max(numOf.measures, 1),
-        beat: Math.max(numOf.beats, 1)
+        measure: Math.max(this.size.measures, 1),
+        beat: Math.max(this.size.beats, 1),
+        section: Math.max(this.size.sections, 1)
       };
 
       var increment = {
         measure: this.index.beat === limit.beat - 1 ? 1 : 0,
-        beat: 1
+        beat: 1,
+        section: beat.exists ? 1 : 0
       };
 
-      this.index.measure = (this.index.measure + increment.measure) % limit.measure;
-      this.index.beat = (this.index.beat + increment.beat) % limit.beat;
+      this.index.measure = Math.floor(this.index.measure + increment.measure) % limit.measure;
+      this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat;
+      this.index.section = Math.floor(this.index.section + increment.section) % limit.section;
+    }
+
+    /**
+     * Removes all active event listeners
+     *
+     * TODO: Consider automatically stopping the track here if already running
+     */
+    // purge
+
+  }, {
+    key: 'clear',
+    value: function clear() {
+      return this.removeAllListeners();
+    }
+
+    /**
+     * Immediately stops the track, its clock, and removes all active event listeners
+     */
+
+  }, {
+    key: 'kill',
+    value: function kill() {
+      return this.stop().clear();
     }
 
     /**
@@ -318,6 +350,18 @@ var Gig = function (_Track) {
       return this.music.state() === 'loaded';
     }
   }, {
+    key: 'sections',
+    get: function get$$1() {
+      return new bachJs.Sections(this.source).all;
+    }
+
+    /**
+     * Provides the measure and beat found at the track's cursor
+     *
+     * @returns {Object}
+     */
+
+  }, {
     key: 'state',
     get: function get$$1() {
       return this.at(this.cursor.measure, this.cursor.beat);
@@ -328,6 +372,7 @@ var Gig = function (_Track) {
      *
      * @returns {Object}
      */
+    // TODO: Remove/refactor, this is pointless (we just want to go back 1 cursor index, not both a measure and beat!)
 
   }, {
     key: 'last',
@@ -340,6 +385,7 @@ var Gig = function (_Track) {
      *
      * @returns {Object}
      */
+    // TODO: Remove/refactor, this is pointless (we just want to go back 1 cursor index, not both a measure and beat!)
 
   }, {
     key: 'next',
@@ -348,7 +394,7 @@ var Gig = function (_Track) {
     }
 
     /**
-     * Determines the cursors of both the current measure and beat of the track
+     * Determines the cursors of the current measure, beat and section of the track
      *
      * @returns {Object}
      */
@@ -357,13 +403,29 @@ var Gig = function (_Track) {
     key: 'cursor',
     get: function get$$1() {
       return {
-        measure: Math.min(Math.max(this.index.measure, 0), this.data.length - 1),
-        beat: Math.min(Math.max(this.index.beat, 0), this.data[this.index.measure].length - 1)
+        measure: Math.min(Math.max(this.index.measure, 0), this.size.measures - 1),
+        beat: Math.min(Math.max(this.index.beat, 0), this.size.beats - 1),
+        section: Math.min(Math.max(this.index.section, 0), this.size.sections - 1)
       };
     }
 
     /**
-     * Determines how much time remains (in milliseconds) until the next tick.
+     * Detrmines the total number of measures, beats and sections in a track
+     */
+    // TODO: Consider moving to `bach-js/Track`
+
+  }, {
+    key: 'size',
+    get: function get$$1() {
+      return {
+        measures: this.data.length,
+        beats: this.data[this.index.measure].length,
+        sections: this.sections.length
+      };
+    }
+
+    /**
+     * Determines how much time remains (in milliseconds) until the next step.
      *
      * @returns {Number}
      */
