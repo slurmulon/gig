@@ -29,6 +29,7 @@ export class Gig extends Track {
     this.timer  = timer || defaultTimer
 
     this.index = { measure: 0, beat: 0, section: 0 }
+    this.status = STATUS.pristine
 
     if (audio) {
       this.music = new Howl(Object.assign({
@@ -113,9 +114,10 @@ export class Gig extends Track {
   }
 
   /**
-   * Detrmines the total number of measures, beats and sections in a track
+   * Provides the total number of measures, beats and sections in a track, relative to the cursor
+   *
+   * @returns {Object}
    */
-  // TODO: Consider moving to `bach-js/Track`
   get size () {
     return {
       measures : this.data.length,
@@ -125,12 +127,39 @@ export class Gig extends Track {
   }
 
   /**
-   * Determines how much time remains (in milliseconds) until the next step.
+   * Determines if the track is actively playing
    *
-   * @returns {Number}
+   * @returns {Boolean}
    */
-  get until () {
-    return this.interval * (1 - (this.beatAt() % 1))
+  get playing () {
+    return this.status === STATUS.playing
+  }
+
+  /**
+   * Determines if the track is actively playing
+   *
+   * @returns {Boolean}
+   */
+  get paused () {
+    return this.status === STATUS.paused
+  }
+
+  /**
+   * Determines if the track is actively playing (currently the same as .playing)
+   *
+   * @returns {Boolean}
+   */
+  get active () {
+    return ACTIVE_STATUS.includes(this.status)
+  }
+
+  /**
+   * Determines if the track is inactive
+   *
+   * @returns {Boolean}
+   */
+  get inactive () {
+    return INACTIVE_STATUS.includes(this.status)
   }
 
   /**
@@ -181,6 +210,7 @@ export class Gig extends Track {
     setTimeout(() => {
       this.clock = this.timer(this)
       this.emit('start')
+      this.is('playing')
     }, delay || 0)
   }
 
@@ -191,19 +221,14 @@ export class Gig extends Track {
   play () {
     if (this.audible) {
       this.music.on('load', () => {
-        // if (!this.clock) this.start()
-
         this.start()
         this.music.play()
         this.emit('play')
       })
+    } else {
+      this.start()
+      this.emit('play')
     }
-
-    // EXPERIMENT
-    if (!this.clock) this.start()
-
-    this.emit('play')
-    //
 
     return this
   }
@@ -222,7 +247,7 @@ export class Gig extends Track {
     this.clock.stop()
     this.emit('stop')
 
-    return this
+    return this.is('stopped')
   }
 
   /**
@@ -234,7 +259,7 @@ export class Gig extends Track {
     this.clock.pause()
     this.emit('pause')
 
-    return this
+    return this.is('paused')
   }
 
   /**
@@ -246,7 +271,7 @@ export class Gig extends Track {
     this.clock.resume()
     this.emit('resume')
 
-    return this
+    return this.is('playing')
   }
 
   /**
@@ -331,9 +356,24 @@ export class Gig extends Track {
    * Immediately stops the track, its clock, and removes all active event listeners
    */
   kill () {
-    return this.stop().clear()
+    return this.stop().clear().is('killed')
   }
 
+  /**
+   * Updates the playing status of the track (idempotent, no reactivity or side-effects).
+   */
+  is (status) {
+    const key = status.toLowerCase()
+    const value = STATUS[key]
+
+    if (!value) throw Error(`${key} is an invalid status`)
+
+    this.status = value
+
+    return this
+  }
+
+  // TODO: Make both of these getters instead
   /**
    * Determines if the track's music is loading
    */
@@ -353,3 +393,28 @@ export class Gig extends Track {
 Object.assign(Track.prototype, EventEmitter.prototype)
 
 export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
+
+export const STATUS = {
+  pristine : Symbol('pristine'),
+  playing  : Symbol('playing'),
+  stopped  : Symbol('stopped'),
+  paused   : Symbol('paused'),
+  killed   : Symbol('killed')
+}
+
+export const ACTIVE_STATUS = [STATUS.playing]
+
+export const INACTIVE_STATUS = [
+  STATUS.pristine,
+  STATUS.stopped,
+  STATUS.paused,
+  STATUS.killed
+]
+
+export const CONSTANTS = Gig.CONSTANTS = {
+  STATUS,
+  ACTIVE_STATUS,
+  INACTIVE_STATUS
+}
+
+export default Gig
