@@ -12,29 +12,41 @@ export class Gig extends Track {
    * @param {Object} source track represented in Bach.JSON
    * @param {Audio} [audio] track audio
    * @param {boolean} [loop] enable track looping
-   * @param {boolean} [tempo] in beats per minute
+   * @param {boolean} [tempo] in beats per minute [REMOVED]
    * @param {number} [delay] wait a duration before starting to play
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [howler] optional Howler configuration overrides
    */
-  constructor ({ source, audio, loop, tempo, delay, timer, howler }) {
+  constructor ({ source, audio, loop, delay, timer, howler }) {
     super(source)
 
     EventEmitter.call(this)
 
     this.audio  = audio
     this.loop   = loop
-    this.tempo  = tempo // FIXME: Sync with Howler's rate property
+    // this.tempo  = tempo // FIXME: Sync with Howler's rate property
     this.delay  = delay
     this.timer  = timer || defaultTimer
 
     this.index = { measure: 0, beat: 0, section: 0 }
-    this.music = new Howl(Object.assign({
-      src: audio,
-      loop
-    }, howler))
+
+    if (audio) {
+      this.music = new Howl(Object.assign({
+        src: audio,
+        loop
+      }, howler))
+    }
 
     // this.listen()
+  }
+
+  /**
+   * Provides the core data structure backing `sections`, primarily for internal use but useful to have exposed indepdently
+   *
+   * @returns {Sections}
+   */
+  get sectionized () {
+    return new Sections(this.source)
   }
 
   /** Provides all of the sections (i.e. the identifiable parts/transitions) of a track
@@ -42,7 +54,7 @@ export class Gig extends Track {
    * @returns {Array}
    */
   get sections () {
-    return new Sections(this.source).all
+    return this.sectionized.all
   }
 
   /**
@@ -88,6 +100,19 @@ export class Gig extends Track {
   }
 
   /**
+   * Provides the current measure, beat and section of the track
+   *
+   * @returns {Object}
+   */
+  get current () {
+    return {
+      measure : this.data[this.cursor.measure],
+      beat    : this.data[this.cursor.measure][this.cursor.beat],
+      section : this.sections[this.cursor.section]
+    }
+  }
+
+  /**
    * Detrmines the total number of measures, beats and sections in a track
    */
   // TODO: Consider moving to `bach-js/Track`
@@ -127,6 +152,15 @@ export class Gig extends Track {
   }
 
   /**
+   * Whether or not the Gig object has associated audio
+   *
+   * @returns {Boolean}
+   */
+  get audible () {
+    return this.audio && this.music
+  }
+
+  /**
    * Synchronizes track with the Howler API
    */
   listen () {
@@ -155,12 +189,21 @@ export class Gig extends Track {
    */
   // FIXME: sync audio playback with `start` delay
   play () {
-    this.music.on('load', () => {
-      if (!this.clock) this.start()
+    if (this.audible) {
+      this.music.on('load', () => {
+        // if (!this.clock) this.start()
 
-      this.music.play()
-      this.emit('play')
-    })
+        this.start()
+        this.music.play()
+        this.emit('play')
+      })
+    }
+
+    // EXPERIMENT
+    if (!this.clock) this.start()
+
+    this.emit('play')
+    //
 
     return this
   }
@@ -171,8 +214,11 @@ export class Gig extends Track {
   stop () {
     if (!this.clock) return
 
-    this.music.stop()
-    this.music.unload()
+    if (this.audible) {
+      this.music.stop()
+      this.music.unload()
+    }
+
     this.clock.stop()
     this.emit('stop')
 
@@ -183,7 +229,8 @@ export class Gig extends Track {
    * Pauses the audio and the synchronization clock
    */
   pause () {
-    this.music.pause()
+    if (this.audible) this.music.pause()
+
     this.clock.pause()
     this.emit('pause')
 
@@ -194,7 +241,8 @@ export class Gig extends Track {
    * Resumes the audio and the synchronization clock
    */
   resume () {
-    this.music.play()
+    if (this.audible) this.music.play()
+
     this.clock.resume()
     this.emit('resume')
 
@@ -205,7 +253,8 @@ export class Gig extends Track {
    * Mutes the track audio
    */
   mute () {
-    this.music.mute()
+    if (this.audible) this.music.mute()
+
     this.emit('mute')
 
     return this
@@ -219,7 +268,7 @@ export class Gig extends Track {
   // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
   // NOTE: if we assume every interval is the same, relative to tempo, this could work
   seek (to) {
-    this.music.seek(to)
+    if (this.audible) this.music.seek(to)
     // TODO: this.reorient()
     this.emit('seek')
 
