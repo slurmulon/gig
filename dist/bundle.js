@@ -110,6 +110,7 @@ var Gig = function (_Track) {
     _this.timer = timer || defaultTimer;
 
     _this.index = { measure: 0, beat: 0, section: 0 };
+    _this.status = STATUS.pristine;
 
     if (audio) {
       _this.music = new howler.Howl(Object.assign({
@@ -159,6 +160,7 @@ var Gig = function (_Track) {
       setTimeout(function () {
         _this2.clock = _this2.timer(_this2);
         _this2.emit('start');
+        _this2.is('playing');
       }, delay || 0);
     }
 
@@ -174,19 +176,14 @@ var Gig = function (_Track) {
 
       if (this.audible) {
         this.music.on('load', function () {
-          // if (!this.clock) this.start()
-
           _this3.start();
           _this3.music.play();
           _this3.emit('play');
         });
+      } else {
+        this.start();
+        this.emit('play');
       }
-
-      // EXPERIMENT
-      if (!this.clock) this.start();
-
-      this.emit('play');
-      //
 
       return this;
     }
@@ -208,7 +205,7 @@ var Gig = function (_Track) {
       this.clock.stop();
       this.emit('stop');
 
-      return this;
+      return this.is('stopped');
     }
 
     /**
@@ -223,7 +220,7 @@ var Gig = function (_Track) {
       this.clock.pause();
       this.emit('pause');
 
-      return this;
+      return this.is('paused');
     }
 
     /**
@@ -238,7 +235,7 @@ var Gig = function (_Track) {
       this.clock.resume();
       this.emit('resume');
 
-      return this;
+      return this.is('playing');
     }
 
     /**
@@ -345,9 +342,27 @@ var Gig = function (_Track) {
   }, {
     key: 'kill',
     value: function kill() {
-      return this.stop().clear();
+      return this.stop().clear().is('killed');
     }
 
+    /**
+     * Updates the playing status of the track (idempotent, no reactivity or side-effects).
+     */
+
+  }, {
+    key: 'is',
+    value: function is(status) {
+      var key = status.toLowerCase();
+      var value = STATUS[key];
+
+      if (!value) throw Error(key + ' is an invalid status');
+
+      this.status = value;
+
+      return this;
+    }
+
+    // TODO: Make both of these getters instead
     /**
      * Determines if the track's music is loading
      */
@@ -455,9 +470,10 @@ var Gig = function (_Track) {
     }
 
     /**
-     * Detrmines the total number of measures, beats and sections in a track
+     * Provides the total number of measures, beats and sections in a track, relative to the cursor
+     *
+     * @returns {Object}
      */
-    // TODO: Consider moving to `bach-js/Track`
 
   }, {
     key: 'size',
@@ -470,15 +486,51 @@ var Gig = function (_Track) {
     }
 
     /**
-     * Determines how much time remains (in milliseconds) until the next step.
+     * Determines if the track is actively playing
      *
-     * @returns {Number}
+     * @returns {Boolean}
      */
 
   }, {
-    key: 'until',
+    key: 'playing',
     get: function get$$1() {
-      return this.interval * (1 - this.beatAt() % 1);
+      return this.status === STATUS.playing;
+    }
+
+    /**
+     * Determines if the track is actively playing
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'paused',
+    get: function get$$1() {
+      return this.status === STATUS.paused;
+    }
+
+    /**
+     * Determines if the track is actively playing (currently the same as .playing)
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'active',
+    get: function get$$1() {
+      return ACTIVE_STATUS.includes(this.status);
+    }
+
+    /**
+     * Determines if the track is inactive
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'inactive',
+    get: function get$$1() {
+      return INACTIVE_STATUS.includes(this.status);
     }
 
     /**
@@ -526,5 +578,28 @@ var defaultTimer = function defaultTimer(track) {
   return statefulDynamicInterval.setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true });
 };
 
+var STATUS = {
+  pristine: Symbol('pristine'),
+  playing: Symbol('playing'),
+  stopped: Symbol('stopped'),
+  paused: Symbol('paused'),
+  killed: Symbol('killed')
+};
+
+var ACTIVE_STATUS = [STATUS.playing];
+
+var INACTIVE_STATUS = [STATUS.pristine, STATUS.stopped, STATUS.paused, STATUS.killed];
+
+var CONSTANTS = Gig.CONSTANTS = {
+  STATUS: STATUS,
+  ACTIVE_STATUS: ACTIVE_STATUS,
+  INACTIVE_STATUS: INACTIVE_STATUS
+};
+
 exports.Gig = Gig;
 exports.defaultTimer = defaultTimer;
+exports.STATUS = STATUS;
+exports.ACTIVE_STATUS = ACTIVE_STATUS;
+exports.INACTIVE_STATUS = INACTIVE_STATUS;
+exports.CONSTANTS = CONSTANTS;
+exports['default'] = Gig;
