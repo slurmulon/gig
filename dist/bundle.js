@@ -85,7 +85,7 @@ var Gig = function (_Track) {
    * @param {Object} source track represented in Bach.JSON
    * @param {Audio} [audio] track audio
    * @param {boolean} [loop] enable track looping
-   * @param {boolean} [tempo] in beats per minute
+   * @param {boolean} [tempo] in beats per minute [REMOVED]
    * @param {number} [delay] wait a duration before starting to play
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [howler] optional Howler configuration overrides
@@ -94,7 +94,6 @@ var Gig = function (_Track) {
     var source = _ref.source,
         audio = _ref.audio,
         loop = _ref.loop,
-        tempo = _ref.tempo,
         delay = _ref.delay,
         timer = _ref.timer,
         howler$$1 = _ref.howler;
@@ -106,23 +105,27 @@ var Gig = function (_Track) {
 
     _this.audio = audio;
     _this.loop = loop;
-    _this.tempo = tempo; // FIXME: Sync with Howler's rate property
+    // this.tempo  = tempo // FIXME: Sync with Howler's rate property
     _this.delay = delay;
     _this.timer = timer || defaultTimer;
 
     _this.index = { measure: 0, beat: 0, section: 0 };
-    _this.music = new howler.Howl(Object.assign({
-      src: audio,
-      loop: loop
-    }, howler$$1));
+
+    if (audio) {
+      _this.music = new howler.Howl(Object.assign({
+        src: audio,
+        loop: loop
+      }, howler$$1));
+    }
 
     // this.listen()
     return _this;
   }
 
-  /** Provides all of the sections (i.e. the identifiable parts/transitions) of a track
+  /**
+   * Provides the core data structure backing `sections`, primarily for internal use but useful to have exposed indepdently
    *
-   * @returns {Array}
+   * @returns {Sections}
    */
 
 
@@ -169,12 +172,21 @@ var Gig = function (_Track) {
     value: function play() {
       var _this3 = this;
 
-      this.music.on('load', function () {
-        if (!_this3.clock) _this3.start();
+      if (this.audible) {
+        this.music.on('load', function () {
+          // if (!this.clock) this.start()
 
-        _this3.music.play();
-        _this3.emit('play');
-      });
+          _this3.start();
+          _this3.music.play();
+          _this3.emit('play');
+        });
+      }
+
+      // EXPERIMENT
+      if (!this.clock) this.start();
+
+      this.emit('play');
+      //
 
       return this;
     }
@@ -188,8 +200,11 @@ var Gig = function (_Track) {
     value: function stop() {
       if (!this.clock) return;
 
-      this.music.stop();
-      this.music.unload();
+      if (this.audible) {
+        this.music.stop();
+        this.music.unload();
+      }
+
       this.clock.stop();
       this.emit('stop');
 
@@ -203,7 +218,8 @@ var Gig = function (_Track) {
   }, {
     key: 'pause',
     value: function pause() {
-      this.music.pause();
+      if (this.audible) this.music.pause();
+
       this.clock.pause();
       this.emit('pause');
 
@@ -217,7 +233,8 @@ var Gig = function (_Track) {
   }, {
     key: 'resume',
     value: function resume() {
-      this.music.play();
+      if (this.audible) this.music.play();
+
       this.clock.resume();
       this.emit('resume');
 
@@ -231,7 +248,8 @@ var Gig = function (_Track) {
   }, {
     key: 'mute',
     value: function mute() {
-      this.music.mute();
+      if (this.audible) this.music.mute();
+
       this.emit('mute');
 
       return this;
@@ -248,7 +266,7 @@ var Gig = function (_Track) {
   }, {
     key: 'seek',
     value: function seek(to) {
-      this.music.seek(to);
+      if (this.audible) this.music.seek(to);
       // TODO: this.reorient()
       this.emit('seek');
 
@@ -350,9 +368,20 @@ var Gig = function (_Track) {
       return this.music.state() === 'loaded';
     }
   }, {
+    key: 'sectionized',
+    get: function get$$1() {
+      return new bachJs.Sections(this.source);
+    }
+
+    /** Provides all of the sections (i.e. the identifiable parts/transitions) of a track
+     *
+     * @returns {Array}
+     */
+
+  }, {
     key: 'sections',
     get: function get$$1() {
-      return new bachJs.Sections(this.source).all;
+      return this.sectionized.all;
     }
 
     /**
@@ -410,6 +439,22 @@ var Gig = function (_Track) {
     }
 
     /**
+     * Provides the current measure, beat and section of the track
+     *
+     * @returns {Object}
+     */
+
+  }, {
+    key: 'current',
+    get: function get$$1() {
+      return {
+        measure: this.data[this.cursor.measure],
+        beat: this.data[this.cursor.measure][this.cursor.beat],
+        section: this.sections[this.cursor.section]
+      };
+    }
+
+    /**
      * Detrmines the total number of measures, beats and sections in a track
      */
     // TODO: Consider moving to `bach-js/Track`
@@ -458,6 +503,18 @@ var Gig = function (_Track) {
     key: 'duration',
     get: function get$$1() {
       return this.music.duration() * 1000;
+    }
+
+    /**
+     * Whether or not the Gig object has associated audio
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'audible',
+    get: function get$$1() {
+      return this.audio && this.music;
     }
   }]);
   return Gig;
