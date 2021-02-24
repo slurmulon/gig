@@ -1,6 +1,7 @@
 import { Track, Sections } from 'bach-js'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
+import now from 'performance-now'
 import EventEmitter from 'events'
 
 /**
@@ -29,6 +30,7 @@ export class Gig extends Track {
     this.timer  = timer || defaultTimer
 
     this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
+    this.origin = null
     this.status = STATUS.pristine
 
     if (audio) {
@@ -127,15 +129,11 @@ export class Gig extends Track {
     }
   }
 
-  // get last () {
-  //   return {
-  //     measure : Math.max(this.size.measures - 1, 0),
-  //     beat    : Math.max(this.size.beats - 1, 0),
-  //     section : Math.max(this.size.sections - 1, 0),
-  //     // repeat  : Math.max(this.size.repeats - 1, 0)
-  //   }
-  // }
-
+  /**
+   * Determines if the cursor is on the first measure, beat, or section
+   *
+   * @returns {Boolean}
+   */
   get first () {
     return {
       measure: this.index.measure === 0,
@@ -144,6 +142,11 @@ export class Gig extends Track {
     }
   }
 
+  /**
+   * Determines if the cursor is on the least measure, beat, or section
+   *
+   * @returns {Boolean}
+   */
   get last () {
     return {
       measure: this.index.measure === this.size.measure - 1,
@@ -188,13 +191,17 @@ export class Gig extends Track {
     return INACTIVE_STATUS.includes(this.status)
   }
 
+  get elapsed () {
+    return now() - this.origin
+  }
+
   /**
    * Determines the progress of the track's audio (in milliseconds).
    *
    * @returns {Number}
    */
   get progress () {
-    return this.music.seek() * 1000
+    return (this.elapsed / this.duration) % 1
   }
 
   /**
@@ -203,7 +210,8 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get duration () {
-    return this.music.duration() * 1000
+    // return this.music.duration() * 1000
+    return this.sectionized.durations.cast(this.sectionized.durations.total, { as: 'ms' })
   }
 
   /**
@@ -215,10 +223,20 @@ export class Gig extends Track {
     return this.audio && this.music
   }
 
+  /**
+   * Whether or not the track is configured to loop playback
+   *
+   * @returns {Boolean}
+   */
   get loops () {
     return this.loop || !!(this.audible && this.music.loop())
   }
 
+  /**
+   * Changes loop configuration of track and associated audio
+   *
+   * @returns {Boolean}
+   */
   set loops (loop) {
     this.loop = loop
 
@@ -227,6 +245,11 @@ export class Gig extends Track {
     }
   }
 
+  /**
+   * Determines if the track has already looped/repeated
+   *
+   * @returns {Boolean}
+   */
   get repeating () {
     return this.index.repeat > 0
   }
@@ -251,6 +274,8 @@ export class Gig extends Track {
 
     setTimeout(() => {
       this.clock = this.timer(this)
+      this.origin = now()
+
       this.emit('start')
       this.is('playing')
     }, delay || 0)
@@ -349,10 +374,7 @@ export class Gig extends Track {
    * @returns {Object} updated interval context
    */
   step (context) {
-    console.log('\n\n\n@@@@@@@@@\nGig step', this.state.beat, this.index.repeat)
-    // if (!this.loops && this.index.repeat > 0) {
     if (!this.loops && this.repeating && this.first.section) {
-      console.log('GIG KILLING STEP', this.index)
       return this.stop()
     }
 
@@ -360,9 +382,6 @@ export class Gig extends Track {
     const { beat } = state
     const { duration, exists } = beat
     const wait = interval * duration
-
-    console.log('------ step prev', prev)
-    console.log('------ step exists', exists)
 
     if (prev)   this.emit('beat:stop', prev)
     if (exists) this.emit('beat:play', beat)
@@ -394,18 +413,14 @@ export class Gig extends Track {
     this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat
     this.index.section = Math.floor(this.index.section + increment.section) % limit.section
     this.index.repeat += increment.repeat
-    // this.index.step++
-
-    // if (!this.loops && this.index.section === 0) {
-    //   // this.kill()
-    //   this.stop()
-    // }
   }
 
+  /**
+   * Resets the cursor indices to their initial unplayed state
+   */
   reset () {
     this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
-
-    console.log('---gig reset index', this.index)
+    this.origin = null
 
     return this
   }
