@@ -28,7 +28,7 @@ export class Gig extends Track {
     this.delay  = delay
     this.timer  = timer || defaultTimer
 
-    this.index = { measure: 0, beat: 0, section: 0 }
+    this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
     this.status = STATUS.pristine
 
     if (audio) {
@@ -73,7 +73,7 @@ export class Gig extends Track {
    * @returns {Object}
    */
   // TODO: Remove/refactor, this is pointless (we just want to go back 1 cursor index, not both a measure and beat!)
-  get last () {
+  get prev () {
     return this.at(this.cursor.measure - 1, this.cursor.beat - 1)
   }
 
@@ -123,6 +123,32 @@ export class Gig extends Track {
       measures : this.data.length,
       beats    : this.data[this.index.measure].length,
       sections : this.sections.length,
+      // repeats  : this.loops ? Infinity : 0
+    }
+  }
+
+  // get last () {
+  //   return {
+  //     measure : Math.max(this.size.measures - 1, 0),
+  //     beat    : Math.max(this.size.beats - 1, 0),
+  //     section : Math.max(this.size.sections - 1, 0),
+  //     // repeat  : Math.max(this.size.repeats - 1, 0)
+  //   }
+  // }
+
+  get first () {
+    return {
+      measure: this.index.measure === 0,
+      beat: this.index.beat === 0,
+      section: this.index.section === 0
+    }
+  }
+
+  get last () {
+    return {
+      measure: this.index.measure === this.size.measure - 1,
+      beat: this.index.beat === this.size.beat - 1,
+      section: this.index.section === this.size.section - 1
     }
   }
 
@@ -189,6 +215,22 @@ export class Gig extends Track {
     return this.audio && this.music
   }
 
+  get loops () {
+    return this.loop || !!(this.audible && this.music.loop())
+  }
+
+  set loops (loop) {
+    this.loop = loop
+
+    if (this.audible) {
+      this.music.loop(loop)
+    }
+  }
+
+  get repeating () {
+    return this.index.repeat > 0
+  }
+
   /**
    * Synchronizes track with the Howler API
    */
@@ -237,7 +279,7 @@ export class Gig extends Track {
    * Stops the audio and the synchronization clock (no resume)
    */
   stop () {
-    if (!this.clock) return
+    if (!this.clock) return this
 
     if (this.audible) {
       this.music.stop()
@@ -247,7 +289,7 @@ export class Gig extends Track {
     this.clock.stop()
     this.emit('stop')
 
-    return this.is('stopped')
+    return this.reset().is('stopped')
   }
 
   /**
@@ -307,12 +349,22 @@ export class Gig extends Track {
    * @returns {Object} updated interval context
    */
   step (context) {
-    const { last, interval, state } = this
+    console.log('\n\n\n@@@@@@@@@\nGig step', this.state.beat, this.index.repeat)
+    // if (!this.loops && this.index.repeat > 0) {
+    if (!this.loops && this.repeating && this.first.section) {
+      console.log('GIG KILLING STEP', this.index)
+      return this.stop()
+    }
+
+    const { state, interval, prev } = this
     const { beat } = state
     const { duration, exists } = beat
     const wait = interval * duration
 
-    if (last)   this.emit('beat:stop', last)
+    console.log('------ step prev', prev)
+    console.log('------ step exists', exists)
+
+    if (prev)   this.emit('beat:stop', prev)
     if (exists) this.emit('beat:play', beat)
 
     this.bump(beat)
@@ -332,6 +384,7 @@ export class Gig extends Track {
     }
 
     const increment = {
+      repeat: this.index.section === (limit.section - 1) ? 1 : 0,
       measure: this.index.beat === (limit.beat - 1) ? 1 : 0,
       beat: 1,
       section: beat.exists ? 1 : 0
@@ -340,6 +393,21 @@ export class Gig extends Track {
     this.index.measure = Math.floor(this.index.measure + increment.measure) % limit.measure
     this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat
     this.index.section = Math.floor(this.index.section + increment.section) % limit.section
+    this.index.repeat += increment.repeat
+    // this.index.step++
+
+    // if (!this.loops && this.index.section === 0) {
+    //   // this.kill()
+    //   this.stop()
+    // }
+  }
+
+  reset () {
+    this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
+
+    console.log('---gig reset index', this.index)
+
+    return this
   }
 
   /**
