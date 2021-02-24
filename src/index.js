@@ -18,7 +18,7 @@ export class Gig extends Track {
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [howler] optional Howler configuration overrides
    */
-  constructor ({ source, audio, loop, delay, timer, howler }) {
+  constructor ({ source, audio, loop, delay, reorient, timer, howler }) {
     super(source)
 
     EventEmitter.call(this)
@@ -30,7 +30,8 @@ export class Gig extends Track {
     this.timer  = timer || defaultTimer
 
     this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
-    this.origin = null
+    // RENAME: Conflicts with base class
+    this.times = { origin: null, last: null }
     this.status = STATUS.pristine
 
     if (audio) {
@@ -192,7 +193,7 @@ export class Gig extends Track {
   }
 
   get elapsed () {
-    return now() - this.origin
+    return this.times.origin != null ? (now() - this.times.origin) : 0
   }
 
   /**
@@ -211,7 +212,7 @@ export class Gig extends Track {
    */
   get duration () {
     // return this.music.duration() * 1000
-    return this.sectionized.durations.cast(this.sectionized.durations.total, { as: 'ms' })
+    return this.durations.cast(this.durations.total, { as: 'ms' })
   }
 
   /**
@@ -274,7 +275,7 @@ export class Gig extends Track {
 
     setTimeout(() => {
       this.clock = this.timer(this)
-      this.origin = now()
+      this.times.origin = now()
 
       this.emit('start')
       this.is('playing')
@@ -374,8 +375,15 @@ export class Gig extends Track {
    * @returns {Object} updated interval context
    */
   step (context) {
-    if (!this.loops && this.repeating && this.first.section) {
-      return this.stop()
+    // if (!this.loops && this.repeating && this.first.section) {
+    //   return this.stop()
+    // }
+    if (this.repeating && this.first.section) {
+      if (this.loops) {
+        this.times.origin = now()
+      } else {
+        return this.stop()
+      }
     }
 
     const { state, interval, prev } = this
@@ -413,6 +421,7 @@ export class Gig extends Track {
     this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat
     this.index.section = Math.floor(this.index.section + increment.section) % limit.section
     this.index.repeat += increment.repeat
+    this.times.last = now()
   }
 
   /**
@@ -420,7 +429,7 @@ export class Gig extends Track {
    */
   reset () {
     this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
-    this.origin = null
+    this.times = { origin: null, last: null }
 
     return this
   }
