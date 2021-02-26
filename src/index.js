@@ -1,6 +1,7 @@
 import { Track, Sections } from 'bach-js'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
+import memoize from 'memoizee'
 import now from 'performance-now'
 import EventEmitter from 'events'
 
@@ -18,7 +19,7 @@ export class Gig extends Track {
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [howler] optional Howler configuration overrides
    */
-  constructor ({ source, audio, loop, delay, reorient, timer, howler }) {
+  constructor ({ source, audio, loop, delay, cache, timer, howler }) {
     super(source)
 
     EventEmitter.call(this)
@@ -34,6 +35,7 @@ export class Gig extends Track {
     this.times = { origin: null, last: null }
     this.status = STATUS.pristine
 
+    if (cache) this.cache()
     if (audio) {
       this.music = new Howl(Object.assign({
         src: audio,
@@ -486,6 +488,23 @@ export class Gig extends Track {
    */
   kill () {
     return this.stop().clear().is('killed')
+  }
+
+  /**
+   * Replaces all performance sensitive getters with memoized/cached versions.
+   *
+   * WARN: Mutates the instance and does not react to changes to source!
+   */
+  cache () {
+    const getters = Object.entries(Object.getOwnPropertyDescriptors(Gig))
+      .filter(([key, descriptor]) => typeof descriptor.get === 'function')
+      .forEach(([key]) => {
+        Object.defineProperty(this, key, {
+          get: memoize(this[key])
+        })
+      })
+
+    return this
   }
 
   /**
