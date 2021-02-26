@@ -439,7 +439,7 @@ export class Gig extends Track {
   }
 
   /**
-   * Increases the cursor to the next beat of the track and, if we're on the last beat,
+   * Increases the cursor to the next pulse beat of the track and, if we're on the last pulse beat,
    * also increases the cursor to the next measure.
    */
   bump (beat) {
