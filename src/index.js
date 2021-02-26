@@ -1,6 +1,7 @@
 import { Track, Sections } from 'bach-js'
 import { Howl } from 'howler'
 import { setStatefulDynterval } from 'stateful-dynamic-interval'
+import now from 'performance-now'
 import EventEmitter from 'events'
 
 /**
@@ -17,7 +18,7 @@ export class Gig extends Track {
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [howler] optional Howler configuration overrides
    */
-  constructor ({ source, audio, loop, delay, timer, howler }) {
+  constructor ({ source, audio, loop, delay, reorient, timer, howler }) {
     super(source)
 
     EventEmitter.call(this)
@@ -28,7 +29,9 @@ export class Gig extends Track {
     this.delay  = delay
     this.timer  = timer || defaultTimer
 
-    this.index = { measure: 0, beat: 0, section: 0 }
+    this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
+    // RENAME: Conflicts with base class
+    this.times = { origin: null, last: null }
     this.status = STATUS.pristine
 
     if (audio) {
@@ -73,7 +76,7 @@ export class Gig extends Track {
    * @returns {Object}
    */
   // TODO: Remove/refactor, this is pointless (we just want to go back 1 cursor index, not both a measure and beat!)
-  get last () {
+  get prev () {
     return this.at(this.cursor.measure - 1, this.cursor.beat - 1)
   }
 
@@ -123,6 +126,33 @@ export class Gig extends Track {
       measures : this.data.length,
       beats    : this.data[this.index.measure].length,
       sections : this.sections.length,
+      // repeats  : this.loops ? Infinity : 0
+    }
+  }
+
+  /**
+   * Determines if the cursor is on the first measure, beat, or section
+   *
+   * @returns {Boolean}
+   */
+  get first () {
+    return {
+      measure: this.index.measure === 0,
+      beat: this.index.beat === 0,
+      section: this.index.section === 0
+    }
+  }
+
+  /**
+   * Determines if the cursor is on the least measure, beat, or section
+   *
+   * @returns {Boolean}
+   */
+  get last () {
+    return {
+      measure: this.index.measure === this.size.measure - 1,
+      beat: this.index.beat === this.size.beat - 1,
+      section: this.index.section === this.size.section - 1
     }
   }
 
@@ -145,6 +175,20 @@ export class Gig extends Track {
   }
 
   /**
+   * Determines if the track's music is loading (when audible).
+   */
+  get loading () {
+    return this.audible ? this.music.state() === 'loading' : false
+  }
+
+  /**
+   * Determines if the track's music is loaded (when audible).
+   */
+  get loaded () {
+    return this.audible ? this.music.state() === 'loaded' : this.active
+  }
+
+  /**
    * Determines if the track is actively playing (currently the same as .playing)
    *
    * @returns {Boolean}
@@ -163,30 +207,88 @@ export class Gig extends Track {
   }
 
   /**
-   * Determines the progress of the track's audio (in milliseconds).
+   * The amount of time that's elapsed since the track started playing.
+   *
+   * @returns {Float}
+   */
+  get elapsed () {
+    return this.times.origin != null ? (now() - this.times.origin) : 0
+  }
+
+  /**
+   * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
    *
    * @returns {Number}
    */
   get progress () {
-    return this.music.seek() * 1000
+    return this.completion % 1
   }
 
   /**
-   * Determines the duration of the track's audio (in milliseconds).
+   * The run-time completion of the entire track (values exceeding 1 mean the track has looped).
+   *
+   * @returns {Number}
+   */
+  get completion () {
+    return this.elapsed / this.duration
+  }
+
+  /**
+   * The duration of the track's audio (in milliseconds).
    *
    * @returns {Number}
    */
   get duration () {
-    return this.music.duration() * 1000
+    return this.durations.cast(this.durations.total, { as: 'ms' })
   }
 
   /**
-   * Whether or not the Gig object has associated audio
+   * Whether or not the Gig object has associated audio.
    *
    * @returns {Boolean}
    */
   get audible () {
     return this.audio && this.music
+  }
+
+  /**
+   * Whether or not the track is configured to loop playback indefinitely.
+   *
+   * @returns {Boolean}
+   */
+  get loops () {
+    return this.loop || !!(this.audible && this.music.loop())
+  }
+
+  /**
+   * Changes loop configuration of track and associated audio.
+   *
+   * @returns {Boolean}
+   */
+  set loops (loop) {
+    this.loop = loop
+
+    if (this.audible) {
+      this.music.loop(loop)
+    }
+  }
+
+  /**
+   * Determines if the track has already looped/repeated.
+   *
+   * @returns {Boolean}
+   */
+  get repeating () {
+    return this.index.repeat > 0
+  }
+
+  /**
+   * Provides the index of the current beat-unit under the context of a looping metronome.
+   *
+   * @returns {Number}
+   */
+  get metronome () {
+    return this.durations.metronize(this.elapsed, { is: 'ms' })
   }
 
   /**
@@ -209,6 +311,8 @@ export class Gig extends Track {
 
     setTimeout(() => {
       this.clock = this.timer(this)
+      this.times.origin = now()
+
       this.emit('start')
       this.is('playing')
     }, delay || 0)
@@ -237,7 +341,7 @@ export class Gig extends Track {
    * Stops the audio and the synchronization clock (no resume)
    */
   stop () {
-    if (!this.clock) return
+    if (!this.clock) return this
 
     if (this.audible) {
       this.music.stop()
@@ -247,7 +351,7 @@ export class Gig extends Track {
     this.clock.stop()
     this.emit('stop')
 
-    return this.is('stopped')
+    return this.reset().is('stopped')
   }
 
   /**
@@ -289,6 +393,7 @@ export class Gig extends Track {
    * Seek to a new position in the track
    *
    * @param {number} to position in the track in seconds
+   * @fixme
    */
   // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
   // NOTE: if we assume every interval is the same, relative to tempo, this could work
@@ -307,21 +412,32 @@ export class Gig extends Track {
    * @returns {Object} updated interval context
    */
   step (context) {
-    const { last, interval, state } = this
+    // if (!this.loops && this.repeating && this.first.section) {
+    //   return this.stop()
+    // }
+    const { state, interval, prev } = this
     const { beat } = state
     const { duration, exists } = beat
-    const wait = interval * duration
 
-    if (last)   this.emit('beat:stop', last)
+    if (prev) this.emit('beat:stop', prev)
+
+    if (this.repeating && this.first.section) {
+      if (this.loops) {
+        this.times.origin = now()
+      } else {
+        return this.stop()
+      }
+    }
+
     if (exists) this.emit('beat:play', beat)
 
     this.bump(beat)
 
-    return Object.assign({}, context, { wait })
+    return Object.assign({}, context, { wait: (interval * duration) })
   }
 
   /**
-   * Increases the cursor to the next beat of the track and, if we're on the last beat,
+   * Increases the cursor to the next pulse beat of the track and, if we're on the last pulse beat,
    * also increases the cursor to the next measure.
    */
   bump (beat) {
@@ -332,6 +448,7 @@ export class Gig extends Track {
     }
 
     const increment = {
+      repeat: this.index.section === (limit.section - 1) ? 1 : 0,
       measure: this.index.beat === (limit.beat - 1) ? 1 : 0,
       beat: 1,
       section: beat.exists ? 1 : 0
@@ -340,6 +457,18 @@ export class Gig extends Track {
     this.index.measure = Math.floor(this.index.measure + increment.measure) % limit.measure
     this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat
     this.index.section = Math.floor(this.index.section + increment.section) % limit.section
+    this.index.repeat += increment.repeat
+    this.times.last = now()
+  }
+
+  /**
+   * Resets the cursor indices to their initial unplayed state
+   */
+  reset () {
+    this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
+    this.times = { origin: null, last: null }
+
+    return this
   }
 
   /**
@@ -371,21 +500,6 @@ export class Gig extends Track {
     this.status = value
 
     return this
-  }
-
-  // TODO: Make both of these getters instead
-  /**
-   * Determines if the track's music is loading
-   */
-  loading () {
-    return this.music.state() === 'loading'
-  }
-
-  /**
-   * Determines if the track's music is loaded
-   */
-  loaded () {
-    return this.music.state() === 'loaded'
   }
 
 }

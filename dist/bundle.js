@@ -7,6 +7,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var bachJs = require('bach-js');
 var howler = require('howler');
 var statefulDynamicInterval = require('stateful-dynamic-interval');
+var now = _interopDefault(require('performance-now'));
 var EventEmitter = _interopDefault(require('events'));
 
 var classCallCheck = function (instance, Constructor) {
@@ -95,6 +96,7 @@ var Gig = function (_Track) {
         audio = _ref.audio,
         loop = _ref.loop,
         delay = _ref.delay,
+        reorient = _ref.reorient,
         timer = _ref.timer,
         howler$$1 = _ref.howler;
     classCallCheck(this, Gig);
@@ -109,7 +111,9 @@ var Gig = function (_Track) {
     _this.delay = delay;
     _this.timer = timer || defaultTimer;
 
-    _this.index = { measure: 0, beat: 0, section: 0 };
+    _this.index = { measure: 0, beat: 0, section: 0, repeat: 0
+      // RENAME: Conflicts with base class
+    };_this.times = { origin: null, last: null };
     _this.status = STATUS.pristine;
 
     if (audio) {
@@ -159,6 +163,8 @@ var Gig = function (_Track) {
 
       setTimeout(function () {
         _this2.clock = _this2.timer(_this2);
+        _this2.times.origin = now();
+
         _this2.emit('start');
         _this2.is('playing');
       }, delay || 0);
@@ -195,7 +201,7 @@ var Gig = function (_Track) {
   }, {
     key: 'stop',
     value: function stop() {
-      if (!this.clock) return;
+      if (!this.clock) return this;
 
       if (this.audible) {
         this.music.stop();
@@ -205,7 +211,7 @@ var Gig = function (_Track) {
       this.clock.stop();
       this.emit('stop');
 
-      return this.is('stopped');
+      return this.reset().is('stopped');
     }
 
     /**
@@ -256,6 +262,7 @@ var Gig = function (_Track) {
      * Seek to a new position in the track
      *
      * @param {number} to position in the track in seconds
+     * @fixme
      */
     // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
     // NOTE: if we assume every interval is the same, relative to tempo, this could work
@@ -280,25 +287,36 @@ var Gig = function (_Track) {
   }, {
     key: 'step',
     value: function step(context) {
-      var last = this.last,
+      // if (!this.loops && this.repeating && this.first.section) {
+      //   return this.stop()
+      // }
+      var state = this.state,
           interval = this.interval,
-          state = this.state;
+          prev = this.prev;
       var beat = state.beat;
       var duration = beat.duration,
           exists = beat.exists;
 
-      var wait = interval * duration;
 
-      if (last) this.emit('beat:stop', last);
+      if (prev) this.emit('beat:stop', prev);
+
+      if (this.repeating && this.first.section) {
+        if (this.loops) {
+          this.times.origin = now();
+        } else {
+          return this.stop();
+        }
+      }
+
       if (exists) this.emit('beat:play', beat);
 
       this.bump(beat);
 
-      return Object.assign({}, context, { wait: wait });
+      return Object.assign({}, context, { wait: interval * duration });
     }
 
     /**
-     * Increases the cursor to the next beat of the track and, if we're on the last beat,
+     * Increases the cursor to the next pulse beat of the track and, if we're on the last pulse beat,
      * also increases the cursor to the next measure.
      */
 
@@ -312,6 +330,7 @@ var Gig = function (_Track) {
       };
 
       var increment = {
+        repeat: this.index.section === limit.section - 1 ? 1 : 0,
         measure: this.index.beat === limit.beat - 1 ? 1 : 0,
         beat: 1,
         section: beat.exists ? 1 : 0
@@ -320,6 +339,21 @@ var Gig = function (_Track) {
       this.index.measure = Math.floor(this.index.measure + increment.measure) % limit.measure;
       this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat;
       this.index.section = Math.floor(this.index.section + increment.section) % limit.section;
+      this.index.repeat += increment.repeat;
+      this.times.last = now();
+    }
+
+    /**
+     * Resets the cursor indices to their initial unplayed state
+     */
+
+  }, {
+    key: 'reset',
+    value: function reset() {
+      this.index = { measure: 0, beat: 0, section: 0, repeat: 0 };
+      this.times = { origin: null, last: null };
+
+      return this;
     }
 
     /**
@@ -361,27 +395,6 @@ var Gig = function (_Track) {
 
       return this;
     }
-
-    // TODO: Make both of these getters instead
-    /**
-     * Determines if the track's music is loading
-     */
-
-  }, {
-    key: 'loading',
-    value: function loading() {
-      return this.music.state() === 'loading';
-    }
-
-    /**
-     * Determines if the track's music is loaded
-     */
-
-  }, {
-    key: 'loaded',
-    value: function loaded() {
-      return this.music.state() === 'loaded';
-    }
   }, {
     key: 'sectionized',
     get: function get$$1() {
@@ -419,7 +432,7 @@ var Gig = function (_Track) {
     // TODO: Remove/refactor, this is pointless (we just want to go back 1 cursor index, not both a measure and beat!)
 
   }, {
-    key: 'last',
+    key: 'prev',
     get: function get$$1() {
       return this.at(this.cursor.measure - 1, this.cursor.beat - 1);
     }
@@ -482,6 +495,39 @@ var Gig = function (_Track) {
         measures: this.data.length,
         beats: this.data[this.index.measure].length,
         sections: this.sections.length
+        // repeats  : this.loops ? Infinity : 0
+      };
+    }
+
+    /**
+     * Determines if the cursor is on the first measure, beat, or section
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'first',
+    get: function get$$1() {
+      return {
+        measure: this.index.measure === 0,
+        beat: this.index.beat === 0,
+        section: this.index.section === 0
+      };
+    }
+
+    /**
+     * Determines if the cursor is on the least measure, beat, or section
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'last',
+    get: function get$$1() {
+      return {
+        measure: this.index.measure === this.size.measure - 1,
+        beat: this.index.beat === this.size.beat - 1,
+        section: this.index.section === this.size.section - 1
       };
     }
 
@@ -510,6 +556,26 @@ var Gig = function (_Track) {
     }
 
     /**
+     * Determines if the track's music is loading (when audible).
+     */
+
+  }, {
+    key: 'loading',
+    get: function get$$1() {
+      return this.audible ? this.music.state() === 'loading' : false;
+    }
+
+    /**
+     * Determines if the track's music is loaded (when audible).
+     */
+
+  }, {
+    key: 'loaded',
+    get: function get$$1() {
+      return this.audible ? this.music.state() === 'loaded' : this.active;
+    }
+
+    /**
      * Determines if the track is actively playing (currently the same as .playing)
      *
      * @returns {Boolean}
@@ -534,7 +600,19 @@ var Gig = function (_Track) {
     }
 
     /**
-     * Determines the progress of the track's audio (in milliseconds).
+     * The amount of time that's elapsed since the track started playing.
+     *
+     * @returns {Float}
+     */
+
+  }, {
+    key: 'elapsed',
+    get: function get$$1() {
+      return this.times.origin != null ? now() - this.times.origin : 0;
+    }
+
+    /**
+     * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
      *
      * @returns {Number}
      */
@@ -542,11 +620,23 @@ var Gig = function (_Track) {
   }, {
     key: 'progress',
     get: function get$$1() {
-      return this.music.seek() * 1000;
+      return this.completion % 1;
     }
 
     /**
-     * Determines the duration of the track's audio (in milliseconds).
+     * The run-time completion of the entire track (values exceeding 1 mean the track has looped).
+     *
+     * @returns {Number}
+     */
+
+  }, {
+    key: 'completion',
+    get: function get$$1() {
+      return this.elapsed / this.duration;
+    }
+
+    /**
+     * The duration of the track's audio (in milliseconds).
      *
      * @returns {Number}
      */
@@ -554,11 +644,11 @@ var Gig = function (_Track) {
   }, {
     key: 'duration',
     get: function get$$1() {
-      return this.music.duration() * 1000;
+      return this.durations.cast(this.durations.total, { as: 'ms' });
     }
 
     /**
-     * Whether or not the Gig object has associated audio
+     * Whether or not the Gig object has associated audio.
      *
      * @returns {Boolean}
      */
@@ -567,6 +657,56 @@ var Gig = function (_Track) {
     key: 'audible',
     get: function get$$1() {
       return this.audio && this.music;
+    }
+
+    /**
+     * Whether or not the track is configured to loop playback indefinitely.
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'loops',
+    get: function get$$1() {
+      return this.loop || !!(this.audible && this.music.loop());
+    }
+
+    /**
+     * Changes loop configuration of track and associated audio.
+     *
+     * @returns {Boolean}
+     */
+    ,
+    set: function set$$1(loop) {
+      this.loop = loop;
+
+      if (this.audible) {
+        this.music.loop(loop);
+      }
+    }
+
+    /**
+     * Determines if the track has already looped/repeated.
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'repeating',
+    get: function get$$1() {
+      return this.index.repeat > 0;
+    }
+
+    /**
+     * Provides the index of the current beat-unit under the context of a looping metronome.
+     *
+     * @returns {Number}
+     */
+
+  }, {
+    key: 'metronome',
+    get: function get$$1() {
+      return this.durations.metronize(this.elapsed, { is: 'ms' });
     }
   }]);
   return Gig;
