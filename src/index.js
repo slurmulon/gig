@@ -415,6 +415,12 @@ export class Gig extends Track {
     // if (!this.loops && this.repeating && this.first.section) {
     //   return this.stop()
     // }
+    const { state, interval, prev } = this
+    const { beat } = state
+    const { duration, exists } = beat
+
+    if (prev) this.emit('beat:stop', prev)
+
     if (this.repeating && this.first.section) {
       if (this.loops) {
         this.times.origin = now()
@@ -423,17 +429,11 @@ export class Gig extends Track {
       }
     }
 
-    const { state, interval, prev } = this
-    const { beat } = state
-    const { duration, exists } = beat
-    const wait = interval * duration
-
-    if (prev)   this.emit('beat:stop', prev)
     if (exists) this.emit('beat:play', beat)
 
     this.bump(beat)
 
-    return Object.assign({}, context, { wait })
+    return Object.assign({}, context, { wait: (interval * duration) })
   }
 
   /**
