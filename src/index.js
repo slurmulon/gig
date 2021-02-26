@@ -412,9 +412,6 @@ export class Gig extends Track {
    * @returns {Object} updated interval context
    */
   step (context) {
-    // if (!this.loops && this.repeating && this.first.section) {
-    //   return this.stop()
-    // }
     const { state, interval, prev } = this
     const { beat } = state
     const { duration, exists } = beat
