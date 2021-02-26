@@ -30,6 +30,7 @@
   "dependencies": {
     "bach-js": "github:slurmulon/bach-js",
     "howler": "^2.2.0",
+    "memoizee": "^0.4.15",
     "performance-now": "^2.1.0",
     "stateful-dynamic-interval": "1.0.1"
   },
