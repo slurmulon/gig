@@ -293,7 +293,7 @@ export class Gig extends Track {
   }
 
   /**
-   * Provides the index of the current pulse-beat under the context of a looping metronome.
+   * Provides the index of the current beat under the context of a looping metronome.
    *
    * @returns {Number}
    */
@@ -430,9 +430,11 @@ export class Gig extends Track {
 
     // if (prev) this.emit('beat:stop', prev)
     if (stop) {
-      const elems = stop.map(this.element)
+      // const elems = stop.map(this.element)
+      // const elems = stop.map(elem => this.store.resolve(elem))
 
-      this.emit('stop:beat', elems)
+      // this.emit('stop:beat', elems)
+      this.emit('stop:beat', stop)
     }
 
     if (this.repeating && this.first.section) {
@@ -558,4 +560,4 @@ export const CONSTANTS = Gig.CONSTANTS = {
   INACTIVE_STATUS
 }
 
-export default Gig
+// export default Gig

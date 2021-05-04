@@ -2,6 +2,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
+import nodePolyfills from 'rollup-plugin-node-polyfills'
 import pkg from './package.json'
 
 // browser-friendly UMD build
@@ -11,15 +12,19 @@ export default [
     output: {
       name: 'gig',
       file: pkg.browser,
-      format: 'umd'
+      format: 'umd',
+      esModule: false
     },
     plugins: [
       json(),
       resolve(),
       commonjs(),
+      nodePolyfills(),
       babel({
-        exclude: ['node_modules/**'],
-        babelHelpers: 'bundled'
+        // exclude: ['node_modules/**'],
+        // babelHelpers: 'bundled'
+        exclude: '**/node_modules/**',
+        babelHelpers: 'runtime'
       })
     ]
   },
@@ -32,16 +37,19 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/index.js',
-    external: ['bach-js', 'howler', 'performance-now', 'stateful-dynamic-interval'],
+    external: [/@babel\/runtime/, 'bach-js', 'howler', 'performance-now', 'stateful-dynamic-interval'],
     output: [
-      { file: pkg.main, format: 'cjs' },
-      { file: pkg.module, format: 'es' }
+      { file: pkg.main, format: 'cjs', exports: 'named' },
+      { file: pkg.module, format: 'esm', exports: 'named' }
     ],
     plugins: [
       json(),
-      babel({
-        exclude: ['node_modules/**']
-      })
+      resolve(),
+      nodePolyfills()
+      // babel({
+      //   // exclude: ['node_modules/**']
+      //   babelHelpers: 'runtime'
+      // })
     ]
   }
 ]
