@@ -289,7 +289,7 @@ export class Gig extends Track {
    */
   get repeating () {
     // return this.index.repeat > 0
-    return (this.index / this.total) >= 1
+    return (this.index / (this.durations.total - 1)) >= 1
   }
 
   /**
@@ -422,14 +422,12 @@ export class Gig extends Track {
    * @returns {Object} updated interval context
    */
   step (context) {
-    // const { state, interval, prev } = this
     const { state, interval } = this
-    // const { beat } = state
     const { beat, play, stop } = state
     const { duration } = beat
 
     // if (prev) this.emit('beat:stop', prev)
-    if (stop) {
+    if (stop.length) {
       // const elems = stop.map(this.element)
       // const elems = stop.map(elem => this.store.resolve(elem))
 
@@ -437,7 +435,7 @@ export class Gig extends Track {
       this.emit('stop:beat', stop)
     }
 
-    if (this.repeating && this.first.section) {
+    if (this.repeating && this.first) {
       if (this.loops) {
         this.times.origin = now()
       } else {
@@ -446,7 +444,7 @@ export class Gig extends Track {
     }
 
     // if (exists) this.emit('beat:play', beat)
-    if (play) {
+    if (play.length) {
       // FIXME: Problem with play in bach.v3 is that it only gives elements, and we want to actually return the beat here
       //  - Actually ok since we can either:
       //    * Get rid of :play and then, here, just search through :beats matching step index
@@ -461,7 +459,8 @@ export class Gig extends Track {
     this.index++
     this.times.last = now()
 
-    return Object.assign({}, context, { wait: (interval * duration) })
+    // return Object.assign({}, context, { wait: (interval * duration) })
+    return Object.assign({}, context, { wait: interval })
   }
 
   /**
