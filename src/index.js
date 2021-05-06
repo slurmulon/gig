@@ -76,12 +76,11 @@ export class Gig extends Track {
   }
 
   /**
-   * Determines the cursors of the cyclic step index.
+   * Determines the cyclic step beat index.
    *
    * @returns {Object}
    */
   get cursor () {
-    // TODO: Could/should probably push this into bach-js, either Music or Durations
     return this.durations.cyclic(this.index)
   }
 
@@ -186,7 +185,7 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get duration () {
-    return this.durations.time(this.durations.total, { as: 'ms' })
+    return this.durations.cast(this.durations.total, { as: 'ms' })
   }
 
   /**
@@ -221,12 +220,21 @@ export class Gig extends Track {
   }
 
   /**
+   * Determines the number of times the track has already looped/repeated.
+   *
+   * @returns {Number}
+   */
+  get iterations () {
+    return this.index / (this.durations.total - 1)
+  }
+
+  /**
    * Determines if the track has already looped/repeated.
    *
    * @returns {Boolean}
    */
   get repeating () {
-    return (this.index / (this.durations.total - 1)) >= 1
+    return this.iterations >= 1
   }
 
   /**
@@ -358,7 +366,7 @@ export class Gig extends Track {
    * @param {Object} [context] stateful dynamic interval context
    * @returns {Object} updated interval context
    */
-  step (context) {
+  step (context = {}) {
     const { state, interval } = this
     const { beat, play, stop } = state
     const { duration } = beat
