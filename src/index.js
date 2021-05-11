@@ -62,7 +62,8 @@ export class Gig extends Track {
    * @returns {Object}
    */
   get prev () {
-    return this.at(this.cursor - 1)
+    // return this.at(this.cursor - 1)
+    return this.at(this.durations.cyclic(this.cursor - 1))
   }
 
   /**
@@ -70,9 +71,9 @@ export class Gig extends Track {
    *
    * @returns {Object}
    */
-  // TODO: Remove/refactor, this is pointless (we just want to go back 1 cursor index, not both a measure and beat!)
   get next () {
-    return this.at(this.cursor + 1)
+    // return this.at(this.cursor + 1)
+    return this.at(this.durations.cyclic(this.cursor + 1))
   }
 
   /**
@@ -90,7 +91,7 @@ export class Gig extends Track {
    * @returns {Boolean}
    */
   get first () {
-    return this.index === 0
+    return this.cursor === 0
   }
 
   /**
@@ -99,7 +100,7 @@ export class Gig extends Track {
    * @returns {Boolean}
    */
   get last () {
-    return this.index === this.durations.total
+    return this.cursor === this.durations.total
   }
 
   /**
@@ -150,6 +151,10 @@ export class Gig extends Track {
    */
   get inactive () {
     return INACTIVE_STATUS.includes(this.status)
+  }
+
+  get target () {
+    return this.durations.cast(this.next.beat.index, { as: 'ms' })
   }
 
   /**
@@ -237,6 +242,10 @@ export class Gig extends Track {
     return this.iterations >= 1
   }
 
+  get limit () {
+    return this.loops ? Math.Infinity : this.durations.cast(this.durations.total, { as: 'ms' })
+  }
+
   /**
    * Provides the index of the current pulse beat under the context of a looping metronome.
    *
@@ -264,13 +273,13 @@ export class Gig extends Track {
   start () {
     const delay  = this.delay * this.interval
 
-    setTimeout(() => {
+    // setTimeout(() => {
       this.clock = this.timer(this)
       this.times.origin = now()
 
       this.emit('start')
       this.is('playing')
-    }, delay || 0)
+    // }, delay || 0)
   }
 
   /**
@@ -377,9 +386,9 @@ export class Gig extends Track {
 
     if (this.repeating && this.first) {
       if (this.loops) {
-        this.times.origin = now()
+        // this.times.origin = now()
       } else {
-        return this.stop()
+        return this.kill()
       }
     }
 
@@ -392,6 +401,19 @@ export class Gig extends Track {
 
     return { ...context, wait: interval }
   }
+
+  // NOTE:
+  //  - Can now just watch gig.index and then call orient.
+  //  - Later we will create a nice abstraction between stateful and stateless intervals
+  // orient (origin, last) {
+  //   if (origin != null && isNaN(origin)) throw Error('Origin must be a numeric timestamp')
+  //   if (last != null && last < origin) throw Error('Last time must occur after origin time')
+
+  //   this.index = this.durations.time(last, { is: 'ms', as: 'step' })
+  //   this.times = { origin: origin || this.times.origin, last }
+
+  //   return this
+  // }
 
   /**
    * Resets the cursor indices to their initial unplayed state
@@ -432,6 +454,13 @@ export class Gig extends Track {
     this.status = value
 
     return this
+  }
+
+  check (status) {
+    const key = status.toLowerCase()
+    const value = STATUS[key]
+
+    return this.status === value
   }
 
 }
