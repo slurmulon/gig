@@ -19,7 +19,7 @@ export class Gig extends Track {
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [howler] optional Howler configuration overrides
    */
-  constructor ({ source, audio, loop, delay, timer, howler }) {
+  constructor ({ source, audio, loop, delay, stateless, timer, howler }) {
     super(source)
 
     EventEmitter.call(this)
@@ -30,12 +30,10 @@ export class Gig extends Track {
     this.delay  = delay
     this.timer  = timer || defaultTimer
 
-    // this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
-    // this.index = { step: 0, repeat: 0 }
     this.index = 0
-    // RENAME: Conflicts with base class
     this.times = { origin: null, last: null }
     this.status = STATUS.pristine
+    this.stateless = stateless
 
     if (audio) {
       this.music = new Howl(Object.assign({
@@ -62,7 +60,6 @@ export class Gig extends Track {
    * @returns {Object}
    */
   get prev () {
-    // return this.at(this.cursor - 1)
     return this.at(this.durations.cyclic(this.cursor - 1))
   }
 
@@ -72,7 +69,6 @@ export class Gig extends Track {
    * @returns {Object}
    */
   get next () {
-    // return this.at(this.cursor + 1)
     return this.at(this.durations.cyclic(this.cursor + 1))
   }
 
@@ -82,7 +78,18 @@ export class Gig extends Track {
    * @returns {Object}
    */
   get cursor () {
-    return this.durations.cyclic(this.index)
+    // return this.durations.cyclic(this.index)
+    return this.durations.cyclic(this.current)
+    // return this.durations.cyclic(Math.floor(this.current))
+  }
+
+  get current () {
+    return !this.stateless ? this.index : Math.floor(this.place)
+    // return !this.stateless ? this.index : this.place
+  }
+
+  get place () {
+    return this.durations.cast(this.elapsed, { is: 'ms', as: 'step' })
   }
 
   /**
@@ -151,6 +158,20 @@ export class Gig extends Track {
    */
   get inactive () {
     return INACTIVE_STATUS.includes(this.status)
+  }
+
+  get expired () {
+    return EXPIRED_STATUS.includes(this.status)
+  }
+
+  get signaling () {
+    const { state } = this
+
+    return {
+      beat: state.beat,
+      play: !!state.play.length,
+      stop: !!state.stop.length
+    }
   }
 
   get target () {
@@ -230,7 +251,8 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get iterations () {
-    return this.index / (this.durations.total - 1)
+    // return this.index / (this.durations.total - 1)
+    return this.current / (this.durations.total - 1)
   }
 
   /**
@@ -243,7 +265,7 @@ export class Gig extends Track {
   }
 
   get limit () {
-    return this.loops ? Math.Infinity : this.durations.cast(this.durations.total, { as: 'ms' })
+    return this.loops ? Math.Infinity : this.duration
   }
 
   /**
@@ -271,15 +293,11 @@ export class Gig extends Track {
    */
   // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
   start () {
-    const delay  = this.delay * this.interval
+    this.clock = this.timer(this)
+    this.times.origin = now()
 
-    // setTimeout(() => {
-      this.clock = this.timer(this)
-      this.times.origin = now()
-
-      this.emit('start')
-      this.is('playing')
-    // }, delay || 0)
+    this.emit('start')
+    this.is('playing')
   }
 
   /**
@@ -386,7 +404,7 @@ export class Gig extends Track {
 
     if (this.repeating && this.first) {
       if (this.loops) {
-        // this.times.origin = now()
+        this.emit('loop', state)
       } else {
         return this.kill()
       }
@@ -396,24 +414,28 @@ export class Gig extends Track {
       this.emit('play:beat', beat)
     }
 
-    this.index++
+    // this.index++
+    this.index = beat.index
     this.times.last = now()
 
     return { ...context, wait: interval }
   }
 
-  // NOTE:
-  //  - Can now just watch gig.index and then call orient.
-  //  - Later we will create a nice abstraction between stateful and stateless intervals
-  // orient (origin, last) {
-  //   if (origin != null && isNaN(origin)) throw Error('Origin must be a numeric timestamp')
-  //   if (last != null && last < origin) throw Error('Last time must occur after origin time')
+  travel (duration, is = 'step') {
+    const step = this.durations.cast(duration, { is, as: 'step' })
+    const time = this.durations.cast(step, { as: 'ms' })
+    const last = this.durations.cast(Math.floor(step), { as: 'ms' })
 
-  //   this.index = this.durations.time(last, { is: 'ms', as: 'step' })
-  //   this.times = { origin: origin || this.times.origin, last }
+    this.index = Math.floor(step)
+    this.times.last = last
+    this.times.origin = now() - time
 
-  //   return this
-  // }
+    return this
+  }
+
+  sync (time) {
+    return this.travel(time == null ? this.elapsed : time)
+  }
 
   /**
    * Resets the cursor indices to their initial unplayed state
@@ -486,8 +508,14 @@ export const INACTIVE_STATUS = [
   STATUS.killed
 ]
 
+export const EXPIRED_STATUS = [
+  STATUS.stopped,
+  STATUS.killed
+]
+
 export const CONSTANTS = Gig.CONSTANTS = {
   STATUS,
   ACTIVE_STATUS,
-  INACTIVE_STATUS
+  INACTIVE_STATUS,
+  EXPIRED_STATUS
 }
