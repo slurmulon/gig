@@ -15,11 +15,10 @@ export class Gig extends Track {
    * @param {Audio} [audio] track audio
    * @param {boolean} [loop] enable track looping
    * @param {boolean} [tempo] in beats per minute [REMOVED]
-   * @param {number} [delay] wait a duration before starting to play
    * @param {Object} [timer] alternative timer/interval API
    * @param {Object} [howler] optional Howler configuration overrides
    */
-  constructor ({ source, audio, loop, delay, stateless, timer, howler }) {
+  constructor ({ source, audio, loop, stateless, timer, howler }) {
     super(source)
 
     EventEmitter.call(this)
@@ -27,7 +26,6 @@ export class Gig extends Track {
     this.audio  = audio
     this.loop   = loop
     // this.tempo  = tempo // FIXME: Sync with Howler's rate property
-    this.delay  = delay
     this.timer  = timer || defaultTimer
 
     this.index = 0
@@ -60,7 +58,7 @@ export class Gig extends Track {
    * @returns {Object}
    */
   get prev () {
-    return this.at(this.durations.cyclic(this.cursor - 1))
+    return this.at(this.cursor - 1)
   }
 
   /**
@@ -69,25 +67,34 @@ export class Gig extends Track {
    * @returns {Object}
    */
   get next () {
-    return this.at(this.durations.cyclic(this.cursor + 1))
+    return this.at(this.cursor + 1)
   }
 
   /**
-   * Determines the cyclic step beat index.
+   * Determines the cyclic/relative step beat index.
    *
-   * @returns {Object}
+   * @returns {Number}
    */
   get cursor () {
-    // return this.durations.cyclic(this.index)
     return this.durations.cyclic(this.current)
-    // return this.durations.cyclic(Math.floor(this.current))
   }
 
+  /**
+   * Determines the global/absolute step beat index.
+   * When stateless the step is calculated based on monotonic time.
+   * When stateful the step is calculated based on current index value.
+   *
+   * @returns {Number}
+   */
   get current () {
     return !this.stateless ? this.index : Math.floor(this.place)
-    // return !this.stateless ? this.index : this.place
   }
 
+  /**
+   * Determines the global/absolute step beat based on elapsed monotonic time.
+   *
+   * @returns {Number}
+   */
   get place () {
     return this.durations.cast(this.elapsed, { is: 'ms', as: 'step' })
   }
@@ -160,26 +167,19 @@ export class Gig extends Track {
     return INACTIVE_STATUS.includes(this.status)
   }
 
+  /**
+   * Determines if the track is expired
+   *
+   * @returns {Boolean}
+   */
   get expired () {
     return EXPIRED_STATUS.includes(this.status)
   }
 
-  get signaling () {
-    const { state } = this
-
-    return {
-      beat: state.beat,
-      play: !!state.play.length,
-      stop: !!state.stop.length
-    }
-  }
-
-  get target () {
-    return this.durations.cast(this.next.beat.index, { as: 'ms' })
-  }
-
   /**
    * The amount of time that's elapsed since the track started playing.
+   *
+   * Used to determine the cursor step when Gig is set to stateless.
    *
    * @returns {Float}
    */
@@ -251,7 +251,6 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get iterations () {
-    // return this.index / (this.durations.total - 1)
     return this.current / (this.durations.total - 1)
   }
 
@@ -264,6 +263,11 @@ export class Gig extends Track {
     return this.iterations >= 1
   }
 
+  /**
+   * Specifies the limit of steps in a track
+   *
+   * @returns {Number}
+   */
   get limit () {
     return this.loops ? Math.Infinity : this.duration
   }
@@ -303,7 +307,6 @@ export class Gig extends Track {
   /**
    * Loads the audio data and kicks off the synchronization clock
    */
-  // FIXME: sync audio playback with `start` delay
   play () {
     if (this.audible) {
       this.music.on('load', () => {
@@ -388,12 +391,10 @@ export class Gig extends Track {
   }
 
   /**
-   * Invokes the action to perform on each interval
-   *
-   * @param {Object} [context] stateful dynamic interval context
-   * @returns {Object} updated interval context
+   * Invokes the action to perform on each interval and emits
+   * various events based on current state of the step.
    */
-  step (context = {}) {
+  step () {
     const { state, interval } = this
     const { beat, play, stop } = state
     const { duration } = beat
@@ -417,10 +418,13 @@ export class Gig extends Track {
     // this.index++
     this.index = beat.index
     this.times.last = now()
-
-    return { ...context, wait: interval }
   }
 
+  /**
+   * Moves playback cursor to the provided duration.
+   *
+   * WARN: Work in progress
+   */
   travel (duration, is = 'step') {
     const step = this.durations.cast(duration, { is, as: 'step' })
     const time = this.durations.cast(step, { as: 'ms' })
@@ -431,10 +435,6 @@ export class Gig extends Track {
     this.times.origin = now() - time
 
     return this
-  }
-
-  sync (time) {
-    return this.travel(time == null ? this.elapsed : time)
   }
 
   /**
@@ -478,6 +478,11 @@ export class Gig extends Track {
     return this
   }
 
+  /**
+   * Determines if the playing status matches the provided status key string.
+   *
+   * @returns {Boolean}
+   */
   check (status) {
     const key = status.toLowerCase()
     const value = STATUS[key]
