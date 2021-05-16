@@ -4,7 +4,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var bachJs = require('bach-js');
 var howler = require('howler');
-var statefulDynamicInterval = require('stateful-dynamic-interval');
 var now = require('performance-now');
 var EventEmitter = require('events');
 
@@ -36,7 +35,7 @@ class Gig extends bachJs.Music {
     this.audio  = audio;
     this.loop   = loop;
     // this.tempo  = tempo // FIXME: Sync with Howler's rate property
-    this.timer  = timer || defaultTimer;
+    this.timer  = timer;// || defaultTimer
 
     this.index = 0;
     this.times = { origin: null, last: null };
@@ -503,7 +502,7 @@ class Gig extends bachJs.Music {
 
 Object.assign(bachJs.Music.prototype, EventEmitter__default['default'].prototype);
 
-const defaultTimer = track => statefulDynamicInterval.setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true });
+// export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
 
 const STATUS = {
   pristine : Symbol('pristine'),
@@ -540,4 +539,3 @@ exports.EXPIRED_STATUS = EXPIRED_STATUS;
 exports.Gig = Gig;
 exports.INACTIVE_STATUS = INACTIVE_STATUS;
 exports.STATUS = STATUS;
-exports.defaultTimer = defaultTimer;

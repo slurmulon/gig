@@ -1,6 +1,5 @@
 import { Music } from 'bach-js';
 import { Howl } from 'howler';
-import { setStatefulDynterval } from 'stateful-dynamic-interval';
 import now from 'performance-now';
 import EventEmitter from 'events';
 
@@ -27,7 +26,7 @@ class Gig extends Music {
     this.audio  = audio;
     this.loop   = loop;
     // this.tempo  = tempo // FIXME: Sync with Howler's rate property
-    this.timer  = timer || defaultTimer;
+    this.timer  = timer;// || defaultTimer
 
     this.index = 0;
     this.times = { origin: null, last: null };
@@ -494,7 +493,7 @@ class Gig extends Music {
 
 Object.assign(Music.prototype, EventEmitter.prototype);
 
-const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true });
+// export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
 
 const STATUS = {
   pristine : Symbol('pristine'),
@@ -525,4 +524,4 @@ const CONSTANTS = Gig.CONSTANTS = {
   EXPIRED_STATUS
 };
 
-export { ACTIVE_STATUS, CONSTANTS, EXPIRED_STATUS, Gig, INACTIVE_STATUS, STATUS, defaultTimer };
+export { ACTIVE_STATUS, CONSTANTS, EXPIRED_STATUS, Gig, INACTIVE_STATUS, STATUS };
