@@ -76,6 +76,7 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
+// import { Track, Sections } from 'bach-js'
 /**
  * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
  */
@@ -96,7 +97,6 @@ var Gig = function (_Track) {
         audio = _ref.audio,
         loop = _ref.loop,
         delay = _ref.delay,
-        reorient = _ref.reorient,
         timer = _ref.timer,
         howler$$1 = _ref.howler;
     classCallCheck(this, Gig);
@@ -111,9 +111,11 @@ var Gig = function (_Track) {
     _this.delay = delay;
     _this.timer = timer || defaultTimer;
 
-    _this.index = { measure: 0, beat: 0, section: 0, repeat: 0
-      // RENAME: Conflicts with base class
-    };_this.times = { origin: null, last: null };
+    // this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
+    // this.index = { step: 0, repeat: 0 }
+    _this.index = 0;
+    // RENAME: Conflicts with base class
+    _this.times = { origin: null, last: null };
     _this.status = STATUS.pristine;
 
     if (audio) {
@@ -127,10 +129,29 @@ var Gig = function (_Track) {
     return _this;
   }
 
+  // REMOVE
   /**
    * Provides the core data structure backing `sections`, primarily for internal use but useful to have exposed indepdently
    *
    * @returns {Sections}
+   */
+  // get sectionized () {
+  //   return new Sections(this.source)
+  // }
+
+  // REMOVE
+  /** Provides all of the sections (i.e. the identifiable parts/transitions) of a track
+   *
+   * @returns {Array}
+   */
+  // get sections () {
+  //   return this.sectionized.all
+  // }
+
+  /**
+   * Provides the beat found at the track's cursor
+   *
+   * @returns {Object}
    */
 
 
@@ -287,18 +308,23 @@ var Gig = function (_Track) {
   }, {
     key: 'step',
     value: function step(context) {
-      // if (!this.loops && this.repeating && this.first.section) {
-      //   return this.stop()
-      // }
+      // const { state, interval, prev } = this
       var state = this.state,
-          interval = this.interval,
-          prev = this.prev;
-      var beat = state.beat;
-      var duration = beat.duration,
-          exists = beat.exists;
+          interval = this.interval;
+      // const { beat } = state
 
+      var beat = state.beat,
+          play = state.play,
+          stop = state.stop;
+      var duration = beat.duration;
 
-      if (prev) this.emit('beat:stop', prev);
+      // if (prev) this.emit('beat:stop', prev)
+
+      if (stop) {
+        var elems = stop.map(this.element);
+
+        this.emit('stop:beat', elems);
+      }
 
       if (this.repeating && this.first.section) {
         if (this.loops) {
@@ -308,9 +334,21 @@ var Gig = function (_Track) {
         }
       }
 
-      if (exists) this.emit('beat:play', beat);
+      // if (exists) this.emit('beat:play', beat)
+      if (play) {
+        // FIXME: Problem with play in bach.v3 is that it only gives elements, and we want to actually return the beat here
+        //  - Actually ok since we can either:
+        //    * Get rid of :play and then, here, just search through :beats matching step index
+        //    * Or, if we want to make sure everything is more consistent in terms of organization, we can keep :play but instead use the beat index instead of the elements
+        //      - Liking this better since we don't want to search through :beats on every step, inefficient compared to :play steps (O(1) vs O(n) access)
+        // const elems = play.map(this.element)
 
-      this.bump(beat);
+        this.emit('play:beat', beat);
+      }
+
+      // this.bump(beat)
+      this.index++;
+      this.times.last = now();
 
       return Object.assign({}, context, { wait: interval * duration });
     }
@@ -319,29 +357,26 @@ var Gig = function (_Track) {
      * Increases the cursor to the next pulse beat of the track and, if we're on the last pulse beat,
      * also increases the cursor to the next measure.
      */
+    // bump (beat) {
+    //   const limit = {
+    //     measure : Math.max(this.size.measures, 1),
+    //     beat    : Math.max(this.size.beats,    1),
+    //     section : Math.max(this.size.sections, 1)
+    //   }
 
-  }, {
-    key: 'bump',
-    value: function bump(beat) {
-      var limit = {
-        measure: Math.max(this.size.measures, 1),
-        beat: Math.max(this.size.beats, 1),
-        section: Math.max(this.size.sections, 1)
-      };
+    //   const increment = {
+    //     repeat: this.index.section === (limit.section - 1) ? 1 : 0,
+    //     measure: this.index.beat === (limit.beat - 1) ? 1 : 0,
+    //     beat: 1,
+    //     section: beat.exists ? 1 : 0
+    //   }
 
-      var increment = {
-        repeat: this.index.section === limit.section - 1 ? 1 : 0,
-        measure: this.index.beat === limit.beat - 1 ? 1 : 0,
-        beat: 1,
-        section: beat.exists ? 1 : 0
-      };
-
-      this.index.measure = Math.floor(this.index.measure + increment.measure) % limit.measure;
-      this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat;
-      this.index.section = Math.floor(this.index.section + increment.section) % limit.section;
-      this.index.repeat += increment.repeat;
-      this.times.last = now();
-    }
+    //   this.index.measure = Math.floor(this.index.measure + increment.measure) % limit.measure
+    //   this.index.beat = Math.floor(this.index.beat + increment.beat) % limit.beat
+    //   this.index.section = Math.floor(this.index.section + increment.section) % limit.section
+    //   this.index.repeat += increment.repeat
+    //   this.index++
+    // }
 
     /**
      * Resets the cursor indices to their initial unplayed state
@@ -350,7 +385,8 @@ var Gig = function (_Track) {
   }, {
     key: 'reset',
     value: function reset() {
-      this.index = { measure: 0, beat: 0, section: 0, repeat: 0 };
+      // this.index = { measure: 0, beat: 0, section: 0, repeat: 0 }
+      this.index = 0;
       this.times = { origin: null, last: null };
 
       return this;
@@ -396,49 +432,25 @@ var Gig = function (_Track) {
       return this;
     }
   }, {
-    key: 'sectionized',
-    get: function get$$1() {
-      return new bachJs.Sections(this.source);
-    }
-
-    /** Provides all of the sections (i.e. the identifiable parts/transitions) of a track
-     *
-     * @returns {Array}
-     */
-
-  }, {
-    key: 'sections',
-    get: function get$$1() {
-      return this.sectionized.all;
-    }
-
-    /**
-     * Provides the measure and beat found at the track's cursor
-     *
-     * @returns {Object}
-     */
-
-  }, {
     key: 'state',
     get: function get$$1() {
-      return this.at(this.cursor.measure, this.cursor.beat);
+      return this.at(this.cursor);
     }
 
     /**
-     * Provides the measure and beat found one step behind the track's cursor
+     * Provides beat found one step behind the track's cursor
      *
      * @returns {Object}
      */
-    // TODO: Remove/refactor, this is pointless (we just want to go back 1 cursor index, not both a measure and beat!)
 
   }, {
     key: 'prev',
     get: function get$$1() {
-      return this.at(this.cursor.measure - 1, this.cursor.beat - 1);
+      return this.at(this.cursor - 1);
     }
 
     /**
-     * Provides the measure and beat found one step ahead of the track's cursor
+     * Provides the beat found one step ahead of the track's cursor
      *
      * @returns {Object}
      */
@@ -447,11 +459,11 @@ var Gig = function (_Track) {
   }, {
     key: 'next',
     get: function get$$1() {
-      return this.at(this.cursor.measure + 1, this.cursor.beat + 1);
+      return this.at(this.cursor + 1);
     }
 
     /**
-     * Determines the cursors of the current measure, beat and section of the track
+     * Determines the cursors of the cyclic step index.
      *
      * @returns {Object}
      */
@@ -459,45 +471,42 @@ var Gig = function (_Track) {
   }, {
     key: 'cursor',
     get: function get$$1() {
-      return {
-        measure: Math.min(Math.max(this.index.measure, 0), this.size.measures - 1),
-        beat: Math.min(Math.max(this.index.beat, 0), this.size.beats - 1),
-        section: Math.min(Math.max(this.index.section, 0), this.size.sections - 1)
-      };
+      // TODO: Could/should probably push this into bach-js, either Music or Durations
+      return this.durations.cyclic(this.index);
+      // return {
+      //   measure : Math.min(Math.max(this.index.measure, 0), this.size.measures - 1),
+      //   beat    : Math.min(Math.max(this.index.beat,    0), this.size.beats    - 1),
+      //   section : Math.min(Math.max(this.index.section, 0), this.size.sections - 1)
+      // }
     }
 
     /**
-     * Provides the current measure, beat and section of the track
+     * Provides the current beat of the track
      *
      * @returns {Object}
      */
-
-  }, {
-    key: 'current',
-    get: function get$$1() {
-      return {
-        measure: this.data[this.cursor.measure],
-        beat: this.data[this.cursor.measure][this.cursor.beat],
-        section: this.sections[this.cursor.section]
-      };
-    }
+    // get current () {
+    //   return this.state.beat
+    //   // return {
+    //   //   measure : this.data[this.cursor.measure],
+    //   //   beat    : this.data[this.cursor.measure][this.cursor.beat],
+    //   //   section : this.sections[this.cursor.section]
+    //   // }
+    // }
 
     /**
      * Provides the total number of measures, beats and sections in a track, relative to the cursor
      *
      * @returns {Object}
-     */
-
-  }, {
-    key: 'size',
-    get: function get$$1() {
-      return {
-        measures: this.data.length,
-        beats: this.data[this.index.measure].length,
-        sections: this.sections.length
-        // repeats  : this.loops ? Infinity : 0
-      };
-    }
+     // */
+    // get size () {
+    //  return {
+    //    measures : this.data.length,
+    //    beats    : this.data[this.index.measure].length,
+    //    sections : this.sections.length,
+    //    // repeats  : this.loops ? Infinity : 0
+    //  }
+    // }
 
     /**
      * Determines if the cursor is on the first measure, beat, or section
@@ -508,11 +517,12 @@ var Gig = function (_Track) {
   }, {
     key: 'first',
     get: function get$$1() {
-      return {
-        measure: this.index.measure === 0,
-        beat: this.index.beat === 0,
-        section: this.index.section === 0
-      };
+      return this.index === 0;
+      // return {
+      //   measure: this.index.measure === 0,
+      //   beat: this.index.beat === 0,
+      //   section: this.index.section === 0
+      // }
     }
 
     /**
@@ -524,11 +534,12 @@ var Gig = function (_Track) {
   }, {
     key: 'last',
     get: function get$$1() {
-      return {
-        measure: this.index.measure === this.size.measure - 1,
-        beat: this.index.beat === this.size.beat - 1,
-        section: this.index.section === this.size.section - 1
-      };
+      return this.index === this.durations.total;
+      // return {
+      //   measure: this.index.measure === this.size.measure - 1,
+      //   beat: this.index.beat === this.size.beat - 1,
+      //   section: this.index.section === this.size.section - 1
+      // }
     }
 
     /**
@@ -694,11 +705,12 @@ var Gig = function (_Track) {
   }, {
     key: 'repeating',
     get: function get$$1() {
-      return this.index.repeat > 0;
+      // return this.index.repeat > 0
+      return this.index / this.total >= 1;
     }
 
     /**
-     * Provides the index of the current beat-unit under the context of a looping metronome.
+     * Provides the index of the current beat under the context of a looping metronome.
      *
      * @returns {Number}
      */
@@ -710,9 +722,9 @@ var Gig = function (_Track) {
     }
   }]);
   return Gig;
-}(bachJs.Track);
+}(bachJs.Music);
 
-Object.assign(bachJs.Track.prototype, EventEmitter.prototype);
+Object.assign(bachJs.Music.prototype, EventEmitter.prototype);
 
 var defaultTimer = function defaultTimer(track) {
   return statefulDynamicInterval.setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true });

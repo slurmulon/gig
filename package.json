@@ -1,6 +1,6 @@
 {
   "name": "gig",
-  "version": "1.4.0",
+  "version": "2.0.0-alpha",
   "description": "Bach player for JS",
   "main": "dist/gig.cjs.js",
   "module": "dist/gig.esm.js",
@@ -32,7 +32,7 @@
   "homepage": "https://github.com/slurmulon/gig#readme",
   "dependencies": {
     "@babel/runtime": "^7.14.0",
-    "bach-js": "github:slurmulon/bach-js",
+    "bach-js": "git+ssh://git@github.com:slurmulon/bach-js.git#v3.0-alpha",
     "howler": "^2.2.0",
     "performance-now": "^2.1.0",
     "stateful-dynamic-interval": "1.0.1"
