@@ -1,5 +1,6 @@
 // import { Track, Sections } from 'bach-js'
 import { Music as Track } from 'bach-js'
+// TODO: Switch to Tone.Player
 import { Howl } from 'howler'
 // import { setStatefulDynterval } from 'stateful-dynamic-interval'
 import now from 'performance-now'
@@ -127,7 +128,7 @@ export class Gig extends Track {
   }
 
   /**
-   * Determines if the track is actively playing
+   * Determines if the track is paused
    *
    * @returns {Boolean}
    */
@@ -415,8 +416,8 @@ export class Gig extends Track {
       this.emit('play:beat', beat)
     }
 
-    // this.index++
-    this.index = beat.index
+    // this.index = beat.index
+    this.index++
     this.times.last = now()
   }
 
