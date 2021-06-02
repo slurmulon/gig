@@ -1,6 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import babel from '@rollup/plugin-babel'
+// import babel from '@rollup/plugin-babel'
+import babel, { getBabelOutputPlugin } from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
 import nodePolyfills from 'rollup-plugin-node-polyfills'
 import pkg from './package.json'
@@ -12,20 +13,36 @@ export default [
     output: {
       name: 'gig',
       file: pkg.browser,
-      format: 'umd',
-      esModule: false
+      // format: 'umd',
+      format: 'esm',
+      esModule: false,
+      exports: 'named',
+      sourcemap: true
     },
     plugins: [
       json(),
       resolve(),
-      commonjs(),
-      nodePolyfills(),
-      babel({
-        // exclude: ['node_modules/**'],
-        // babelHelpers: 'bundled'
-        exclude: '**/node_modules/**',
-        babelHelpers: 'runtime'
-      })
+      // commonjs(),
+      commonjs({
+        // esmExternals: true, //['bach-cljs']
+        esmExternals: false, //['bach-cljs']
+        // requireReturnsDefault: true
+        requireReturnsDefault: false,
+        ignore: ['bach-cljs']
+      }),
+      // nodePolyfills(),
+      getBabelOutputPlugin({
+        presets: ['@babel/preset-env'],
+        presets: [['@babel/preset-env', { modules: 'umd' }]],
+        // plugins: [['@babel/plugin-transform-runtime']]
+      }),
+
+      // babel({
+      //   exclude: ['node_modules/**'],
+      //   // babelHelpers: 'bundled'
+      //   // exclude: '**/node_modules/**',
+      //   babelHelpers: 'runtime'
+      // })
     ]
   },
 
@@ -37,19 +54,38 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/index.js',
-    external: [/@babel\/runtime/, 'bach-js', 'howler', 'performance-now', 'stateful-dynamic-interval'],
+    external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'stateful-dynamic-interval'],
+    // output: [
+    //   { file: pkg.main, format: 'cjs', exports: 'named' },
+    //   { file: pkg.module, format: 'esm', exports: 'named' }
+    // ],
     output: [
-      { file: pkg.main, format: 'cjs', exports: 'named' },
-      { file: pkg.module, format: 'esm', exports: 'named' }
+      {
+        file: pkg.main,
+        format: 'cjs',
+        plugins: [getBabelOutputPlugin({
+          presets: ['@babel/preset-env'],
+          plugins: [['@babel/plugin-transform-runtime', { useESModules: false }]]
+        })]
+      }, // exports: 'named', sourcemap: true },
+      {
+        file: pkg.module,
+        format: 'esm',
+        plugins: [getBabelOutputPlugin({
+          // presets: ['@babel/preset-env'],
+          presets: [['@babel/preset-env', { modules: 'umd' }]],
+          plugins: [['@babel/plugin-transform-runtime', { useESModules: true }]]
+        })]
+      } // exports: 'named', sourcemap: true }
     ],
-    plugins: [
-      json(),
-      resolve(),
-      nodePolyfills()
-      // babel({
-      //   // exclude: ['node_modules/**']
-      //   babelHelpers: 'runtime'
-      // })
-    ]
+    // plugins: [
+    //   json(),
+    //   resolve(),
+    //   // nodePolyfills()
+    //   babel({
+    //     exclude: ['**/node_modules/**'],
+    //     babelHelpers: 'runtime'
+    //   })
+    // ]
   }
 ]
