@@ -1,6 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-// import babel from '@rollup/plugin-babel'
 import babel, { getBabelOutputPlugin } from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
 import nodePolyfills from 'rollup-plugin-node-polyfills'
@@ -22,11 +21,8 @@ export default [
     plugins: [
       json(),
       resolve(),
-      // commonjs(),
       commonjs({
-        // esmExternals: true, //['bach-cljs']
-        esmExternals: false, //['bach-cljs']
-        // requireReturnsDefault: true
+        esmExternals: false,
         requireReturnsDefault: false,
         ignore: ['bach-cljs']
       }),
@@ -34,15 +30,7 @@ export default [
       getBabelOutputPlugin({
         presets: ['@babel/preset-env'],
         presets: [['@babel/preset-env', { modules: 'umd' }]],
-        // plugins: [['@babel/plugin-transform-runtime']]
-      }),
-
-      // babel({
-      //   exclude: ['node_modules/**'],
-      //   // babelHelpers: 'bundled'
-      //   // exclude: '**/node_modules/**',
-      //   babelHelpers: 'runtime'
-      // })
+      })
     ]
   },
 
@@ -55,10 +43,6 @@ export default [
   {
     input: 'src/index.js',
     external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'stateful-dynamic-interval'],
-    // output: [
-    //   { file: pkg.main, format: 'cjs', exports: 'named' },
-    //   { file: pkg.module, format: 'esm', exports: 'named' }
-    // ],
     output: [
       {
         file: pkg.main,
@@ -72,7 +56,6 @@ export default [
         file: pkg.module,
         format: 'esm',
         plugins: [getBabelOutputPlugin({
-          // presets: ['@babel/preset-env'],
           presets: [['@babel/preset-env', { modules: 'umd' }]],
           plugins: [['@babel/plugin-transform-runtime', { useESModules: true }]]
         })]
