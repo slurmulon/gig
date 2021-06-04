@@ -1,527 +1,654 @@
-import { Music } from 'bach-js';
-import { Howl } from 'howler';
-import now from 'performance-now';
-import EventEmitter from 'events';
+(function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define(["exports", "@babel/runtime/helpers/esm/classCallCheck", "@babel/runtime/helpers/esm/createClass", "@babel/runtime/helpers/esm/assertThisInitialized", "@babel/runtime/helpers/esm/inherits", "@babel/runtime/helpers/esm/possibleConstructorReturn", "@babel/runtime/helpers/esm/getPrototypeOf", "bach-js", "howler", "performance-now", "events"], factory);
+  } else if (typeof exports !== "undefined") {
+    factory(exports, require("@babel/runtime/helpers/esm/classCallCheck"), require("@babel/runtime/helpers/esm/createClass"), require("@babel/runtime/helpers/esm/assertThisInitialized"), require("@babel/runtime/helpers/esm/inherits"), require("@babel/runtime/helpers/esm/possibleConstructorReturn"), require("@babel/runtime/helpers/esm/getPrototypeOf"), require("bach-js"), require("howler"), require("performance-now"), require("events"));
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod.exports, global.classCallCheck, global.createClass, global.assertThisInitialized, global.inherits, global.possibleConstructorReturn, global.getPrototypeOf, global.bachJs, global.howler, global.performanceNow, global.events);
+    global.unknown = mod.exports;
+  }
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _classCallCheck2, _createClass2, _assertThisInitialized2, _inherits2, _possibleConstructorReturn2, _getPrototypeOf2, _bachJs, _howler, _performanceNow, _events) {
+  "use strict";
 
-// import { Track, Sections } from 'bach-js'
+  var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-/**
- * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
- */
-class Gig extends Music {
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.STATUS = _exports.INACTIVE_STATUS = _exports.Gig = _exports.EXPIRED_STATUS = _exports.CONSTANTS = _exports.ACTIVE_STATUS = void 0;
+  _classCallCheck2 = _interopRequireDefault(_classCallCheck2);
+  _createClass2 = _interopRequireDefault(_createClass2);
+  _assertThisInitialized2 = _interopRequireDefault(_assertThisInitialized2);
+  _inherits2 = _interopRequireDefault(_inherits2);
+  _possibleConstructorReturn2 = _interopRequireDefault(_possibleConstructorReturn2);
+  _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf2);
+  _performanceNow = _interopRequireDefault(_performanceNow);
+  _events = _interopRequireDefault(_events);
+
+  function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2["default"])(this, result); }; }
+
+  function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+  // import { Track, Sections } from 'bach-js'
 
   /**
-   * @param {Object} source track represented in Bach.JSON
-   * @param {Audio} [audio] track audio
-   * @param {boolean} [loop] enable track looping
-   * @param {boolean} [tempo] in beats per minute [REMOVED]
-   * @param {Object} [timer] alternative timer/interval API
-   * @param {Object} [howler] optional Howler configuration overrides
+   * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
    */
-  constructor ({ source, audio, loop, stateless, timer, howler }) {
-    super(source);
+  var Gig = /*#__PURE__*/function (_Music) {
+    (0, _inherits2["default"])(Gig, _Music);
 
-    EventEmitter.call(this);
+    var _super = _createSuper(Gig);
 
-    this.audio  = audio;
-    this.loop   = loop;
-    // this.tempo  = tempo // FIXME: Sync with Howler's rate property
-    this.timer  = timer;// || defaultTimer
+    /**
+     * @param {Object} source track represented in Bach.JSON
+     * @param {Audio} [audio] track audio
+     * @param {boolean} [loop] enable track looping
+     * @param {boolean} [tempo] in beats per minute [REMOVED]
+     * @param {Object} [timer] alternative timer/interval API
+     * @param {Object} [howler] optional Howler configuration overrides
+     */
+    function Gig(_ref) {
+      var _this;
 
-    this.index = 0;
-    this.times = { origin: null, last: null };
-    this.status = STATUS.pristine;
-    this.stateless = stateless;
+      var source = _ref.source,
+          audio = _ref.audio,
+          loop = _ref.loop,
+          stateless = _ref.stateless,
+          timer = _ref.timer,
+          howler = _ref.howler;
+      (0, _classCallCheck2["default"])(this, Gig);
+      _this = _super.call(this, source);
 
-    if (audio) {
-      this.music = new Howl(Object.assign({
-        src: audio,
-        loop
-      }, howler));
+      _events["default"].call((0, _assertThisInitialized2["default"])(_this));
+
+      _this.audio = audio;
+      _this.loop = loop; // this.tempo  = tempo // FIXME: Sync with Howler's rate property
+
+      _this.timer = timer; // || defaultTimer
+
+      _this.index = 0;
+      _this.times = {
+        origin: null,
+        last: null
+      };
+      _this.status = STATUS.pristine;
+      _this.stateless = stateless;
+
+      if (audio) {
+        _this.music = new _howler.Howl(Object.assign({
+          src: audio,
+          loop: loop
+        }, howler));
+      } // this.listen()
+
+
+      return _this;
     }
+    /**
+     * Provides the beat found at the track's cursor
+     *
+     * @returns {Object}
+     */
 
-    // this.listen()
-  }
 
-  /**
-   * Provides the beat found at the track's cursor
-   *
-   * @returns {Object}
-   */
-  get state () {
-    return this.at(this.cursor)
-  }
-
-  /**
-   * Provides beat found one step behind the track's cursor
-   *
-   * @returns {Object}
-   */
-  get prev () {
-    return this.at(this.cursor - 1)
-  }
-
-  /**
-   * Provides the beat found one step ahead of the track's cursor
-   *
-   * @returns {Object}
-   */
-  get next () {
-    return this.at(this.cursor + 1)
-  }
-
-  /**
-   * Determines the cyclic/relative step beat index.
-   *
-   * @returns {Number}
-   */
-  get cursor () {
-    return this.durations.cyclic(this.current)
-  }
-
-  /**
-   * Determines the global/absolute step beat index.
-   * When stateless the step is calculated based on monotonic time.
-   * When stateful the step is calculated based on current index value.
-   *
-   * @returns {Number}
-   */
-  get current () {
-    return !this.stateless ? this.index : Math.floor(this.place)
-  }
-
-  /**
-   * Determines the global/absolute step beat based on elapsed monotonic time.
-   *
-   * @returns {Number}
-   */
-  get place () {
-    return this.durations.cast(this.elapsed, { is: 'ms', as: 'step' })
-  }
-
-  /**
-   * Determines if the cursor is on the first step
-   *
-   * @returns {Boolean}
-   */
-  get first () {
-    return this.cursor === 0
-  }
-
-  /**
-   * Determines if the cursor is on the least measure, beat, or section
-   *
-   * @returns {Boolean}
-   */
-  get last () {
-    return this.cursor === this.durations.total
-  }
-
-  /**
-   * Determines if the track is actively playing
-   *
-   * @returns {Boolean}
-   */
-  get playing () {
-    return this.status === STATUS.playing
-  }
-
-  /**
-   * Determines if the track is actively playing
-   *
-   * @returns {Boolean}
-   */
-  get paused () {
-    return this.status === STATUS.paused
-  }
-
-  /**
-   * Determines if the track's music is loading (when audible).
-   */
-  get loading () {
-    return this.audible ? this.music.state() === 'loading' : false
-  }
-
-  /**
-   * Determines if the track's music is loaded (when audible).
-   */
-  get loaded () {
-    return this.audible ? this.music.state() === 'loaded' : this.active
-  }
-
-  /**
-   * Determines if the track is actively playing (currently the same as .playing)
-   *
-   * @returns {Boolean}
-   */
-  get active () {
-    return ACTIVE_STATUS.includes(this.status)
-  }
-
-  /**
-   * Determines if the track is inactive
-   *
-   * @returns {Boolean}
-   */
-  get inactive () {
-    return INACTIVE_STATUS.includes(this.status)
-  }
-
-  /**
-   * Determines if the track is expired
-   *
-   * @returns {Boolean}
-   */
-  get expired () {
-    return EXPIRED_STATUS.includes(this.status)
-  }
-
-  /**
-   * The amount of time that's elapsed since the track started playing.
-   *
-   * Used to determine the cursor step when Gig is set to stateless.
-   *
-   * @returns {Float}
-   */
-  get elapsed () {
-    return this.times.origin != null ? (now() - this.times.origin) : 0
-  }
-
-  /**
-   * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
-   *
-   * @returns {Number}
-   */
-  get progress () {
-    return this.completion % 1
-  }
-
-  /**
-   * The run-time completion of the entire track (values exceeding 1 mean the track has looped).
-   *
-   * @returns {Number}
-   */
-  get completion () {
-    return this.elapsed / this.duration
-  }
-
-  /**
-   * The duration of the track's audio (in milliseconds).
-   *
-   * @returns {Number}
-   */
-  get duration () {
-    return this.durations.cast(this.durations.total, { as: 'ms' })
-  }
-
-  /**
-   * Whether or not the Gig object has associated audio.
-   *
-   * @returns {Boolean}
-   */
-  get audible () {
-    return this.audio && this.music
-  }
-
-  /**
-   * Whether or not the track is configured to loop playback indefinitely.
-   *
-   * @returns {Boolean}
-   */
-  get loops () {
-    return this.loop || !!(this.audible && this.music.loop())
-  }
-
-  /**
-   * Changes loop configuration of track and associated audio.
-   *
-   * @returns {Boolean}
-   */
-  set loops (loop) {
-    this.loop = loop;
-
-    if (this.audible) {
-      this.music.loop(loop);
-    }
-  }
-
-  /**
-   * Determines the number of times the track has already looped/repeated.
-   *
-   * @returns {Number}
-   */
-  get iterations () {
-    return this.current / (this.durations.total - 1)
-  }
-
-  /**
-   * Determines if the track has already looped/repeated.
-   *
-   * @returns {Boolean}
-   */
-  get repeating () {
-    return this.iterations >= 1
-  }
-
-  /**
-   * Specifies the limit of steps in a track
-   *
-   * @returns {Number}
-   */
-  get limit () {
-    return this.loops ? Math.Infinity : this.duration
-  }
-
-  /**
-   * Provides the index of the current pulse beat under the context of a looping metronome.
-   *
-   * @returns {Number}
-   */
-  get metronome () {
-    return this.durations.metronize(this.elapsed, { is: 'ms' })
-  }
-
-  /**
-   * Synchronizes track with the Howler API
-   */
-  listen () {
-    this.music.on('play',  this.play);
-    this.music.on('pause', this.pause);
-    this.music.on('stop',  this.stop);
-    this.music.on('rate',  this.rate);
-    this.music.on('seek',  this.seek);
-  }
-
-  /**
-   * Instantiates a new clock which acts as the primary synchronization mechanism
-   */
-  // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
-  start () {
-    this.clock = this.timer(this);
-    this.times.origin = now();
-
-    this.emit('start');
-    this.is('playing');
-  }
-
-  /**
-   * Loads the audio data and kicks off the synchronization clock
-   */
-  play () {
-    if (this.audible) {
-      this.music.on('load', () => {
-        this.start();
-        this.music.play();
-        this.emit('play');
-      });
-    } else {
-      this.start();
-      this.emit('play');
-    }
-
-    return this
-  }
-
-  /**
-   * Stops the audio and the synchronization clock (no resume)
-   */
-  stop () {
-    if (!this.clock) return this
-
-    if (this.audible) {
-      this.music.stop();
-      this.music.unload();
-    }
-
-    this.clock.stop();
-    this.emit('stop');
-
-    return this.reset().is('stopped')
-  }
-
-  /**
-   * Pauses the audio and the synchronization clock
-   */
-  pause () {
-    if (this.audible) this.music.pause();
-
-    this.clock.pause();
-    this.emit('pause');
-
-    return this.is('paused')
-  }
-
-  /**
-   * Resumes the audio and the synchronization clock
-   */
-  resume () {
-    if (this.audible) this.music.play();
-
-    this.clock.resume();
-    this.emit('resume');
-
-    return this.is('playing')
-  }
-
-  /**
-   * Mutes the track audio
-   */
-  mute () {
-    if (this.audible) this.music.mute();
-
-    this.emit('mute');
-
-    return this
-  }
-
-  /**
-   * Seek to a new position in the track
-   *
-   * @param {number} to position in the track in seconds
-   * @fixme
-   */
-  // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
-  // NOTE: if we assume every interval is the same, relative to tempo, this could work
-  seek (to) {
-    if (this.audible) this.music.seek(to);
-    // TODO: this.reorient()
-    this.emit('seek');
-
-    return this
-  }
-
-  /**
-   * Invokes the action to perform on each interval and emits
-   * various events based on current state of the step.
-   */
-  step () {
-    const { state, interval } = this;
-    const { beat, play, stop } = state;
-
-    if (stop.length) {
-      this.emit('stop:beat', stop);
-    }
-
-    if (this.repeating && this.first) {
-      if (this.loops) {
-        this.emit('loop', state);
-      } else {
-        return this.kill()
+    (0, _createClass2["default"])(Gig, [{
+      key: "state",
+      get: function get() {
+        return this.at(this.cursor);
       }
-    }
+      /**
+       * Provides beat found one step behind the track's cursor
+       *
+       * @returns {Object}
+       */
 
-    if (play.length) {
-      this.emit('play:beat', beat);
-    }
+    }, {
+      key: "prev",
+      get: function get() {
+        return this.at(this.cursor - 1);
+      }
+      /**
+       * Provides the beat found one step ahead of the track's cursor
+       *
+       * @returns {Object}
+       */
 
-    // this.index++
-    this.index = beat.index;
-    this.times.last = now();
-  }
+    }, {
+      key: "next",
+      get: function get() {
+        return this.at(this.cursor + 1);
+      }
+      /**
+       * Determines the cyclic/relative step beat index.
+       *
+       * @returns {Number}
+       */
 
-  /**
-   * Moves playback cursor to the provided duration.
-   *
-   * WARN: Work in progress
-   */
-  travel (duration, is = 'step') {
-    const step = this.durations.cast(duration, { is, as: 'step' });
-    const time = this.durations.cast(step, { as: 'ms' });
-    const last = this.durations.cast(Math.floor(step), { as: 'ms' });
+    }, {
+      key: "cursor",
+      get: function get() {
+        return this.durations.cyclic(this.current);
+      }
+      /**
+       * Determines the global/absolute step beat index.
+       * When stateless the step is calculated based on monotonic time.
+       * When stateful the step is calculated based on current index value.
+       *
+       * @returns {Number}
+       */
 
-    this.index = Math.floor(step);
-    this.times.last = last;
-    this.times.origin = now() - time;
+    }, {
+      key: "current",
+      get: function get() {
+        return !this.stateless ? this.index : Math.floor(this.place);
+      }
+      /**
+       * Determines the global/absolute step beat based on elapsed monotonic time.
+       *
+       * @returns {Number}
+       */
 
-    return this
-  }
+    }, {
+      key: "place",
+      get: function get() {
+        return this.durations.cast(this.elapsed, {
+          is: 'ms',
+          as: 'step'
+        });
+      }
+      /**
+       * Determines if the cursor is on the first step
+       *
+       * @returns {Boolean}
+       */
 
-  /**
-   * Resets the cursor indices to their initial unplayed state
-   */
-  reset () {
-    this.index = 0;
-    this.times = { origin: null, last: null };
+    }, {
+      key: "first",
+      get: function get() {
+        return this.cursor === 0;
+      }
+      /**
+       * Determines if the cursor is on the least measure, beat, or section
+       *
+       * @returns {Boolean}
+       */
 
-    return this
-  }
+    }, {
+      key: "last",
+      get: function get() {
+        return this.cursor === this.durations.total;
+      }
+      /**
+       * Determines if the track is actively playing
+       *
+       * @returns {Boolean}
+       */
 
-  /**
-   * Removes all active event listeners
-   *
-   * TODO: Consider automatically stopping the track here if already running
-   */
-  // purge
-  clear () {
-    return this.removeAllListeners()
-  }
+    }, {
+      key: "playing",
+      get: function get() {
+        return this.status === STATUS.playing;
+      }
+      /**
+       * Determines if the track is paused
+       *
+       * @returns {Boolean}
+       */
 
-  /**
-   * Immediately stops the track, its clock, and removes all active event listeners
-   */
-  kill () {
-    return this.stop().clear().is('killed')
-  }
+    }, {
+      key: "paused",
+      get: function get() {
+        return this.status === STATUS.paused;
+      }
+      /**
+       * Determines if the track's music is loading (when audible).
+       */
 
-  /**
-   * Updates the playing status of the track (idempotent, no reactivity or side-effects).
-   */
-  is (status) {
-    const key = status.toLowerCase();
-    const value = STATUS[key];
+    }, {
+      key: "loading",
+      get: function get() {
+        return this.audible ? this.music.state() === 'loading' : false;
+      }
+      /**
+       * Determines if the track's music is loaded (when audible).
+       */
 
-    if (!value) throw Error(`${key} is an invalid status`)
+    }, {
+      key: "loaded",
+      get: function get() {
+        return this.audible ? this.music.state() === 'loaded' : this.active;
+      }
+      /**
+       * Determines if the track is actively playing (currently the same as .playing)
+       *
+       * @returns {Boolean}
+       */
 
-    this.status = value;
+    }, {
+      key: "active",
+      get: function get() {
+        return ACTIVE_STATUS.includes(this.status);
+      }
+      /**
+       * Determines if the track is inactive
+       *
+       * @returns {Boolean}
+       */
 
-    return this
-  }
+    }, {
+      key: "inactive",
+      get: function get() {
+        return INACTIVE_STATUS.includes(this.status);
+      }
+      /**
+       * Determines if the track is expired
+       *
+       * @returns {Boolean}
+       */
 
-  /**
-   * Determines if the playing status matches the provided status key string.
-   *
-   * @returns {Boolean}
-   */
-  check (status) {
-    const key = status.toLowerCase();
-    const value = STATUS[key];
+    }, {
+      key: "expired",
+      get: function get() {
+        return EXPIRED_STATUS.includes(this.status);
+      }
+      /**
+       * The amount of time that's elapsed since the track started playing.
+       *
+       * Used to determine the cursor step when Gig is set to stateless.
+       *
+       * @returns {Float}
+       */
 
-    return this.status === value
-  }
+    }, {
+      key: "elapsed",
+      get: function get() {
+        return this.times.origin != null ? (0, _performanceNow["default"])() - this.times.origin : 0;
+      }
+      /**
+       * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
+       *
+       * @returns {Number}
+       */
 
-}
+    }, {
+      key: "progress",
+      get: function get() {
+        return this.completion % 1;
+      }
+      /**
+       * The run-time completion of the entire track (values exceeding 1 mean the track has looped).
+       *
+       * @returns {Number}
+       */
 
-Object.assign(Music.prototype, EventEmitter.prototype);
+    }, {
+      key: "completion",
+      get: function get() {
+        return this.elapsed / this.duration;
+      }
+      /**
+       * The duration of the track's audio (in milliseconds).
+       *
+       * @returns {Number}
+       */
 
-// export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
+    }, {
+      key: "duration",
+      get: function get() {
+        return this.durations.cast(this.durations.total, {
+          as: 'ms'
+        });
+      }
+      /**
+       * Whether or not the Gig object has associated audio.
+       *
+       * @returns {Boolean}
+       */
 
-const STATUS = {
-  pristine : Symbol('pristine'),
-  playing  : Symbol('playing'),
-  stopped  : Symbol('stopped'),
-  paused   : Symbol('paused'),
-  killed   : Symbol('killed')
-};
+    }, {
+      key: "audible",
+      get: function get() {
+        return this.audio && this.music;
+      }
+      /**
+       * Whether or not the track is configured to loop playback indefinitely.
+       *
+       * @returns {Boolean}
+       */
 
-const ACTIVE_STATUS = [STATUS.playing];
+    }, {
+      key: "loops",
+      get: function get() {
+        return this.loop || !!(this.audible && this.music.loop());
+      }
+      /**
+       * Changes loop configuration of track and associated audio.
+       *
+       * @returns {Boolean}
+       */
+      ,
+      set: function set(loop) {
+        this.loop = loop;
 
-const INACTIVE_STATUS = [
-  STATUS.pristine,
-  STATUS.stopped,
-  STATUS.paused,
-  STATUS.killed
-];
+        if (this.audible) {
+          this.music.loop(loop);
+        }
+      }
+      /**
+       * Determines the number of times the track has already looped/repeated.
+       *
+       * @returns {Number}
+       */
 
-const EXPIRED_STATUS = [
-  STATUS.stopped,
-  STATUS.killed
-];
+    }, {
+      key: "iterations",
+      get: function get() {
+        return this.current / (this.durations.total - 1);
+      }
+      /**
+       * Determines if the track has already looped/repeated.
+       *
+       * @returns {Boolean}
+       */
 
-const CONSTANTS = Gig.CONSTANTS = {
-  STATUS,
-  ACTIVE_STATUS,
-  INACTIVE_STATUS,
-  EXPIRED_STATUS
-};
+    }, {
+      key: "repeating",
+      get: function get() {
+        return this.iterations >= 1;
+      }
+      /**
+       * Specifies the limit of steps in a track
+       *
+       * @returns {Number}
+       */
 
-export { ACTIVE_STATUS, CONSTANTS, EXPIRED_STATUS, Gig, INACTIVE_STATUS, STATUS };
+    }, {
+      key: "limit",
+      get: function get() {
+        return this.loops ? Math.Infinity : this.duration;
+      }
+      /**
+       * Provides the index of the current pulse beat under the context of a looping metronome.
+       *
+       * @returns {Number}
+       */
+
+    }, {
+      key: "metronome",
+      get: function get() {
+        return this.durations.metronize(this.elapsed, {
+          is: 'ms'
+        });
+      }
+      /**
+       * Synchronizes track with the Howler API
+       */
+
+    }, {
+      key: "listen",
+      value: function listen() {
+        this.music.on('play', this.play);
+        this.music.on('pause', this.pause);
+        this.music.on('stop', this.stop);
+        this.music.on('rate', this.rate);
+        this.music.on('seek', this.seek);
+      }
+      /**
+       * Instantiates a new clock which acts as the primary synchronization mechanism
+       */
+      // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
+
+    }, {
+      key: "start",
+      value: function start() {
+        this.clock = this.timer(this);
+        this.times.origin = (0, _performanceNow["default"])();
+        this.emit('start');
+        this.is('playing');
+      }
+      /**
+       * Loads the audio data and kicks off the synchronization clock
+       */
+
+    }, {
+      key: "play",
+      value: function play() {
+        var _this2 = this;
+
+        if (this.audible) {
+          this.music.on('load', function () {
+            _this2.start();
+
+            _this2.music.play();
+
+            _this2.emit('play');
+          });
+        } else {
+          this.start();
+          this.emit('play');
+        }
+
+        return this;
+      }
+      /**
+       * Stops the audio and the synchronization clock (no resume)
+       */
+
+    }, {
+      key: "stop",
+      value: function stop() {
+        if (!this.clock) return this;
+
+        if (this.audible) {
+          this.music.stop();
+          this.music.unload();
+        }
+
+        this.clock.stop();
+        this.emit('stop');
+        return this.reset().is('stopped');
+      }
+      /**
+       * Pauses the audio and the synchronization clock
+       */
+
+    }, {
+      key: "pause",
+      value: function pause() {
+        if (this.audible) this.music.pause();
+        this.clock.pause();
+        this.emit('pause');
+        return this.is('paused');
+      }
+      /**
+       * Resumes the audio and the synchronization clock
+       */
+
+    }, {
+      key: "resume",
+      value: function resume() {
+        if (this.audible) this.music.play();
+        this.clock.resume();
+        this.emit('resume');
+        return this.is('playing');
+      }
+      /**
+       * Mutes the track audio
+       */
+
+    }, {
+      key: "mute",
+      value: function mute() {
+        if (this.audible) this.music.mute();
+        this.emit('mute');
+        return this;
+      }
+      /**
+       * Seek to a new position in the track
+       *
+       * @param {number} to position in the track in seconds
+       * @fixme
+       */
+      // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
+      // NOTE: if we assume every interval is the same, relative to tempo, this could work
+
+    }, {
+      key: "seek",
+      value: function seek(to) {
+        if (this.audible) this.music.seek(to); // TODO: this.reorient()
+
+        this.emit('seek');
+        return this;
+      }
+      /**
+       * Invokes the action to perform on each interval and emits
+       * various events based on current state of the step.
+       */
+
+    }, {
+      key: "step",
+      value: function step() {
+        var state = this.state,
+            interval = this.interval;
+        var beat = state.beat,
+            play = state.play,
+            stop = state.stop;
+
+        if (stop.length) {
+          this.emit('stop:beat', stop);
+        }
+
+        if (this.repeating && this.first) {
+          if (this.loops) {
+            this.emit('loop', state);
+          } else {
+            return this.kill();
+          }
+        }
+
+        if (play.length) {
+          this.emit('play:beat', beat);
+        } // this.index = beat.index
+
+
+        this.index++;
+        this.times.last = (0, _performanceNow["default"])();
+      }
+      /**
+       * Moves playback cursor to the provided duration.
+       *
+       * WARN: Work in progress
+       */
+
+    }, {
+      key: "travel",
+      value: function travel(duration) {
+        var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+        var step = this.durations.cast(duration, {
+          is: is,
+          as: 'step'
+        });
+        var time = this.durations.cast(step, {
+          as: 'ms'
+        });
+        var last = this.durations.cast(Math.floor(step), {
+          as: 'ms'
+        });
+        this.index = Math.floor(step);
+        this.times.last = last;
+        this.times.origin = (0, _performanceNow["default"])() - time;
+        return this;
+      }
+      /**
+       * Resets the cursor indices to their initial unplayed state
+       */
+
+    }, {
+      key: "reset",
+      value: function reset() {
+        this.index = 0;
+        this.times = {
+          origin: null,
+          last: null
+        };
+        return this;
+      }
+      /**
+       * Removes all active event listeners
+       *
+       * TODO: Consider automatically stopping the track here if already running
+       */
+      // purge
+
+    }, {
+      key: "clear",
+      value: function clear() {
+        return this.removeAllListeners();
+      }
+      /**
+       * Immediately stops the track, its clock, and removes all active event listeners
+       */
+
+    }, {
+      key: "kill",
+      value: function kill() {
+        return this.stop().clear().is('killed');
+      }
+      /**
+       * Updates the playing status of the track (idempotent, no reactivity or side-effects).
+       */
+
+    }, {
+      key: "is",
+      value: function is(status) {
+        var key = status.toLowerCase();
+        var value = STATUS[key];
+        if (!value) throw Error("".concat(key, " is an invalid status"));
+        this.status = value;
+        return this;
+      }
+      /**
+       * Determines if the playing status matches the provided status key string.
+       *
+       * @returns {Boolean}
+       */
+
+    }, {
+      key: "check",
+      value: function check(status) {
+        var key = status.toLowerCase();
+        var value = STATUS[key];
+        return this.status === value;
+      }
+    }]);
+    return Gig;
+  }(_bachJs.Music);
+
+  _exports.Gig = Gig;
+  Object.assign(_bachJs.Music.prototype, _events["default"].prototype); // export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
+
+  var STATUS = {
+    pristine: Symbol('pristine'),
+    playing: Symbol('playing'),
+    stopped: Symbol('stopped'),
+    paused: Symbol('paused'),
+    killed: Symbol('killed')
+  };
+  _exports.STATUS = STATUS;
+  var ACTIVE_STATUS = [STATUS.playing];
+  _exports.ACTIVE_STATUS = ACTIVE_STATUS;
+  var INACTIVE_STATUS = [STATUS.pristine, STATUS.stopped, STATUS.paused, STATUS.killed];
+  _exports.INACTIVE_STATUS = INACTIVE_STATUS;
+  var EXPIRED_STATUS = [STATUS.stopped, STATUS.killed];
+  _exports.EXPIRED_STATUS = EXPIRED_STATUS;
+  var CONSTANTS = Gig.CONSTANTS = {
+    STATUS: STATUS,
+    ACTIVE_STATUS: ACTIVE_STATUS,
+    INACTIVE_STATUS: INACTIVE_STATUS,
+    EXPIRED_STATUS: EXPIRED_STATUS
+  };
+  _exports.CONSTANTS = CONSTANTS;
+});

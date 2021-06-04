@@ -32,7 +32,7 @@
   "homepage": "https://github.com/slurmulon/gig#readme",
   "dependencies": {
     "@babel/runtime": "^7.14.0",
-    "bach-js": "github:slurmulon/bach-js#v3.0-alpha",
+    "bach-js": "github:slurmulon/bach-js#v3.0-alpha.1",
     "howler": "^2.2.0",
     "performance-now": "^2.1.0"
   },
