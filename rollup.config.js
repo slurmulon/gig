@@ -1,8 +1,8 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import babel, { getBabelOutputPlugin } from '@rollup/plugin-babel'
+import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
-import nodePolyfills from 'rollup-plugin-node-polyfills'
+// import nodePolyfills from 'rollup-plugin-node-polyfills'
 import pkg from './package.json'
 
 // browser-friendly UMD build
