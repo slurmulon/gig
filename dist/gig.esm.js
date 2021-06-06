@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "@babel/runtime/helpers/esm/classCallCheck", "@babel/runtime/helpers/esm/createClass", "@babel/runtime/helpers/esm/assertThisInitialized", "@babel/runtime/helpers/esm/inherits", "@babel/runtime/helpers/esm/possibleConstructorReturn", "@babel/runtime/helpers/esm/getPrototypeOf", "bach-js", "howler", "performance-now", "events"], factory);
+    define(["exports", "@babel/runtime/helpers/esm/classCallCheck", "@babel/runtime/helpers/esm/createClass", "@babel/runtime/helpers/esm/assertThisInitialized", "@babel/runtime/helpers/esm/inherits", "@babel/runtime/helpers/esm/possibleConstructorReturn", "@babel/runtime/helpers/esm/getPrototypeOf", "bach-js", "raf", "performance-now", "howler", "events"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("@babel/runtime/helpers/esm/classCallCheck"), require("@babel/runtime/helpers/esm/createClass"), require("@babel/runtime/helpers/esm/assertThisInitialized"), require("@babel/runtime/helpers/esm/inherits"), require("@babel/runtime/helpers/esm/possibleConstructorReturn"), require("@babel/runtime/helpers/esm/getPrototypeOf"), require("bach-js"), require("howler"), require("performance-now"), require("events"));
+    factory(exports, require("@babel/runtime/helpers/esm/classCallCheck"), require("@babel/runtime/helpers/esm/createClass"), require("@babel/runtime/helpers/esm/assertThisInitialized"), require("@babel/runtime/helpers/esm/inherits"), require("@babel/runtime/helpers/esm/possibleConstructorReturn"), require("@babel/runtime/helpers/esm/getPrototypeOf"), require("bach-js"), require("raf"), require("performance-now"), require("howler"), require("events"));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.classCallCheck, global.createClass, global.assertThisInitialized, global.inherits, global.possibleConstructorReturn, global.getPrototypeOf, global.bachJs, global.howler, global.performanceNow, global.events);
+    factory(mod.exports, global.classCallCheck, global.createClass, global.assertThisInitialized, global.inherits, global.possibleConstructorReturn, global.getPrototypeOf, global.bachJs, global.raf, global.performanceNow, global.howler, global.events);
     global.unknown = mod.exports;
   }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _classCallCheck2, _createClass2, _assertThisInitialized2, _inherits2, _possibleConstructorReturn2, _getPrototypeOf2, _bachJs, _howler, _performanceNow, _events) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _classCallCheck2, _createClass2, _assertThisInitialized2, _inherits2, _possibleConstructorReturn2, _getPrototypeOf2, _bachJs, _raf, _performanceNow, _howler, _events) {
   "use strict";
 
   var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -18,6 +18,7 @@
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
+  _exports.clock = clock;
   _exports.STATUS = _exports.INACTIVE_STATUS = _exports.Gig = _exports.EXPIRED_STATUS = _exports.CONSTANTS = _exports.ACTIVE_STATUS = void 0;
   _classCallCheck2 = _interopRequireDefault(_classCallCheck2);
   _createClass2 = _interopRequireDefault(_createClass2);
@@ -25,6 +26,7 @@
   _inherits2 = _interopRequireDefault(_inherits2);
   _possibleConstructorReturn2 = _interopRequireDefault(_possibleConstructorReturn2);
   _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf2);
+  _raf = _interopRequireDefault(_raf);
   _performanceNow = _interopRequireDefault(_performanceNow);
   _events = _interopRequireDefault(_events);
 
@@ -32,11 +34,66 @@
 
   function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
-  // import { Track, Sections } from 'bach-js'
+  /**
+   * Default monotonic/stateless timer for Gig.
+   * Uses requestAnimationFrame and performance.now (polyfilled).
+   *
+   * @param {Gig} gig parent instance provided on construction
+   * @param {function} [tick] optional function to call on each tick of the clock
+   */
+  function clock(gig, tick) {
+    var last = null;
+    var interval = null;
 
+    var loop = function loop(time) {
+      var cursor = gig.cursor,
+          expired = gig.expired;
+      if (expired) return cancel();
+
+      if (cursor !== last) {
+        last = cursor;
+        gig.step();
+      }
+
+      if (typeof tick === 'function') {
+        tick(gig, time);
+      }
+
+      interval = (0, _raf["default"])(loop);
+    };
+
+    var cancel = function cancel() {
+      _raf["default"].cancel(interval);
+
+      interval = null;
+    };
+
+    var timer = {
+      play: function play() {
+        loop((0, _performanceNow["default"])());
+      },
+      pause: function pause() {
+        (0, _performanceNow["default"])();
+        cancel();
+      },
+      resume: function resume() {
+        gig.times.origin = (0, _performanceNow["default"])();
+        gig.times.last = null;
+        timer.play();
+      },
+      stop: function stop() {
+        last = null;
+        cancel();
+      }
+    };
+    timer.play();
+    return timer;
+  }
   /**
    * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
    */
+
+
   var Gig = /*#__PURE__*/function (_Music) {
     (0, _inherits2["default"])(Gig, _Music);
 
@@ -46,19 +103,22 @@
      * @param {Object} source track represented in Bach.JSON
      * @param {Audio} [audio] track audio
      * @param {boolean} [loop] enable track looping
-     * @param {boolean} [tempo] in beats per minute [REMOVED]
-     * @param {Object} [timer] alternative timer/interval API
+     * @param {Object} [timer] alternative timer API (default is monotonic and uses raf)
      * @param {Object} [howler] optional Howler configuration overrides
+     * @param {boolean} [stateless] enable stateless/monotonic cursor
      */
-    function Gig(_ref) {
+    function Gig() {
       var _this;
 
-      var source = _ref.source,
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          source = _ref.source,
           audio = _ref.audio,
           loop = _ref.loop,
-          stateless = _ref.stateless,
           timer = _ref.timer,
-          howler = _ref.howler;
+          howler = _ref.howler,
+          _ref$stateless = _ref.stateless,
+          stateless = _ref$stateless === void 0 ? true : _ref$stateless;
+
       (0, _classCallCheck2["default"])(this, Gig);
       _this = _super.call(this, source);
 
@@ -67,8 +127,7 @@
       _this.audio = audio;
       _this.loop = loop; // this.tempo  = tempo // FIXME: Sync with Howler's rate property
 
-      _this.timer = timer; // || defaultTimer
-
+      _this.timer = timer || clock;
       _this.index = 0;
       _this.times = {
         origin: null,
@@ -492,14 +551,14 @@
        * @param {number} to position in the track in seconds
        * @fixme
        */
-      // WARN: probably can't even support this because of dynamic interval (step can change arbitrarily)
-      // NOTE: if we assume every interval is the same, relative to tempo, this could work
 
     }, {
       key: "seek",
       value: function seek(to) {
-        if (this.audible) this.music.seek(to); // TODO: this.reorient()
-
+        if (this.audible) this.music.seek(to);
+        this.travel(to, {
+          is: 'second'
+        });
         this.emit('seek');
         return this;
       }
@@ -531,8 +590,7 @@
 
         if (play.length) {
           this.emit('play:beat', beat);
-        } // this.index = beat.index
-
+        }
 
         this.index++;
         this.times.last = (0, _performanceNow["default"])();
@@ -628,8 +686,7 @@
   }(_bachJs.Music);
 
   _exports.Gig = Gig;
-  Object.assign(_bachJs.Music.prototype, _events["default"].prototype); // export const defaultTimer = track => setStatefulDynterval(track.step.bind(track), { wait: track.interval, immediate: true })
-
+  Object.assign(_bachJs.Music.prototype, _events["default"].prototype);
   var STATUS = {
     pristine: Symbol('pristine'),
     playing: Symbol('playing'),
