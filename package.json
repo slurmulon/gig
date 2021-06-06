@@ -1,6 +1,6 @@
 {
   "name": "gig",
-  "version": "3.0.0-beta.0",
+  "version": "3.0.0-beta.1",
   "description": "Bach player for JS",
   "main": "dist/gig.cjs.js",
   "module": "dist/gig.esm.js",
