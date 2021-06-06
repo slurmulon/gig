@@ -42,7 +42,7 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/index.js',
-    external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'stateful-dynamic-interval'],
+    external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'raf', 'events'],
     output: [
       {
         file: pkg.main,
