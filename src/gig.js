@@ -99,6 +99,18 @@ export class Gig extends Track {
     return this.durations.cast(this.elapsed, { is: 'ms', as: 'step' })
   }
 
+
+  /**
+   * Determines the base bach-js duration unit to use based on stateless config.
+   *
+   * Can be provided to cast as `is`: `gig.durations.cast(4, { is: gig.unit })`.
+   *
+   * @returns {String}
+   */
+  get unit () {
+    return this.stateless ? 'ms' : 'step'
+  }
+
   /**
    * Determines if the cursor is on the first step
    *
@@ -278,7 +290,7 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get metronome () {
-    return this.durations.metronize(this.elapsed, { is: 'ms' })
+    return this.durations.metronize(this.current, { is: 'step' })
   }
 
   /**
@@ -394,6 +406,8 @@ export class Gig extends Track {
    * various events based on current state of the step.
    */
   step () {
+    this.index = this.times.last ? this.index + 1 : 0
+
     const { state, interval } = this
     const { beat, play, stop } = state
     const { duration } = beat
@@ -414,7 +428,8 @@ export class Gig extends Track {
       this.emit('play:beat', beat)
     }
 
-    this.index++
+    // FIXME: Bring back original index++, this offsets the beat sent to play:beat
+    // this.index = this.times.last ? this.index + 1 : 0
     this.times.last = now()
   }
 
