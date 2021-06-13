@@ -413,18 +413,23 @@ export class Gig extends Track {
   /**
    * Invokes the action to perform on each interval and emits
    * various events based on current state of the step.
+   * Only emits beat events if the beat has updated from the previous step.
    */
   step () {
     this.index = this.times.last ? this.index + 1 : 0
-
-    if (!this.stateless && !this.updated) return this
 
     const { state, interval } = this
     const { beat, play, stop } = state
     const { duration } = beat
 
+    this.emit('step', state)
+
     if (stop.length) {
       this.emit('stop:beat', stop)
+    }
+
+    if (!this.stateless && !this.updated) {
+      return this
     }
 
     if (this.repeating && this.first) {
