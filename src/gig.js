@@ -294,6 +294,15 @@ export class Gig extends Track {
   }
 
   /**
+   * Determines if the current step's beat has changed from the previous step's beat.
+   *
+   * @returns {Boolean}
+   */
+  get updated () {
+    return this.state.beat.index !== this.prev.beat.index
+  }
+
+  /**
    * Synchronizes track with the Howler API
    */
   listen () {
@@ -408,6 +417,8 @@ export class Gig extends Track {
   step () {
     this.index = this.times.last ? this.index + 1 : 0
 
+    if (!this.stateless && !this.updated) return this
+
     const { state, interval } = this
     const { beat, play, stop } = state
     const { duration } = beat
@@ -428,9 +439,9 @@ export class Gig extends Track {
       this.emit('play:beat', beat)
     }
 
-    // FIXME: Bring back original index++, this offsets the beat sent to play:beat
-    // this.index = this.times.last ? this.index + 1 : 0
     this.times.last = now()
+
+    return this
   }
 
   /**
