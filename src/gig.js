@@ -290,7 +290,7 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get metronome () {
-    return this.durations.metronize(this.current, { is: 'step' })
+    return this.durations.metronize(this.elapsed, { is: 'ms' })
   }
 
   /**
