@@ -465,6 +465,17 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
       });
     }
     /**
+     * Determines if the current step's beat has changed from the previous step's beat.
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: "updated",
+    get: function get() {
+      return this.state.beat.index !== this.prev.beat.index;
+    }
+    /**
      * Synchronizes track with the Howler API
      */
 
@@ -587,6 +598,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
     /**
      * Invokes the action to perform on each interval and emits
      * various events based on current state of the step.
+     * Only emits beat events if the beat has updated from the previous step.
      */
 
   }, {
@@ -598,9 +610,14 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
       var beat = state.beat,
           play = state.play,
           stop = state.stop;
+      this.emit('step', state);
 
       if (stop.length) {
         this.emit('stop:beat', stop);
+      }
+
+      if (!this.stateless && !this.updated) {
+        return this;
       }
 
       if (this.repeating && this.first) {
@@ -613,11 +630,10 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
 
       if (play.length) {
         this.emit('play:beat', beat);
-      } // FIXME: Bring back original index++, this offsets the beat sent to play:beat
-      // this.index = this.times.last ? this.index + 1 : 0
-
+      }
 
       this.times.last = now__default['default']();
+      return this;
     }
     /**
      * Moves playback cursor to the provided duration.
