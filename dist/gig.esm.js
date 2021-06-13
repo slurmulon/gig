@@ -219,6 +219,19 @@
         });
       }
       /**
+       * Determines the base bach-js duration unit to use based on stateless config.
+       *
+       * Can be provided to cast as `is`: `gig.durations.cast(4, { is: gig.unit })`.
+       *
+       * @returns {String}
+       */
+
+    }, {
+      key: "unit",
+      get: function get() {
+        return this.stateless ? 'ms' : 'step';
+      }
+      /**
        * Determines if the cursor is on the first step
        *
        * @returns {Boolean}
@@ -570,6 +583,7 @@
     }, {
       key: "step",
       value: function step() {
+        this.index = this.times.last ? this.index + 1 : 0;
         var state = this.state,
             interval = this.interval;
         var beat = state.beat,
@@ -590,9 +604,10 @@
 
         if (play.length) {
           this.emit('play:beat', beat);
-        }
+        } // FIXME: Bring back original index++, this offsets the beat sent to play:beat
+        // this.index = this.times.last ? this.index + 1 : 0
 
-        this.index++;
+
         this.times.last = (0, _performanceNow["default"])();
       }
       /**
