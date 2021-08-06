@@ -522,6 +522,8 @@ export class Gig extends Track {
 
     this.status = value
 
+    this.emit('update:status', key)
+
     return this
   }
 
