@@ -47,8 +47,10 @@ export function clock (gig, tick) {
     },
 
     resume () {
-      gig.times.origin = now()
-      gig.times.last = null
+      const skew = now() - paused
+
+      gig.times.origin += skew
+      gig.times.last += skew
 
       timer.play()
     },

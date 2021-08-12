@@ -162,6 +162,15 @@ export class Gig extends Track {
   }
 
   /**
+   * Determines if the track is pristine (i.e. hasn't changed status since initialization).
+   *
+   * @returns {Boolean}
+   */
+  get pristine () {
+    return this.status === STATUS.pristine
+  }
+
+  /**
    * Determines if the track is actively playing (currently the same as .playing)
    *
    * @returns {Boolean}
@@ -186,6 +195,15 @@ export class Gig extends Track {
    */
   get expired () {
     return EXPIRED_STATUS.includes(this.status)
+  }
+
+  /**
+   * Determines if the track has a status where baseline playback can be started
+   *
+   * @returns {Boolean}
+   */
+  get based () {
+    return BASED_STATUS.includes(this.status)
   }
 
   /**
@@ -504,6 +522,8 @@ export class Gig extends Track {
 
     this.status = value
 
+    this.emit('update:status', key)
+
     return this
   }
 
@@ -545,11 +565,18 @@ export const EXPIRED_STATUS = [
   STATUS.killed
 ]
 
+export const BASED_STATUS = [
+  STATUS.pristine,
+  STATUS.stopped,
+  STATUS.killed
+]
+
 export const CONSTANTS = Gig.CONSTANTS = {
   STATUS,
   ACTIVE_STATUS,
   INACTIVE_STATUS,
-  EXPIRED_STATUS
+  EXPIRED_STATUS,
+  BASED_STATUS
 }
 
 export default Gig
