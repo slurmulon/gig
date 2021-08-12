@@ -19,7 +19,7 @@
     value: true
   });
   _exports.clock = clock;
-  _exports.STATUS = _exports.INACTIVE_STATUS = _exports.Gig = _exports.EXPIRED_STATUS = _exports.CONSTANTS = _exports.ACTIVE_STATUS = void 0;
+  _exports.STATUS = _exports.INACTIVE_STATUS = _exports.Gig = _exports.EXPIRED_STATUS = _exports.CONSTANTS = _exports.BASED_STATUS = _exports.ACTIVE_STATUS = void 0;
   _classCallCheck2 = _interopRequireDefault(_classCallCheck2);
   _createClass2 = _interopRequireDefault(_createClass2);
   _assertThisInitialized2 = _interopRequireDefault(_assertThisInitialized2);
@@ -44,6 +44,7 @@
   function clock(gig, tick) {
     var last = null;
     var interval = null;
+    var paused = null;
 
     var loop = function loop(time) {
       var cursor = gig.cursor,
@@ -73,12 +74,13 @@
         loop((0, _performanceNow["default"])());
       },
       pause: function pause() {
-        (0, _performanceNow["default"])();
+        paused = (0, _performanceNow["default"])();
         cancel();
       },
       resume: function resume() {
-        gig.times.origin = (0, _performanceNow["default"])();
-        gig.times.last = null;
+        var skew = (0, _performanceNow["default"])() - paused;
+        gig.times.origin += skew;
+        gig.times.last += skew;
         timer.play();
       },
       stop: function stop() {
@@ -294,6 +296,17 @@
         return this.audible ? this.music.state() === 'loaded' : this.active;
       }
       /**
+       * Determines if the track is pristine (i.e. hasn't changed status since initialization).
+       *
+       * @returns {Boolean}
+       */
+
+    }, {
+      key: "pristine",
+      get: function get() {
+        return this.status === STATUS.pristine;
+      }
+      /**
        * Determines if the track is actively playing (currently the same as .playing)
        *
        * @returns {Boolean}
@@ -325,6 +338,17 @@
       key: "expired",
       get: function get() {
         return EXPIRED_STATUS.includes(this.status);
+      }
+      /**
+       * Determines if the track has a status where baseline playback can be started
+       *
+       * @returns {Boolean}
+       */
+
+    }, {
+      key: "based",
+      get: function get() {
+        return BASED_STATUS.includes(this.status);
       }
       /**
        * The amount of time that's elapsed since the track started playing.
@@ -697,6 +721,7 @@
         var value = STATUS[key];
         if (!value) throw Error("".concat(key, " is an invalid status"));
         this.status = value;
+        this.emit('update:status', key);
         return this;
       }
       /**
@@ -732,11 +757,14 @@
   _exports.INACTIVE_STATUS = INACTIVE_STATUS;
   var EXPIRED_STATUS = [STATUS.stopped, STATUS.killed];
   _exports.EXPIRED_STATUS = EXPIRED_STATUS;
+  var BASED_STATUS = [STATUS.pristine, STATUS.stopped, STATUS.killed];
+  _exports.BASED_STATUS = BASED_STATUS;
   var CONSTANTS = Gig.CONSTANTS = {
     STATUS: STATUS,
     ACTIVE_STATUS: ACTIVE_STATUS,
     INACTIVE_STATUS: INACTIVE_STATUS,
-    EXPIRED_STATUS: EXPIRED_STATUS
+    EXPIRED_STATUS: EXPIRED_STATUS,
+    BASED_STATUS: BASED_STATUS
   };
   _exports.CONSTANTS = CONSTANTS;
 });
