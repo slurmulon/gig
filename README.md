@@ -14,24 +14,20 @@ Example `bach` tracks can be found at https://codebach.tech/#/examples.
 
  - [Install](#install)
  - [Usage](#usage)
+ - [Documentation](#documentation)
    * [Options](#options)
    * [Methods](#methods)
+   * [Getters](#getters)
    * [Events](#events)
    * [Timers](#timers)
- - [Data](#data)
-   * [`bach`](#bach)
-   * [`bach.json`](#bachjson)
-   * [Support](#support)
- - [Future](#future)
+ - [Roadmap](#roadmap)
  - [License](#license)
 
 ## Install
 
-`npm install --save slurmulon/gig`
-
-In order to compile your `bach` tracks, you will also need to install the [core `bach` library](https://github.com/slurmulon/bach#install).
-
-A ClojureScript module will be introduced soon so that this step becomes unnecessary.
+```sh
+$ npm i slurmulon/gig
+```
 
 ## Usage
 
@@ -39,20 +35,34 @@ Simply provide your `bach` track as either a string (UTF-8) or a valid `bach.jso
 
 ```js
 import { Gig } from 'gig'
-import source from './bouree.bach.json'
 
-const gig = new Gig({ source })
+const gig = new Gig({
+  source: `
+    @tempo = 134
+
+    play! [
+      1/2 -> chord('Am')
+      1/2 -> chord('G')
+      3/8 -> chord('F')
+      5/8 -> chord('D')
+    ]
+  `
+})
 
 gig.play()
 ```
 
-To see examples of both a `bach` track and its compiled `back.json`, see the [Data](#data) section.
+## Documentation
 
 ### Options
 
 #### `source`
 
 Defines the core musical data of the track in [`bach.json`](https://github.com/slurmulon/bach-json-schema).
+
+If provided as a string, `bach` will be compiled upon instantiation.
+
+If provided an object, it will be validated as proper `bach.json`.
 
  - **Type**: `string` or [`bach.json`](https://github.com/slurmulon/bach-json-schema)
  - **Required**: `true`
@@ -166,7 +176,7 @@ import source from './lullaby.bach.json'
 
 const gig = new Gig({ source })
 
-track.start()
+gig.start()
 ```
 
 #### `stop()`
@@ -182,7 +192,7 @@ const gig = new Gig({ source })
 gig.play()
 
 setTimeout(() => {
-  track.stop()
+  gig.stop()
 }, 1000)
 ```
 
@@ -199,7 +209,7 @@ const gig = new Gig({ source })
 gig.play()
 
 setTimeout(() => {
-  track.pause()
+  gig.pause()
 }, 1000)
 ```
 
@@ -216,11 +226,30 @@ const gig = new Gig({ source })
 gig.play()
 
 setTimeout(() => {
-  track.pause()
+  gig.pause()
 
   setTimeout(() => {
-    track.resume()
+    gig.resume()
   }, 1000)
+}, 1000)
+```
+
+#### `kill()`
+
+Stops the synchronization clock, audio, and removes all even listeners and artifacts.
+
+This is particularly useful in reactive systems such as Vue and React.
+
+```js
+import { Gig } from 'gig'
+import source from './lullaby.bach.json'
+
+const gig = new Gig({ source })
+
+gig.play()
+
+setTimeout(() => {
+  gig.kill()
 }, 1000)
 ```
 
@@ -237,23 +266,140 @@ const gig = new Gig({ source })
 gig.play()
 
 setTimeout(() => {
-  track.mute()
+  gig.mute()
 }, 1000)
 ```
+
+#### `check(status)`
+
+Determines if playback matches the provided status (as a string).
+
+The supported statuses are:
+
+ - `pristine`: Playback has not changed since instantiation.
+ - `playing`: Playback is currently active.
+ - `stopped`: Playback is stopped.
+ - `paused`: Playback is paused and may be resumed later.
+ - `killed`: Playback has been killed and all listeners and artifacts have been removed.
+
+```js
+import { Gig } from 'gig'
+import source from './lullaby.bach.json'
+
+const gig = new Gig({ source })
+
+gig.play()
+gig.check('playing') // true
+
+gig.stop()
+gig.check('stopped') // true
+```
+
+### Getters
+
+`Gig` extends `bach-js`'s [`Music`](https://github.com/slurmulon/bach-js#musical_note-music) class and provides additional getters that are specific to real-time playback.
+
+#### `state`
+
+Provides the beat, elements and events found at the playback cursor (step).
+
+ - `beat`: The beat present at the duration (from `Gig.beats`)
+ - `elems` List of elements (by id) playing at the duration (from `Gig.elements`)
+ - `play`: List of elements that should begin playing at the duration
+ - `stop`: List of elements that should stop playing at the duration
+
+#### `prev`
+
+Provides the beat, elements and events found at the previous playback cursor (step).
+
+#### `next`
+
+Provides the beat, elements and events found at the next playback cursor (step).
+
+#### `cursor`
+
+Determines the cyclic/relative playback cursor (step), never exceeding the total length of the track.
+
+#### `current`
+
+Determines the global/absolute playback cursor (step), potentially exceeding the total length of the track.
+
+Uses the `stateless` configuration option to determine if the value is derived from an imperative state or a monotonic timer.
+
+#### `place`
+
+Determines the global/absolute playback cursor (step), strictly based on elapsed monotonic time.
+
+#### `unit`
+
+Determines the base duration unit to use via the `stateless` configuration option.
+
+Returns `ms` when stateless and `step` when stateful.
+
+#### `first`
+
+Determines if the cursor is on the first step of the track.
+
+#### `last`
+
+Determines if the cursor is on the last step of the track.
+
+#### `elapsed`
+
+Determines the amount of time (in `ms`) that's elapsed since the track started playing.
+
+#### `progress`
+
+The progress of the track's overall playback, modulated to 1 (e.g. 1.2 -> 0.2).
+
+#### `completion`
+
+The run-time completion of the track's overall playback.
+
+The same as `progress` but can overflow `1`, meaning the track has looped.
+
+#### `iterations`
+
+Determines the number of times the track's playback has looped/repeated.
+
+#### `repeating`
+
+Determines if the track's playback has already looped/repeated.
+
+#### `limit`
+
+Determines the limit of steps to restrict playback to.
+
+If the `loop` configuration option is `true`, the limit becomes `Math.Infinity`.
+
+Otherwise the `limit` matches the total duration of the track.
+
+#### `metronome`
+
+Provides the current pulse beat under the context of a looping metronome.
+
+#### `updated`
+
+Determines if the current step's beat has changed from the previous step's beat.
+
 ### Events
 
-A `Track` will emit an event for each of its transitional behaviors:
+A `Gig` object emits events for each of its transitional behaviors, extending Node's `EventEmitter` API:
 
  - `start`: The internal clock has been instantiated and invoked
  - `play`: The audio has finished loading and begins playing
  - `stop`: The audio and clock have been stopped and deconstructed
+ - `pause`: The audio and clock have been paused
+ - `resume`: The audio and clock have been resumed
  - `mute`: The audio has been muted
  - `seek`: The position of the track (both data and audio) has been modified
  - `loop`: The track has looped
+ - `step`: The clock has progressed a single step (`bach`'s quantized unit of iteration)
  - `stop:beat`: The beat that was just playing has ended
  - `play:beat`: The next beat in the queue has begun playing
+ - `update:status`: The playback status has generally changed (i.e. `paused`, `resumed`, etc.)
 
-You can subscribe to a `Track` event using the `on` method:
+Subscribe to events using the `on` method:
 
 ```js
 const gig = new Gig({ /* ... */ })
@@ -263,11 +409,18 @@ gig.on('stop:beat', beat => console.log('finished playing beat', beat))
 
 gig.play()
 ```
+
+> **Warning**
+> 
+> Be sure to unsubscribe to events using the `off` method when you're no longer using them in order to avoid memory leaks!
+
 ### Timers
 
 Because the timing needs of each music application are different, `gig` allows you to provide your own custom timers.
 
-`gig` supports both stateless monotic timers (default) and stateful interval timers. It's recommended to use a stateless monotic timer since they are immune to drift.
+`gig` supports both stateless monotic timers (default) and stateful interval timers.
+
+It's recommended to use a stateless monotic timer since they are immune to drift, however stateful intervals are more ideal under certain circumstances.
 
 #### Stateless
 
@@ -315,7 +468,7 @@ const gig = new Gig({
 gig.play()
 ```
 
-However, because `stateful-dynamic-interval` uses `setTimeout` behind the scenes, drift between audio (or any other synchronization points) will inevitably grow, and playback will no longer be accurately aligned.
+However, because `stateful-dynamic-interval` uses `setTimeout` behind the scenes, drift between audio (or any other synchronization points) will inevitably grow, and playback will eventually become misaligned.
 
 This is due to the single-threaded nature of JavaScript and the generally low precision of `setTimeout` and `setInterval`. Read Chris Wilson's article ["A Tale of Two Clocks: Scheduling Web Audio for Precision"](https://www.html5rocks.com/en/tutorials/audio/scheduling/) for detailed information on this limitation and a tutorial on how to create a more accurate clock in JavaScript.
 
@@ -344,7 +497,7 @@ Timers must invoke their first step immediately, unlike the behavior of `setInte
 
 The best example of a timer implementation is `gig`'s default monotonic clock, which can be found in `src/timer.js`.
 
-## Future
+## Roadmap
 
  - [ ] Replace `howler` with `tone.js`
  - [ ] Unit and integration tests
@@ -353,4 +506,6 @@ The best example of a timer implementation is `gig`'s default monotonic clock, w
 
 ## License
 
-MIT
+Copyright &copy; Erik Vavro. All rights reserved.
+
+Licensed under the [MIT License](https://opensource.org/licenses/MIT).
