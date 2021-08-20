@@ -44,7 +44,6 @@
   function clock(gig, tick) {
     var last = null;
     var interval = null;
-    var paused = null;
 
     var loop = function loop(time) {
       var cursor = gig.cursor,
@@ -74,13 +73,9 @@
         loop((0, _performanceNow["default"])());
       },
       pause: function pause() {
-        paused = (0, _performanceNow["default"])();
         cancel();
       },
       resume: function resume() {
-        var skew = (0, _performanceNow["default"])() - paused;
-        gig.times.origin += skew;
-        gig.times.last += skew;
         timer.play();
       },
       stop: function stop() {
@@ -133,7 +128,8 @@
       _this.index = 0;
       _this.times = {
         origin: null,
-        last: null
+        last: null,
+        paused: null
       };
       _this.status = STATUS.pristine;
       _this.stateless = stateless;
@@ -566,6 +562,7 @@
       key: "pause",
       value: function pause() {
         if (this.audible) this.music.pause();
+        this.times.paused = (0, _performanceNow["default"])();
         this.clock.pause();
         this.emit('pause');
         return this.is('paused');
@@ -578,6 +575,10 @@
       key: "resume",
       value: function resume() {
         if (this.audible) this.music.play();
+        var skew = (0, _performanceNow["default"])() - this.times.paused;
+        this.times.origin += skew;
+        this.times.last += skew;
+        this.times.paused = null;
         this.clock.resume();
         this.emit('resume');
         return this.is('playing');

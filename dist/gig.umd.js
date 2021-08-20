@@ -1064,7 +1064,7 @@ return raf.call(root,fn);};var cancel=function cancel(){caf.apply(root,arguments
  *
  * @param {Gig} gig parent instance provided on construction
  * @param {function} [tick] optional function to call on each tick of the clock
- */function clock(gig,tick){var last=null;var interval=null;var paused=null;var loop=function loop(time){var cursor=gig.cursor,expired=gig.expired;if(expired)return cancel();if(cursor!==last){last=cursor;gig.step();}if(typeof tick==='function'){tick(gig,time);}interval=raf_1(loop);};var cancel=function cancel(){raf_1.cancel(interval);interval=null;};var timer={play:function play(){loop(performanceNow());},pause:function pause(){paused=performanceNow();cancel();},resume:function resume(){var skew=performanceNow()-paused;gig.times.origin+=skew;gig.times.last+=skew;timer.play();},stop:function stop(){last=null;cancel();}};timer.play();return timer;}/*!
+ */function clock(gig,tick){var last=null;var interval=null;var loop=function loop(time){var cursor=gig.cursor,expired=gig.expired;if(expired)return cancel();if(cursor!==last){last=cursor;gig.step();}if(typeof tick==='function'){tick(gig,time);}interval=raf_1(loop);};var cancel=function cancel(){raf_1.cancel(interval);interval=null;};var timer={play:function play(){loop(performanceNow());},pause:function pause(){cancel();},resume:function resume(){timer.play();},stop:function stop(){last=null;cancel();}};timer.play();return timer;}/*!
  *  howler.js v2.2.3
  *  howlerjs.com
  *
@@ -1784,7 +1784,7 @@ if(!sound._paused){sound._parent.pause(sound._id,true).play(sound._id,true);}};}
    * @param {Object} [howler] optional Howler configuration overrides
    * @param {boolean} [stateless] enable stateless/monotonic cursor
    */function Gig(){var _this38;var _ref101=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{},source=_ref101.source,audio=_ref101.audio,loop=_ref101.loop,timer=_ref101.timer,howler$1=_ref101.howler,_ref101$stateless=_ref101.stateless,stateless=_ref101$stateless===void 0?true:_ref101$stateless;_classCallCheck3(this,Gig);_this38=_super31.call(this,source);_events["default"].call(_assertThisInitialized2(_this38));_this38.audio=audio;_this38.loop=loop;// this.tempo  = tempo // FIXME: Sync with Howler's rate property
-_this38.timer=timer||clock;_this38.index=0;_this38.times={origin:null,last:null};_this38.status=STATUS.pristine;_this38.stateless=stateless;if(audio){_this38.music=new howler.Howl(Object.assign({src:audio,loop:loop},howler$1));}// this.listen()
+_this38.timer=timer||clock;_this38.index=0;_this38.times={origin:null,last:null,paused:null};_this38.status=STATUS.pristine;_this38.stateless=stateless;if(audio){_this38.music=new howler.Howl(Object.assign({src:audio,loop:loop},howler$1));}// this.listen()
 return _this38;}/**
    * Provides the beat found at the track's cursor
    *
@@ -1918,9 +1918,9 @@ return _this38;}/**
    * Stops the audio and the synchronization clock (no resume)
    */},{key:"stop",value:function stop(){if(!this.clock)return this;if(this.audible){this.music.stop();this.music.unload();}this.clock.stop();this.emit('stop');return this.reset().is('stopped');}/**
    * Pauses the audio and the synchronization clock
-   */},{key:"pause",value:function pause(){if(this.audible)this.music.pause();this.clock.pause();this.emit('pause');return this.is('paused');}/**
+   */},{key:"pause",value:function pause(){if(this.audible)this.music.pause();this.times.paused=performanceNow();this.clock.pause();this.emit('pause');return this.is('paused');}/**
    * Resumes the audio and the synchronization clock
-   */},{key:"resume",value:function resume(){if(this.audible)this.music.play();this.clock.resume();this.emit('resume');return this.is('playing');}/**
+   */},{key:"resume",value:function resume(){if(this.audible)this.music.play();var skew=performanceNow()-this.times.paused;this.times.origin+=skew;this.times.last+=skew;this.times.paused=null;this.clock.resume();this.emit('resume');return this.is('playing');}/**
    * Mutes the track audio
    */},{key:"mute",value:function mute(){if(this.audible)this.music.mute();this.emit('mute');return this;}/**
    * Seek to a new position in the track
