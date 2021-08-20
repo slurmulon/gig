@@ -384,10 +384,10 @@ export class Gig extends Track {
   pause () {
     if (this.audible) this.music.pause()
 
+    this.times.paused = now()
+
     this.clock.pause()
     this.emit('pause')
-
-    this.times.paused = now()
 
     return this.is('paused')
   }
