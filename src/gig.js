@@ -299,7 +299,7 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get limit () {
-    return this.loops ? Math.Infinity : this.duration
+    return this.loops ? Math.Infinity : this.durations.total
   }
 
   /**
