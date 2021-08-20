@@ -29,7 +29,7 @@ export class Gig extends Track {
     this.timer  = timer || clock
 
     this.index = 0
-    this.times = { origin: null, last: null }
+    this.times = { origin: null, last: null, paused: null }
     this.status = STATUS.pristine
     this.stateless = stateless
 
@@ -387,6 +387,8 @@ export class Gig extends Track {
     this.clock.pause()
     this.emit('pause')
 
+    this.times.paused = now()
+
     return this.is('paused')
   }
 
@@ -395,6 +397,12 @@ export class Gig extends Track {
    */
   resume () {
     if (this.audible) this.music.play()
+
+    const skew = now() - this.times.paused
+
+    this.times.origin += skew
+    this.times.last += skew
+    this.times.paused = null
 
     this.clock.resume()
     this.emit('resume')

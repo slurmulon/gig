@@ -11,7 +11,6 @@ import now from 'performance-now'
 export function clock (gig, tick) {
   let last = null
   let interval = null
-  let paused = null
 
   const loop = (time) => {
     const { cursor, expired } = gig
@@ -42,16 +41,10 @@ export function clock (gig, tick) {
     },
 
     pause () {
-      paused = now()
       cancel()
     },
 
     resume () {
-      const skew = now() - paused
-
-      gig.times.origin += skew
-      gig.times.last += skew
-
       timer.play()
     },
 
