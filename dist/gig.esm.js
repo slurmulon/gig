@@ -460,7 +460,7 @@
     }, {
       key: "limit",
       get: function get() {
-        return this.loops ? Math.Infinity : this.duration;
+        return this.loops ? Math.Infinity : this.durations.total;
       }
       /**
        * Provides the index of the current pulse beat under the context of a looping metronome.

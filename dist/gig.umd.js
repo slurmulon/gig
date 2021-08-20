@@ -1899,7 +1899,7 @@ return _this38;}/**
    * Specifies the limit of steps in a track
    *
    * @returns {Number}
-   */},{key:"limit",get:function get(){return this.loops?Math.Infinity:this.duration;}/**
+   */},{key:"limit",get:function get(){return this.loops?Math.Infinity:this.durations.total;}/**
    * Provides the index of the current pulse beat under the context of a looping metronome.
    *
    * @returns {Number}
