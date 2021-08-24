@@ -348,11 +348,17 @@ export class Gig extends Track {
    */
   play () {
     if (this.audible) {
-      this.music.on('load', () => {
+      const ready = () => {
         this.start()
         this.music.play()
         this.emit('play')
-      })
+      }
+
+      if (this.loaded) {
+        ready()
+      } else {
+        this.music.on('load', ready)
+      }
     } else {
       this.start()
       this.emit('play')
