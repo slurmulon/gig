@@ -225,7 +225,6 @@ export class Gig extends Track {
    * @returns {Float}
    */
   get elapsed () {
-    // return this.times.origin != null ? (now() - this.times.origin) : 0
     return this.times.origin != null ? (this.time - this.times.origin) : 0
   }
 
@@ -349,7 +348,6 @@ export class Gig extends Track {
   // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
   start () {
     this.clock = this.timer(this)
-    // this.times.origin = now()
     this.times.origin = this.time
 
     this.emit('start')
@@ -403,7 +401,6 @@ export class Gig extends Track {
   pause () {
     if (this.audible) this.music.pause()
 
-    // this.times.paused = now()
     this.times.paused = this.time
 
     this.clock.pause()
@@ -418,7 +415,6 @@ export class Gig extends Track {
   resume () {
     if (this.audible) this.music.play()
 
-    // const skew = now() - this.times.paused
     const skew = this.time - this.times.paused
 
     this.times.origin += skew
@@ -451,7 +447,7 @@ export class Gig extends Track {
   seek (to) {
     if (this.audible) this.music.seek(to)
 
-    this.travel(to, { is: 'second' })
+    this.travel(to, 'second')
     this.emit('seek')
 
     return this
@@ -491,7 +487,6 @@ export class Gig extends Track {
       this.emit('play:beat', beat)
     }
 
-    // this.times.last = now()
     this.times.last = this.time
 
     return this
@@ -509,7 +504,6 @@ export class Gig extends Track {
 
     this.index = Math.floor(step)
     this.times.last = last
-    // this.times.origin = now() - time
     this.times.origin = this.time - time
 
     return this
