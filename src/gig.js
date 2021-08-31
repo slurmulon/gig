@@ -16,6 +16,7 @@ export class Gig extends Track {
    * @param {Audio} [audio] track audio
    * @param {boolean} [loop] enable track looping
    * @param {Object} [timer] alternative timer API (default is monotonic and uses raf)
+   * @param {Function} [now] custom monotonic timer function
    * @param {Object} [howler] optional Howler configuration overrides
    * @param {boolean} [stateless] enable stateless/monotonic cursor
    */
@@ -24,8 +25,8 @@ export class Gig extends Track {
 
     EventEmitter.call(this)
 
-    this.audio  = audio
-    this.loop   = loop
+    this.audio = audio
+    this.loop = loop
     // this.tempo  = tempo // FIXME: Sync with Howler's rate property
     this.timer  = timer || clock
     this.now = now || hrtime
