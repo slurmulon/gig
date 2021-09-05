@@ -45,8 +45,9 @@
     var last = null;
     var interval = null;
 
-    var loop = function loop(time) {
-      var cursor = gig.cursor,
+    var loop = function loop() {
+      var time = gig.time,
+          cursor = gig.cursor,
           expired = gig.expired;
       if (expired) return cancel();
 
@@ -101,6 +102,7 @@
      * @param {Audio} [audio] track audio
      * @param {boolean} [loop] enable track looping
      * @param {Object} [timer] alternative timer API (default is monotonic and uses raf)
+     * @param {Function} [now] custom monotonic timer function
      * @param {Object} [howler] optional Howler configuration overrides
      * @param {boolean} [stateless] enable stateless/monotonic cursor
      */
@@ -112,6 +114,7 @@
           audio = _ref.audio,
           loop = _ref.loop,
           timer = _ref.timer,
+          now = _ref.now,
           howler = _ref.howler,
           _ref$stateless = _ref.stateless,
           stateless = _ref$stateless === void 0 ? true : _ref$stateless;
@@ -125,6 +128,7 @@
       _this.loop = loop; // this.tempo  = tempo // FIXME: Sync with Howler's rate property
 
       _this.timer = timer || clock;
+      _this.now = now || _performanceNow["default"];
       _this.index = 0;
       _this.times = {
         origin: null,
@@ -215,6 +219,19 @@
           is: 'ms',
           as: 'step'
         });
+      }
+      /**
+       * Centralized getter that allows for custom monotomic timer functions (`now`).
+       * Defaults to process.hrtime polyfill when a custom `now` function is not provided.
+       *
+       * @returns {Number}
+       */
+
+    }, {
+      key: "time",
+      get: function get() {
+        // return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime()
+        return (0, _performanceNow["default"])();
       }
       /**
        * Determines the base bach-js duration unit to use based on stateless config.
@@ -357,7 +374,7 @@
     }, {
       key: "elapsed",
       get: function get() {
-        return this.times.origin != null ? (0, _performanceNow["default"])() - this.times.origin : 0;
+        return this.times.origin != null ? this.time - this.times.origin : 0;
       }
       /**
        * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
@@ -508,7 +525,7 @@
       key: "start",
       value: function start() {
         this.clock = this.timer(this);
-        this.times.origin = (0, _performanceNow["default"])();
+        this.times.origin = this.time;
         this.emit('start');
         this.is('playing');
       }
@@ -522,13 +539,21 @@
         var _this2 = this;
 
         if (this.audible) {
-          this.music.on('load', function () {
+          var ready = function ready() {
             _this2.start();
 
             _this2.music.play();
 
             _this2.emit('play');
-          });
+
+            console.log('[gig] playing!');
+          };
+
+          if (this.loaded) {
+            ready();
+          } else {
+            this.music.on('load', ready);
+          }
         } else {
           this.start();
           this.emit('play');
@@ -562,7 +587,7 @@
       key: "pause",
       value: function pause() {
         if (this.audible) this.music.pause();
-        this.times.paused = (0, _performanceNow["default"])();
+        this.times.paused = this.time;
         this.clock.pause();
         this.emit('pause');
         return this.is('paused');
@@ -575,7 +600,7 @@
       key: "resume",
       value: function resume() {
         if (this.audible) this.music.play();
-        var skew = (0, _performanceNow["default"])() - this.times.paused;
+        var skew = this.time - this.times.paused;
         this.times.origin += skew;
         this.times.last += skew;
         this.times.paused = null;
@@ -605,9 +630,7 @@
       key: "seek",
       value: function seek(to) {
         if (this.audible) this.music.seek(to);
-        this.travel(to, {
-          is: 'second'
-        });
+        this.travel(to, 'second');
         this.emit('seek');
         return this;
       }
@@ -648,7 +671,7 @@
           this.emit('play:beat', beat);
         }
 
-        this.times.last = (0, _performanceNow["default"])();
+        this.times.last = this.time;
         return this;
       }
       /**
@@ -673,7 +696,7 @@
         });
         this.index = Math.floor(step);
         this.times.last = last;
-        this.times.origin = (0, _performanceNow["default"])() - time;
+        this.times.origin = this.time - time;
         return this;
       }
       /**

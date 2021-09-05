@@ -1064,7 +1064,7 @@ return raf.call(root,fn);};var cancel=function cancel(){caf.apply(root,arguments
  *
  * @param {Gig} gig parent instance provided on construction
  * @param {function} [tick] optional function to call on each tick of the clock
- */function clock(gig,tick){var last=null;var interval=null;var loop=function loop(time){var cursor=gig.cursor,expired=gig.expired;if(expired)return cancel();if(cursor!==last){last=cursor;gig.step();}if(typeof tick==='function'){tick(gig,time);}interval=raf_1(loop);};var cancel=function cancel(){raf_1.cancel(interval);interval=null;};var timer={play:function play(){loop(performanceNow());},pause:function pause(){cancel();},resume:function resume(){timer.play();},stop:function stop(){last=null;cancel();}};timer.play();return timer;}/*!
+ */function clock(gig,tick){var last=null;var interval=null;var loop=function loop(){var time=gig.time,cursor=gig.cursor,expired=gig.expired;if(expired)return cancel();if(cursor!==last){last=cursor;gig.step();}if(typeof tick==='function'){tick(gig,time);}interval=raf_1(loop);};var cancel=function cancel(){raf_1.cancel(interval);interval=null;};var timer={play:function play(){loop(performanceNow());},pause:function pause(){cancel();},resume:function resume(){timer.play();},stop:function stop(){last=null;cancel();}};timer.play();return timer;}/*!
  *  howler.js v2.2.3
  *  howlerjs.com
  *
@@ -1781,10 +1781,11 @@ if(!sound._paused){sound._parent.pause(sound._id,true).play(sound._id,true);}};}
    * @param {Audio} [audio] track audio
    * @param {boolean} [loop] enable track looping
    * @param {Object} [timer] alternative timer API (default is monotonic and uses raf)
+   * @param {Function} [now] custom monotonic timer function
    * @param {Object} [howler] optional Howler configuration overrides
    * @param {boolean} [stateless] enable stateless/monotonic cursor
-   */function Gig(){var _this38;var _ref101=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{},source=_ref101.source,audio=_ref101.audio,loop=_ref101.loop,timer=_ref101.timer,howler$1=_ref101.howler,_ref101$stateless=_ref101.stateless,stateless=_ref101$stateless===void 0?true:_ref101$stateless;_classCallCheck3(this,Gig);_this38=_super31.call(this,source);_events["default"].call(_assertThisInitialized2(_this38));_this38.audio=audio;_this38.loop=loop;// this.tempo  = tempo // FIXME: Sync with Howler's rate property
-_this38.timer=timer||clock;_this38.index=0;_this38.times={origin:null,last:null,paused:null};_this38.status=STATUS.pristine;_this38.stateless=stateless;if(audio){_this38.music=new howler.Howl(Object.assign({src:audio,loop:loop},howler$1));}// this.listen()
+   */function Gig(){var _this38;var _ref101=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{},source=_ref101.source,audio=_ref101.audio,loop=_ref101.loop,timer=_ref101.timer,now=_ref101.now,howler$1=_ref101.howler,_ref101$stateless=_ref101.stateless,stateless=_ref101$stateless===void 0?true:_ref101$stateless;_classCallCheck3(this,Gig);_this38=_super31.call(this,source);_events["default"].call(_assertThisInitialized2(_this38));_this38.audio=audio;_this38.loop=loop;// this.tempo  = tempo // FIXME: Sync with Howler's rate property
+_this38.timer=timer||clock;_this38.now=now||performanceNow;_this38.index=0;_this38.times={origin:null,last:null,paused:null};_this38.status=STATUS.pristine;_this38.stateless=stateless;if(audio){_this38.music=new howler.Howl(Object.assign({src:audio,loop:loop},howler$1));}// this.listen()
 return _this38;}/**
    * Provides the beat found at the track's cursor
    *
@@ -1812,6 +1813,12 @@ return _this38;}/**
    *
    * @returns {Number}
    */},{key:"place",get:function get(){return this.durations.cast(this.elapsed,{is:'ms',as:'step'});}/**
+   * Centralized getter that allows for custom monotomic timer functions (`now`).
+   * Defaults to process.hrtime polyfill when a custom `now` function is not provided.
+   *
+   * @returns {Number}
+   */},{key:"time",get:function get(){// return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime()
+return performanceNow();}/**
    * Determines the base bach-js duration unit to use based on stateless config.
    *
    * Can be provided to cast as `is`: `gig.durations.cast(4, { is: gig.unit })`.
@@ -1863,7 +1870,7 @@ return _this38;}/**
    * Used to determine the cursor step when Gig is set to stateless.
    *
    * @returns {Float}
-   */},{key:"elapsed",get:function get(){return this.times.origin!=null?performanceNow()-this.times.origin:0;}/**
+   */},{key:"elapsed",get:function get(){return this.times.origin!=null?this.time-this.times.origin:0;}/**
    * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
    *
    * @returns {Number}
@@ -1912,30 +1919,30 @@ return _this38;}/**
    */},{key:"listen",value:function listen(){this.music.on('play',this.play);this.music.on('pause',this.pause);this.music.on('stop',this.stop);this.music.on('rate',this.rate);this.music.on('seek',this.seek);}/**
    * Instantiates a new clock which acts as the primary synchronization mechanism
    */ // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
-},{key:"start",value:function start(){this.clock=this.timer(this);this.times.origin=performanceNow();this.emit('start');this.is('playing');}/**
+},{key:"start",value:function start(){this.clock=this.timer(this);this.times.origin=this.time;this.emit('start');this.is('playing');}/**
    * Loads the audio data and kicks off the synchronization clock
-   */},{key:"play",value:function play(){var _this39=this;if(this.audible){this.music.on('load',function(){_this39.start();_this39.music.play();_this39.emit('play');});}else{this.start();this.emit('play');}return this;}/**
+   */},{key:"play",value:function play(){var _this39=this;if(this.audible){var ready=function ready(){_this39.start();_this39.music.play();_this39.emit('play');console.log('[gig] playing!');};if(this.loaded){ready();}else{this.music.on('load',ready);}}else{this.start();this.emit('play');}return this;}/**
    * Stops the audio and the synchronization clock (no resume)
    */},{key:"stop",value:function stop(){if(!this.clock)return this;if(this.audible){this.music.stop();this.music.unload();}this.clock.stop();this.emit('stop');return this.reset().is('stopped');}/**
    * Pauses the audio and the synchronization clock
-   */},{key:"pause",value:function pause(){if(this.audible)this.music.pause();this.times.paused=performanceNow();this.clock.pause();this.emit('pause');return this.is('paused');}/**
+   */},{key:"pause",value:function pause(){if(this.audible)this.music.pause();this.times.paused=this.time;this.clock.pause();this.emit('pause');return this.is('paused');}/**
    * Resumes the audio and the synchronization clock
-   */},{key:"resume",value:function resume(){if(this.audible)this.music.play();var skew=performanceNow()-this.times.paused;this.times.origin+=skew;this.times.last+=skew;this.times.paused=null;this.clock.resume();this.emit('resume');return this.is('playing');}/**
+   */},{key:"resume",value:function resume(){if(this.audible)this.music.play();var skew=this.time-this.times.paused;this.times.origin+=skew;this.times.last+=skew;this.times.paused=null;this.clock.resume();this.emit('resume');return this.is('playing');}/**
    * Mutes the track audio
    */},{key:"mute",value:function mute(){if(this.audible)this.music.mute();this.emit('mute');return this;}/**
    * Seek to a new position in the track
    *
    * @param {number} to position in the track in seconds
    * @fixme
-   */},{key:"seek",value:function seek(to){if(this.audible)this.music.seek(to);this.travel(to,{is:'second'});this.emit('seek');return this;}/**
+   */},{key:"seek",value:function seek(to){if(this.audible)this.music.seek(to);this.travel(to,'second');this.emit('seek');return this;}/**
    * Invokes the action to perform on each interval and emits
    * various events based on current state of the step.
    * Only emits beat events if the beat has updated from the previous step.
-   */},{key:"step",value:function step(){this.index=this.times.last?this.index+1:0;var state=this.state,interval=this.interval;var beat=state.beat,play=state.play,stop=state.stop;this.emit('step',state);if(stop.length){this.emit('stop:beat',stop);}if(!this.stateless&&!this.updated){return this;}if(this.repeating&&this.first){if(this.loops){this.emit('loop',state);}else{return this.kill();}}if(play.length){this.emit('play:beat',beat);}this.times.last=performanceNow();return this;}/**
+   */},{key:"step",value:function step(){this.index=this.times.last?this.index+1:0;var state=this.state,interval=this.interval;var beat=state.beat,play=state.play,stop=state.stop;this.emit('step',state);if(stop.length){this.emit('stop:beat',stop);}if(!this.stateless&&!this.updated){return this;}if(this.repeating&&this.first){if(this.loops){this.emit('loop',state);}else{return this.kill();}}if(play.length){this.emit('play:beat',beat);}this.times.last=this.time;return this;}/**
    * Moves playback cursor to the provided duration.
    *
    * WARN: Work in progress
-   */},{key:"travel",value:function travel(duration){var is=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'step';var step=this.durations.cast(duration,{is:is,as:'step'});var time=this.durations.cast(step,{as:'ms'});var last=this.durations.cast(Math.floor(step),{as:'ms'});this.index=Math.floor(step);this.times.last=last;this.times.origin=performanceNow()-time;return this;}/**
+   */},{key:"travel",value:function travel(duration){var is=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'step';var step=this.durations.cast(duration,{is:is,as:'step'});var time=this.durations.cast(step,{as:'ms'});var last=this.durations.cast(Math.floor(step),{as:'ms'});this.index=Math.floor(step);this.times.last=last;this.times.origin=this.time-time;return this;}/**
    * Resets the cursor indices to their initial unplayed state
    */},{key:"reset",value:function reset(){this.index=0;this.times={origin:null,last:null};return this;}/**
    * Removes all active event listeners
