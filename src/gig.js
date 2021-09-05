@@ -109,7 +109,8 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get time () {
-    return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime()
+    // return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime()
+    return hrtime()
   }
 
   /**
