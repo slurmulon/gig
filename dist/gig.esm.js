@@ -399,6 +399,37 @@
         return this.elapsed / this.duration;
       }
       /**
+       * The run-time progression (0-1) of the current step.
+       *
+       * @returns {Number}
+       */
+
+    }, {
+      key: "stride",
+      get: function get() {
+        return (this.time - this.basis) / this.interval;
+      }
+      /** Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
+       *
+       * @returns {Number}
+       */
+
+    }, {
+      key: "skew",
+      get: function get() {
+        return this.time - (this.times.paused || this.time);
+      }
+      /** Determines the base time of the current step.
+       *
+       * @returns {Number}
+       */
+
+    }, {
+      key: "basis",
+      get: function get() {
+        return this.times.last + this.skew;
+      }
+      /**
        * The duration of the track's audio (in milliseconds).
        *
        * @returns {Number}
@@ -545,8 +576,6 @@
             _this2.music.play();
 
             _this2.emit('play');
-
-            console.log('[gig] playing!');
           };
 
           if (this.loaded) {
@@ -607,6 +636,23 @@
         this.clock.resume();
         this.emit('resume');
         return this.is('playing');
+      }
+      /**
+       * Toggles playback based on the current run-time status.
+       */
+
+    }, {
+      key: "toggle",
+      value: function toggle() {
+        if (this.based) {
+          return this.play();
+        } else if (this.playing) {
+          return this.pause();
+        } else if (this.paused) {
+          return this.resume();
+        }
+
+        return this;
       }
       /**
        * Mutes the track audio
