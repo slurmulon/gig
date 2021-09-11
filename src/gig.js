@@ -455,6 +455,21 @@ export class Gig extends Track {
   }
 
   /**
+   * Toggles playback based on the current run-time status.
+   */
+  toggle () {
+    if (this.based) {
+      return this.play()
+    } else if (this.playing) {
+      return this.pause()
+    } else if (this.paused) {
+      return this.resume()
+    }
+
+    return this
+  }
+
+  /**
    * Mutes the track audio
    */
   mute () {
