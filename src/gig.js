@@ -2,7 +2,8 @@ import { Music as Track } from 'bach-js'
 import { clock } from './timer'
 // TODO: Switch to Tone.Player
 import { Howl } from 'howler'
-import now from 'performance-now'
+// import now from 'performance-now'
+import hrtime from 'performance-now'
 import EventEmitter from 'events'
 
 /**
@@ -15,18 +16,20 @@ export class Gig extends Track {
    * @param {Audio} [audio] track audio
    * @param {boolean} [loop] enable track looping
    * @param {Object} [timer] alternative timer API (default is monotonic and uses raf)
+   * @param {Function} [now] custom monotonic timer function
    * @param {Object} [howler] optional Howler configuration overrides
    * @param {boolean} [stateless] enable stateless/monotonic cursor
    */
-  constructor ({ source, audio, loop, timer, howler, stateless = true } = {}) {
+  constructor ({ source, audio, loop, timer, now, howler, stateless = true } = {}) {
     super(source)
 
     EventEmitter.call(this)
 
-    this.audio  = audio
-    this.loop   = loop
+    this.audio = audio
+    this.loop = loop
     // this.tempo  = tempo // FIXME: Sync with Howler's rate property
     this.timer  = timer || clock
+    this.now = now || hrtime
 
     this.index = 0
     this.times = { origin: null, last: null, paused: null }
@@ -99,6 +102,15 @@ export class Gig extends Track {
     return this.durations.cast(this.elapsed, { is: 'ms', as: 'step' })
   }
 
+  /**
+   * Centralized getter that allows for custom monotomic timer functions (`now`).
+   * Defaults to process.hrtime polyfill when a custom `now` function is not provided.
+   *
+   * @returns {Number}
+   */
+  get time () {
+    return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime()
+  }
 
   /**
    * Determines the base bach-js duration unit to use based on stateless config.
@@ -214,7 +226,7 @@ export class Gig extends Track {
    * @returns {Float}
    */
   get elapsed () {
-    return this.times.origin != null ? (now() - this.times.origin) : 0
+    return this.times.origin != null ? (this.time - this.times.origin) : 0
   }
 
   /**
@@ -233,6 +245,31 @@ export class Gig extends Track {
    */
   get completion () {
     return this.elapsed / this.duration
+  }
+
+  /**
+   * The run-time progression (0-1) of the current step.
+   *
+   * @returns {Number}
+   */
+  get stride () {
+    return (this.time - this.basis) / this.interval
+  }
+
+  /** Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
+   *
+   * @returns {Number}
+   */
+  get skew () {
+    return this.time - (this.times.paused || this.time)
+  }
+
+  /** Determines the base time of the current step.
+   *
+   * @returns {Number}
+   */
+  get basis () {
+    return this.times.last + this.skew
   }
 
   /**
@@ -337,7 +374,7 @@ export class Gig extends Track {
   // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
   start () {
     this.clock = this.timer(this)
-    this.times.origin = now()
+    this.times.origin = this.time
 
     this.emit('start')
     this.is('playing')
@@ -348,11 +385,17 @@ export class Gig extends Track {
    */
   play () {
     if (this.audible) {
-      this.music.on('load', () => {
+      const ready = () => {
         this.start()
         this.music.play()
         this.emit('play')
-      })
+      }
+
+      if (this.loaded) {
+        ready()
+      } else {
+        this.music.on('load', ready)
+      }
     } else {
       this.start()
       this.emit('play')
@@ -384,7 +427,7 @@ export class Gig extends Track {
   pause () {
     if (this.audible) this.music.pause()
 
-    this.times.paused = now()
+    this.times.paused = this.time
 
     this.clock.pause()
     this.emit('pause')
@@ -398,7 +441,7 @@ export class Gig extends Track {
   resume () {
     if (this.audible) this.music.play()
 
-    const skew = now() - this.times.paused
+    const skew = this.time - this.times.paused
 
     this.times.origin += skew
     this.times.last += skew
@@ -408,6 +451,21 @@ export class Gig extends Track {
     this.emit('resume')
 
     return this.is('playing')
+  }
+
+  /**
+   * Toggles playback based on the current run-time status.
+   */
+  toggle () {
+    if (this.based) {
+      return this.play()
+    } else if (this.playing) {
+      return this.pause()
+    } else if (this.paused) {
+      return this.resume()
+    }
+
+    return this
   }
 
   /**
@@ -430,7 +488,7 @@ export class Gig extends Track {
   seek (to) {
     if (this.audible) this.music.seek(to)
 
-    this.travel(to, { is: 'second' })
+    this.travel(to, 'second')
     this.emit('seek')
 
     return this
@@ -470,7 +528,7 @@ export class Gig extends Track {
       this.emit('play:beat', beat)
     }
 
-    this.times.last = now()
+    this.times.last = this.time
 
     return this
   }
@@ -487,7 +545,7 @@ export class Gig extends Track {
 
     this.index = Math.floor(step)
     this.times.last = last
-    this.times.origin = now() - time
+    this.times.origin = this.time - time
 
     return this
   }

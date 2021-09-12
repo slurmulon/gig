@@ -26,7 +26,7 @@ var bachJs = require('bach-js');
 
 var raf = require('raf');
 
-var now = require('performance-now');
+var hrtime = require('performance-now');
 
 var howler = require('howler');
 
@@ -40,7 +40,7 @@ function _interopDefaultLegacy(e) {
 
 var raf__default = /*#__PURE__*/_interopDefaultLegacy(raf);
 
-var now__default = /*#__PURE__*/_interopDefaultLegacy(now);
+var hrtime__default = /*#__PURE__*/_interopDefaultLegacy(hrtime);
 
 var EventEmitter__default = /*#__PURE__*/_interopDefaultLegacy(EventEmitter);
 /**
@@ -56,8 +56,9 @@ function clock(gig, tick) {
   var last = null;
   var interval = null;
 
-  var loop = function loop(time) {
-    var cursor = gig.cursor,
+  var loop = function loop() {
+    var time = gig.time,
+        cursor = gig.cursor,
         expired = gig.expired;
     if (expired) return cancel();
 
@@ -80,7 +81,7 @@ function clock(gig, tick) {
 
   var timer = {
     play: function play() {
-      loop(now__default['default']());
+      loop(hrtime__default['default']());
     },
     pause: function pause() {
       cancel();
@@ -111,6 +112,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
    * @param {Audio} [audio] track audio
    * @param {boolean} [loop] enable track looping
    * @param {Object} [timer] alternative timer API (default is monotonic and uses raf)
+   * @param {Function} [now] custom monotonic timer function
    * @param {Object} [howler] optional Howler configuration overrides
    * @param {boolean} [stateless] enable stateless/monotonic cursor
    */
@@ -122,6 +124,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
         audio = _ref.audio,
         loop = _ref.loop,
         timer = _ref.timer,
+        now = _ref.now,
         howler$1 = _ref.howler,
         _ref$stateless = _ref.stateless,
         stateless = _ref$stateless === void 0 ? true : _ref$stateless;
@@ -134,6 +137,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
     _this.loop = loop; // this.tempo  = tempo // FIXME: Sync with Howler's rate property
 
     _this.timer = timer || clock;
+    _this.now = now || hrtime__default['default'];
     _this.index = 0;
     _this.times = {
       origin: null,
@@ -224,6 +228,18 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
         is: 'ms',
         as: 'step'
       });
+    }
+    /**
+     * Centralized getter that allows for custom monotomic timer functions (`now`).
+     * Defaults to process.hrtime polyfill when a custom `now` function is not provided.
+     *
+     * @returns {Number}
+     */
+
+  }, {
+    key: "time",
+    get: function get() {
+      return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime__default['default']();
     }
     /**
      * Determines the base bach-js duration unit to use based on stateless config.
@@ -366,7 +382,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
   }, {
     key: "elapsed",
     get: function get() {
-      return this.times.origin != null ? now__default['default']() - this.times.origin : 0;
+      return this.times.origin != null ? this.time - this.times.origin : 0;
     }
     /**
      * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
@@ -389,6 +405,37 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
     key: "completion",
     get: function get() {
       return this.elapsed / this.duration;
+    }
+    /**
+     * The run-time progression (0-1) of the current step.
+     *
+     * @returns {Number}
+     */
+
+  }, {
+    key: "stride",
+    get: function get() {
+      return (this.time - this.basis) / this.interval;
+    }
+    /** Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
+     *
+     * @returns {Number}
+     */
+
+  }, {
+    key: "skew",
+    get: function get() {
+      return this.time - (this.times.paused || this.time);
+    }
+    /** Determines the base time of the current step.
+     *
+     * @returns {Number}
+     */
+
+  }, {
+    key: "basis",
+    get: function get() {
+      return this.times.last + this.skew;
     }
     /**
      * The duration of the track's audio (in milliseconds).
@@ -517,7 +564,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
     key: "start",
     value: function start() {
       this.clock = this.timer(this);
-      this.times.origin = now__default['default']();
+      this.times.origin = this.time;
       this.emit('start');
       this.is('playing');
     }
@@ -531,13 +578,19 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
       var _this2 = this;
 
       if (this.audible) {
-        this.music.on('load', function () {
+        var ready = function ready() {
           _this2.start();
 
           _this2.music.play();
 
           _this2.emit('play');
-        });
+        };
+
+        if (this.loaded) {
+          ready();
+        } else {
+          this.music.on('load', ready);
+        }
       } else {
         this.start();
         this.emit('play');
@@ -571,7 +624,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
     key: "pause",
     value: function pause() {
       if (this.audible) this.music.pause();
-      this.times.paused = now__default['default']();
+      this.times.paused = this.time;
       this.clock.pause();
       this.emit('pause');
       return this.is('paused');
@@ -584,13 +637,30 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
     key: "resume",
     value: function resume() {
       if (this.audible) this.music.play();
-      var skew = now__default['default']() - this.times.paused;
+      var skew = this.time - this.times.paused;
       this.times.origin += skew;
       this.times.last += skew;
       this.times.paused = null;
       this.clock.resume();
       this.emit('resume');
       return this.is('playing');
+    }
+    /**
+     * Toggles playback based on the current run-time status.
+     */
+
+  }, {
+    key: "toggle",
+    value: function toggle() {
+      if (this.based) {
+        return this.play();
+      } else if (this.playing) {
+        return this.pause();
+      } else if (this.paused) {
+        return this.resume();
+      }
+
+      return this;
     }
     /**
      * Mutes the track audio
@@ -614,9 +684,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
     key: "seek",
     value: function seek(to) {
       if (this.audible) this.music.seek(to);
-      this.travel(to, {
-        is: 'second'
-      });
+      this.travel(to, 'second');
       this.emit('seek');
       return this;
     }
@@ -657,7 +725,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
         this.emit('play:beat', beat);
       }
 
-      this.times.last = now__default['default']();
+      this.times.last = this.time;
       return this;
     }
     /**
@@ -682,7 +750,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
       });
       this.index = Math.floor(step);
       this.times.last = last;
-      this.times.origin = now__default['default']() - time;
+      this.times.origin = this.time - time;
       return this;
     }
     /**

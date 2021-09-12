@@ -12,8 +12,8 @@ export function clock (gig, tick) {
   let last = null
   let interval = null
 
-  const loop = (time) => {
-    const { cursor, expired } = gig
+  const loop = () => {
+    const { time, cursor, expired } = gig
 
     if (expired) return cancel()
     if (cursor !== last) {
