@@ -239,8 +239,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
   }, {
     key: "time",
     get: function get() {
-      // return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime()
-      return hrtime__default['default']();
+      return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime__default['default']();
     }
     /**
      * Determines the base bach-js duration unit to use based on stateless config.

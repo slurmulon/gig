@@ -1819,8 +1819,7 @@ return _this38;}/**
    * Defaults to process.hrtime polyfill when a custom `now` function is not provided.
    *
    * @returns {Number}
-   */},{key:"time",get:function get(){// return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime()
-return performanceNow();}/**
+   */},{key:"time",get:function get(){return typeof this.now==='function'&&this.clock?this.now(this.clock):performanceNow();}/**
    * Determines the base bach-js duration unit to use based on stateless config.
    *
    * Can be provided to cast as `is`: `gig.durations.cast(4, { is: gig.unit })`.

@@ -230,8 +230,7 @@
     }, {
       key: "time",
       get: function get() {
-        // return typeof this.now === 'function' && this.clock ? this.now(this.clock) : hrtime()
-        return (0, _performanceNow["default"])();
+        return typeof this.now === 'function' && this.clock ? this.now(this.clock) : (0, _performanceNow["default"])();
       }
       /**
        * Determines the base bach-js duration unit to use based on stateless config.
