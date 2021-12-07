@@ -270,6 +270,22 @@ setTimeout(() => {
 }, 1000)
 ```
 
+#### `moment(duration, is)`
+
+Determines when a duration occurs (in milliseconds) relative to the run-time origin.
+
+```js
+import { Gig } from 'gig'
+import source from './lullaby.bach.json'
+
+const gig = new Gig({ source })
+
+gig.moment(4, 'step')
+gig.moment(12, 'pulse')
+gig.moment(2.5, 'bar')
+gig.moment(30, 'second')
+```
+
 #### `check(status)`
 
 Determines if playback matches the provided status (as a string).
