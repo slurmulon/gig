@@ -426,7 +426,7 @@
     }, {
       key: "basis",
       get: function get() {
-        return this.times.last + this.skew;
+        return (this.times.last || this.times.origin) + this.skew;
       }
       /**
        * The duration of the track's audio (in milliseconds).
@@ -718,6 +718,26 @@
 
         this.times.last = this.time;
         return this;
+      }
+      /* Determines when a duration occurs (in milliseconds) relative to the run-time origin.
+       *
+       * @param {number} duration time value
+       * @param {string} is unit of duration
+       * @returns {number}
+       */
+
+    }, {
+      key: "moment",
+      value: function moment(duration) {
+        var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+        var step = this.durations.cast(duration, {
+          is: is,
+          as: 'step'
+        });
+        var time = this.durations.cast(step, {
+          as: 'ms'
+        });
+        return this.times.origin + this.skew + time;
       }
       /**
        * Moves playback cursor to the provided duration.
