@@ -269,7 +269,7 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get basis () {
-    return this.times.last + this.skew
+    return (this.times.last || this.times.origin) + this.skew
   }
 
   /**
@@ -531,6 +531,19 @@ export class Gig extends Track {
     this.times.last = this.time
 
     return this
+  }
+
+  /* Determines when a duration occurs (in milliseconds) relative to the run-time origin.
+   *
+   * @param {number} duration time value
+   * @param {string} is unit of duration
+   * @returns {number}
+   */
+  moment (duration, is = 'step') {
+    const step = this.durations.cast(duration, { is, as: 'step' })
+    const time = this.durations.cast(step, { as: 'ms' })
+
+    return this.times.origin + this.skew + time
   }
 
   /**
