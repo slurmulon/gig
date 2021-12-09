@@ -273,7 +273,8 @@ export class Gig extends Track {
     return (this.time - this.basis) / this.interval
   }
 
-  /** Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
+  /**
+   * Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
    *
    * @returns {Number}
    */
@@ -281,12 +282,23 @@ export class Gig extends Track {
     return this.time - (this.times.paused || this.time)
   }
 
-  /** Determines the amount of run-time drift, in ms, of the current beat.
+  /**
+   * Determines the amount of run-time drift, in ms, of the current beat.
    *
    * @returns {Number}
    */
   get drift () {
     return this.times.beat ? ((this.times.beat + this.skew) - this.moment(this.state.beat.index)) : 0
+  }
+
+  /**
+   * Provides an offset, in steps, based on the total number of iterations.
+   * Useful for adjusting between absolute (global) and relative (cyclic) duration calculations.
+   *
+   * @returns {Number}
+   */
+  get offset () {
+    return this.durations.total * Math.floor(this.iterations)
   }
 
   /**
@@ -499,7 +511,7 @@ export class Gig extends Track {
   /**
    * Seek to a new position in the track
    *
-   * @param {number} to position in the track in seconds
+   * @param {Number} to position in the track in seconds
    * @fixme
    */
   seek (to) {
@@ -551,18 +563,30 @@ export class Gig extends Track {
     return this
   }
 
-  /* Determines when a duration occurs (in milliseconds) relative to the run-time origin.
+  /**
+   * Converts a localized/cyclic duration into its globalized version.
+   * The inverse of this conversion can be achieved with Gig.durations.cyclic().
    *
-   * @param {number} duration time value
-   * @param {string} is unit of duration
-   * @returns {number}
+   * @param {Number} duration time value
+   * @param {Object} [lens] unit conversions
+   * @returns {Number}
    */
-  moment (duration, is = 'step') {
-    const offset = this.durations.total * Math.floor(this.iterations)
-    const step = this.durations.cast(duration, { is, as: 'step' }) + offset
-    const time = this.durations.cast(step, { as: 'ms' })
+  globalize (duration, { is = 'step', as = 'step' } = {}) {
+    return this.durations.cyclic(duration, { is, as }) + this.durations.cast(this.offset, { as })
+  }
 
-    return this.origin + time
+  /**
+   * Determines when a duration occurs (in milliseconds, by default) globalized to the run-time origin.
+   *
+   * @param {Number} duration time value
+   * @param {Object} [lens] unit conversions
+   * @returns {Number}
+   */
+  moment (duration, { is = 'step', as = 'ms' } = {}) {
+    const time = this.globalize(duration, { is, as: 'ms' })
+    const moment = this.origin + time
+
+    return this.durations.cast(moment, { is: 'ms', as })
   }
 
   /**
