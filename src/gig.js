@@ -32,7 +32,7 @@ export class Gig extends Track {
     this.now = now || hrtime
 
     this.index = 0
-    this.times = { origin: null, last: null, paused: null }
+    this.times = { origin: null, last: null, beat: null, paused: null }
     this.status = STATUS.pristine
     this.stateless = stateless
 
@@ -219,6 +219,23 @@ export class Gig extends Track {
   }
 
   /**
+   * Establishes the origin time of run-time playback, skewed to pause time.
+   *
+   * @returns {Number}
+   */
+  get origin () {
+    return this.times.origin != null ? this.times.origin + this.skew : null
+  }
+
+  /** Determines the base time of the current step.
+   *
+   * @returns {Number}
+   */
+  get basis () {
+    return (this.times.last || this.times.origin) + this.skew
+  }
+
+  /**
    * The amount of time that's elapsed since the track started playing.
    *
    * Used to determine the cursor step when Gig is set to stateless.
@@ -226,7 +243,7 @@ export class Gig extends Track {
    * @returns {Float}
    */
   get elapsed () {
-    return this.times.origin != null ? (this.time - this.times.origin) : 0
+    return this.origin != null ? (this.time - this.origin) : 0
   }
 
   /**
@@ -264,12 +281,12 @@ export class Gig extends Track {
     return this.time - (this.times.paused || this.time)
   }
 
-  /** Determines the base time of the current step.
+  /** Determines the amount of run-time drift, in ms, of the current beat.
    *
    * @returns {Number}
    */
-  get basis () {
-    return (this.times.last || this.times.origin) + this.skew
+  get drift () {
+    return this.times.beat ? ((this.times.beat + this.skew) - this.moment(this.state.beat.index)) : 0
   }
 
   /**
@@ -318,7 +335,7 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get iterations () {
-    return this.current / (this.durations.total - 1)
+    return this.current / this.durations.total
   }
 
   /**
@@ -526,6 +543,7 @@ export class Gig extends Track {
 
     if (play.length) {
       this.emit('play:beat', beat)
+      this.times.beat = this.time
     }
 
     this.times.last = this.time
@@ -540,10 +558,11 @@ export class Gig extends Track {
    * @returns {number}
    */
   moment (duration, is = 'step') {
-    const step = this.durations.cast(duration, { is, as: 'step' })
+    const offset = this.durations.total * Math.floor(this.iterations)
+    const step = this.durations.cast(duration, { is, as: 'step' }) + offset
     const time = this.durations.cast(step, { as: 'ms' })
 
-    return this.times.origin + this.skew + time
+    return this.origin + time
   }
 
   /**
@@ -568,7 +587,7 @@ export class Gig extends Track {
    */
   reset () {
     this.index = 0
-    this.times = { origin: null, last: null }
+    this.times = { origin: null, last: null, paused: null, beat: null }
 
     return this
   }
