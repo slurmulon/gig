@@ -599,10 +599,12 @@ export class Gig extends Track {
     const step = this.durations.cast(duration, { is, as: 'step' })
     const time = this.durations.cast(step, { as: 'ms' })
     const last = this.durations.cast(Math.floor(step), { as: 'ms' })
+    const beat = this.beat(this.index)
 
     this.index = Math.floor(step)
     this.times.last = last
     this.times.origin = this.time - time
+    this.times.beat = this.moment(beat.index)
 
     return this
   }
