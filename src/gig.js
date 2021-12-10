@@ -219,6 +219,15 @@ export class Gig extends Track {
   }
 
   /**
+   * The duration of the track's audio (in milliseconds).
+   *
+   * @returns {Number}
+   */
+  get duration () {
+    return this.durations.cast(this.durations.total, { as: 'ms' })
+  }
+
+  /**
    * Establishes the origin time of run-time playback, skewed to pause time.
    *
    * @returns {Number}
@@ -227,7 +236,8 @@ export class Gig extends Track {
     return this.times.origin != null ? this.times.origin + this.skew : null
   }
 
-  /** Determines the base time of the current step.
+  /**
+   * Determines the base time of the current step.
    *
    * @returns {Number}
    */
@@ -299,15 +309,6 @@ export class Gig extends Track {
    */
   get offset () {
     return this.durations.total * Math.floor(this.iterations)
-  }
-
-  /**
-   * The duration of the track's audio (in milliseconds).
-   *
-   * @returns {Number}
-   */
-  get duration () {
-    return this.durations.cast(this.durations.total, { as: 'ms' })
   }
 
   /**
