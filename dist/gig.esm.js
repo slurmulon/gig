@@ -133,6 +133,7 @@
       _this.times = {
         origin: null,
         last: null,
+        beat: null,
         paused: null
       };
       _this.status = STATUS.pristine;
@@ -363,6 +364,41 @@
         return BASED_STATUS.includes(this.status);
       }
       /**
+       * The duration of the track's audio (in milliseconds).
+       *
+       * @returns {Number}
+       */
+
+    }, {
+      key: "duration",
+      get: function get() {
+        return this.durations.cast(this.durations.total, {
+          as: 'ms'
+        });
+      }
+      /**
+       * Establishes the origin time of run-time playback, skewed to pause time.
+       *
+       * @returns {Number}
+       */
+
+    }, {
+      key: "origin",
+      get: function get() {
+        return this.times.origin != null ? this.times.origin + this.skew : null;
+      }
+      /**
+       * Determines the base time of the current step.
+       *
+       * @returns {Number}
+       */
+
+    }, {
+      key: "basis",
+      get: function get() {
+        return (this.times.last || this.times.origin) + this.skew;
+      }
+      /**
        * The amount of time that's elapsed since the track started playing.
        *
        * Used to determine the cursor step when Gig is set to stateless.
@@ -373,7 +409,7 @@
     }, {
       key: "elapsed",
       get: function get() {
-        return this.times.origin != null ? this.time - this.times.origin : 0;
+        return this.origin != null ? this.time - this.origin : 0;
       }
       /**
        * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
@@ -408,7 +444,8 @@
       get: function get() {
         return (this.time - this.basis) / this.interval;
       }
-      /** Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
+      /**
+       * Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
        *
        * @returns {Number}
        */
@@ -418,28 +455,28 @@
       get: function get() {
         return this.time - (this.times.paused || this.time);
       }
-      /** Determines the base time of the current step.
+      /**
+       * Determines the amount of run-time drift, in ms, of the current beat.
        *
        * @returns {Number}
        */
 
     }, {
-      key: "basis",
+      key: "drift",
       get: function get() {
-        return (this.times.last || this.times.origin) + this.skew;
+        return this.times.beat ? this.times.beat + this.skew - this.moment(this.state.beat.index) : 0;
       }
       /**
-       * The duration of the track's audio (in milliseconds).
+       * Provides an offset, in steps, based on the total number of iterations.
+       * Useful for adjusting between absolute (global) and relative (cyclic) duration calculations.
        *
        * @returns {Number}
        */
 
     }, {
-      key: "duration",
+      key: "offset",
       get: function get() {
-        return this.durations.cast(this.durations.total, {
-          as: 'ms'
-        });
+        return this.durations.total * Math.floor(this.iterations);
       }
       /**
        * Whether or not the Gig object has associated audio.
@@ -485,7 +522,7 @@
     }, {
       key: "iterations",
       get: function get() {
-        return this.current / (this.durations.total - 1);
+        return this.current / this.durations.total;
       }
       /**
        * Determines if the track has already looped/repeated.
@@ -667,7 +704,7 @@
       /**
        * Seek to a new position in the track
        *
-       * @param {number} to position in the track in seconds
+       * @param {Number} to position in the track in seconds
        * @fixme
        */
 
@@ -714,30 +751,63 @@
 
         if (play.length) {
           this.emit('play:beat', beat);
+          this.times.beat = this.time;
         }
 
         this.times.last = this.time;
         return this;
       }
-      /* Determines when a duration occurs (in milliseconds) relative to the run-time origin.
+      /**
+       * Converts a localized/cyclic duration into its globalized version.
+       * The inverse of this conversion can be achieved with Gig.durations.cyclic().
        *
-       * @param {number} duration time value
-       * @param {string} is unit of duration
-       * @returns {number}
+       * @param {Number} duration time value
+       * @param {Object} [lens] unit conversions
+       * @returns {Number}
+       */
+
+    }, {
+      key: "globalize",
+      value: function globalize(duration) {
+        var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref2$is = _ref2.is,
+            is = _ref2$is === void 0 ? 'step' : _ref2$is,
+            _ref2$as = _ref2.as,
+            as = _ref2$as === void 0 ? 'step' : _ref2$as;
+
+        return this.durations.cyclic(duration, {
+          is: is,
+          as: as
+        }) + this.durations.cast(this.offset, {
+          as: as
+        });
+      }
+      /**
+       * Determines when a duration occurs (in milliseconds, by default) globalized to the run-time origin.
+       *
+       * @param {Number} duration time value
+       * @param {Object} [lens] unit conversions
+       * @returns {Number}
        */
 
     }, {
       key: "moment",
       value: function moment(duration) {
-        var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
-        var step = this.durations.cast(duration, {
+        var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref3$is = _ref3.is,
+            is = _ref3$is === void 0 ? 'step' : _ref3$is,
+            _ref3$as = _ref3.as,
+            as = _ref3$as === void 0 ? 'ms' : _ref3$as;
+
+        var time = this.globalize(duration, {
           is: is,
-          as: 'step'
-        });
-        var time = this.durations.cast(step, {
           as: 'ms'
         });
-        return this.times.origin + this.skew + time;
+        var moment = this.origin + time;
+        return this.durations.cast(moment, {
+          is: 'ms',
+          as: as
+        });
       }
       /**
        * Moves playback cursor to the provided duration.
@@ -756,12 +826,15 @@
         var time = this.durations.cast(step, {
           as: 'ms'
         });
-        var last = this.durations.cast(Math.floor(step), {
+        var index = Math.floor(step);
+        var last = this.durations.cast(index, {
           as: 'ms'
         });
-        this.index = Math.floor(step);
+        var beat = this.beat(index);
+        this.index = index;
         this.times.last = last;
         this.times.origin = this.time - time;
+        this.times.beat = this.moment(beat.index);
         return this;
       }
       /**
@@ -774,7 +847,9 @@
         this.index = 0;
         this.times = {
           origin: null,
-          last: null
+          last: null,
+          paused: null,
+          beat: null
         };
         return this;
       }
