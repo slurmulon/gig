@@ -32,7 +32,7 @@ export class Gig extends Track {
     this.now = now || hrtime
 
     this.index = 0
-    this.times = { origin: null, last: null, paused: null }
+    this.times = { origin: null, last: null, beat: null, paused: null }
     this.status = STATUS.pristine
     this.stateless = stateless
 
@@ -219,6 +219,33 @@ export class Gig extends Track {
   }
 
   /**
+   * The duration of the track's audio (in milliseconds).
+   *
+   * @returns {Number}
+   */
+  get duration () {
+    return this.durations.cast(this.durations.total, { as: 'ms' })
+  }
+
+  /**
+   * Establishes the origin time of run-time playback, skewed to pause time.
+   *
+   * @returns {Number}
+   */
+  get origin () {
+    return this.times.origin != null ? this.times.origin + this.skew : null
+  }
+
+  /**
+   * Determines the base time of the current step.
+   *
+   * @returns {Number}
+   */
+  get basis () {
+    return (this.times.last || this.times.origin) + this.skew
+  }
+
+  /**
    * The amount of time that's elapsed since the track started playing.
    *
    * Used to determine the cursor step when Gig is set to stateless.
@@ -226,7 +253,7 @@ export class Gig extends Track {
    * @returns {Float}
    */
   get elapsed () {
-    return this.times.origin != null ? (this.time - this.times.origin) : 0
+    return this.origin != null ? (this.time - this.origin) : 0
   }
 
   /**
@@ -256,7 +283,8 @@ export class Gig extends Track {
     return (this.time - this.basis) / this.interval
   }
 
-  /** Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
+  /**
+   * Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
    *
    * @returns {Number}
    */
@@ -264,21 +292,23 @@ export class Gig extends Track {
     return this.time - (this.times.paused || this.time)
   }
 
-  /** Determines the base time of the current step.
+  /**
+   * Determines the amount of run-time drift, in ms, of the current beat.
    *
    * @returns {Number}
    */
-  get basis () {
-    return (this.times.last || this.times.origin) + this.skew
+  get drift () {
+    return this.times.beat ? ((this.times.beat + this.skew) - this.moment(this.state.beat.index)) : 0
   }
 
   /**
-   * The duration of the track's audio (in milliseconds).
+   * Provides an offset, in steps, based on the total number of iterations.
+   * Useful for adjusting between absolute (global) and relative (cyclic) duration calculations.
    *
    * @returns {Number}
    */
-  get duration () {
-    return this.durations.cast(this.durations.total, { as: 'ms' })
+  get offset () {
+    return this.durations.total * Math.floor(this.iterations)
   }
 
   /**
@@ -318,7 +348,7 @@ export class Gig extends Track {
    * @returns {Number}
    */
   get iterations () {
-    return this.current / (this.durations.total - 1)
+    return this.current / this.durations.total
   }
 
   /**
@@ -482,7 +512,7 @@ export class Gig extends Track {
   /**
    * Seek to a new position in the track
    *
-   * @param {number} to position in the track in seconds
+   * @param {Number} to position in the track in seconds
    * @fixme
    */
   seek (to) {
@@ -526,6 +556,7 @@ export class Gig extends Track {
 
     if (play.length) {
       this.emit('play:beat', beat)
+      this.times.beat = this.time
     }
 
     this.times.last = this.time
@@ -533,17 +564,30 @@ export class Gig extends Track {
     return this
   }
 
-  /* Determines when a duration occurs (in milliseconds) relative to the run-time origin.
+  /**
+   * Converts a localized/cyclic duration into its globalized version.
+   * The inverse of this conversion can be achieved with Gig.durations.cyclic().
    *
-   * @param {number} duration time value
-   * @param {string} is unit of duration
-   * @returns {number}
+   * @param {Number} duration time value
+   * @param {Object} [lens] unit conversions
+   * @returns {Number}
    */
-  moment (duration, is = 'step') {
-    const step = this.durations.cast(duration, { is, as: 'step' })
-    const time = this.durations.cast(step, { as: 'ms' })
+  globalize (duration, { is = 'step', as = 'step' } = {}) {
+    return this.durations.cyclic(duration, { is, as }) + this.durations.cast(this.offset, { as })
+  }
 
-    return this.times.origin + this.skew + time
+  /**
+   * Determines when a duration occurs (in milliseconds, by default) globalized to the run-time origin.
+   *
+   * @param {Number} duration time value
+   * @param {Object} [lens] unit conversions
+   * @returns {Number}
+   */
+  moment (duration, { is = 'step', as = 'ms' } = {}) {
+    const time = this.globalize(duration, { is, as: 'ms' })
+    const moment = this.origin + time
+
+    return this.durations.cast(moment, { is: 'ms', as })
   }
 
   /**
@@ -554,11 +598,14 @@ export class Gig extends Track {
   travel (duration, is = 'step') {
     const step = this.durations.cast(duration, { is, as: 'step' })
     const time = this.durations.cast(step, { as: 'ms' })
-    const last = this.durations.cast(Math.floor(step), { as: 'ms' })
+    const index = Math.floor(step)
+    const last = this.durations.cast(index, { as: 'ms' })
+    const beat = this.beat(index)
 
-    this.index = Math.floor(step)
+    this.index = index
     this.times.last = last
     this.times.origin = this.time - time
+    this.times.beat = this.moment(beat.index)
 
     return this
   }
@@ -568,7 +615,7 @@ export class Gig extends Track {
    */
   reset () {
     this.index = 0
-    this.times = { origin: null, last: null }
+    this.times = { origin: null, last: null, paused: null, beat: null }
 
     return this
   }

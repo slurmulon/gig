@@ -1787,7 +1787,7 @@ if(!sound._paused){sound._parent.pause(sound._id,true).play(sound._id,true);}};}
    * @param {Object} [howler] optional Howler configuration overrides
    * @param {boolean} [stateless] enable stateless/monotonic cursor
    */function Gig(){var _this38;var _ref101=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{},source=_ref101.source,audio=_ref101.audio,loop=_ref101.loop,timer=_ref101.timer,now=_ref101.now,howler$1=_ref101.howler,_ref101$stateless=_ref101.stateless,stateless=_ref101$stateless===void 0?true:_ref101$stateless;_classCallCheck3(this,Gig);_this38=_super31.call(this,source);_events["default"].call(_assertThisInitialized2(_this38));_this38.audio=audio;_this38.loop=loop;// this.tempo  = tempo // FIXME: Sync with Howler's rate property
-_this38.timer=timer||clock;_this38.now=now||performanceNow;_this38.index=0;_this38.times={origin:null,last:null,paused:null};_this38.status=STATUS.pristine;_this38.stateless=stateless;if(audio){_this38.music=new howler.Howl(Object.assign({src:audio,loop:loop},howler$1));}// this.listen()
+_this38.timer=timer||clock;_this38.now=now||performanceNow;_this38.index=0;_this38.times={origin:null,last:null,beat:null,paused:null};_this38.status=STATUS.pristine;_this38.stateless=stateless;if(audio){_this38.music=new howler.Howl(Object.assign({src:audio,loop:loop},howler$1));}// this.listen()
 return _this38;}/**
    * Provides the beat found at the track's cursor
    *
@@ -1866,12 +1866,24 @@ return _this38;}/**
    *
    * @returns {Boolean}
    */},{key:"based",get:function get(){return BASED_STATUS.includes(this.status);}/**
+   * The duration of the track's audio (in milliseconds).
+   *
+   * @returns {Number}
+   */},{key:"duration",get:function get(){return this.durations.cast(this.durations.total,{as:'ms'});}/**
+   * Establishes the origin time of run-time playback, skewed to pause time.
+   *
+   * @returns {Number}
+   */},{key:"origin",get:function get(){return this.times.origin!=null?this.times.origin+this.skew:null;}/**
+   * Determines the base time of the current step.
+   *
+   * @returns {Number}
+   */},{key:"basis",get:function get(){return(this.times.last||this.times.origin)+this.skew;}/**
    * The amount of time that's elapsed since the track started playing.
    *
    * Used to determine the cursor step when Gig is set to stateless.
    *
    * @returns {Float}
-   */},{key:"elapsed",get:function get(){return this.times.origin!=null?this.time-this.times.origin:0;}/**
+   */},{key:"elapsed",get:function get(){return this.origin!=null?this.time-this.origin:0;}/**
    * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
    *
    * @returns {Number}
@@ -1883,17 +1895,20 @@ return _this38;}/**
    * The run-time progression (0-1) of the current step.
    *
    * @returns {Number}
-   */},{key:"stride",get:function get(){return(this.time-this.basis)/this.interval;}/** Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
+   */},{key:"stride",get:function get(){return(this.time-this.basis)/this.interval;}/**
+   * Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
    *
    * @returns {Number}
-   */},{key:"skew",get:function get(){return this.time-(this.times.paused||this.time);}/** Determines the base time of the current step.
+   */},{key:"skew",get:function get(){return this.time-(this.times.paused||this.time);}/**
+   * Determines the amount of run-time drift, in ms, of the current beat.
    *
    * @returns {Number}
-   */},{key:"basis",get:function get(){return(this.times.last||this.times.origin)+this.skew;}/**
-   * The duration of the track's audio (in milliseconds).
+   */},{key:"drift",get:function get(){return this.times.beat?this.times.beat+this.skew-this.moment(this.state.beat.index):0;}/**
+   * Provides an offset, in steps, based on the total number of iterations.
+   * Useful for adjusting between absolute (global) and relative (cyclic) duration calculations.
    *
    * @returns {Number}
-   */},{key:"duration",get:function get(){return this.durations.cast(this.durations.total,{as:'ms'});}/**
+   */},{key:"offset",get:function get(){return this.durations.total*Math.floor(this.iterations);}/**
    * Whether or not the Gig object has associated audio.
    *
    * @returns {Boolean}
@@ -1909,7 +1924,7 @@ return _this38;}/**
    * Determines the number of times the track has already looped/repeated.
    *
    * @returns {Number}
-   */},{key:"iterations",get:function get(){return this.current/(this.durations.total-1);}/**
+   */},{key:"iterations",get:function get(){return this.current/this.durations.total;}/**
    * Determines if the track has already looped/repeated.
    *
    * @returns {Boolean}
@@ -1945,24 +1960,32 @@ return _this38;}/**
    */},{key:"mute",value:function mute(){if(this.audible)this.music.mute();this.emit('mute');return this;}/**
    * Seek to a new position in the track
    *
-   * @param {number} to position in the track in seconds
+   * @param {Number} to position in the track in seconds
    * @fixme
    */},{key:"seek",value:function seek(to){if(this.audible)this.music.seek(to);this.travel(to,'second');this.emit('seek');return this;}/**
    * Invokes the action to perform on each interval and emits
    * various events based on current state of the step.
    * Only emits beat events if the beat has updated from the previous step.
-   */},{key:"step",value:function step(){this.index=this.times.last?this.index+1:0;var state=this.state,interval=this.interval;var beat=state.beat,play=state.play,stop=state.stop;this.emit('step',state);if(stop.length){this.emit('stop:beat',stop);}if(!this.stateless&&!this.updated){return this;}if(this.repeating&&this.first){if(this.loops){this.emit('loop',state);}else{return this.kill();}}if(play.length){this.emit('play:beat',beat);}this.times.last=this.time;return this;}/* Determines when a duration occurs (in milliseconds) relative to the run-time origin.
+   */},{key:"step",value:function step(){this.index=this.times.last?this.index+1:0;var state=this.state,interval=this.interval;var beat=state.beat,play=state.play,stop=state.stop;this.emit('step',state);if(stop.length){this.emit('stop:beat',stop);}if(!this.stateless&&!this.updated){return this;}if(this.repeating&&this.first){if(this.loops){this.emit('loop',state);}else{return this.kill();}}if(play.length){this.emit('play:beat',beat);this.times.beat=this.time;}this.times.last=this.time;return this;}/**
+   * Converts a localized/cyclic duration into its globalized version.
+   * The inverse of this conversion can be achieved with Gig.durations.cyclic().
    *
-   * @param {number} duration time value
-   * @param {string} is unit of duration
-   * @returns {number}
-   */},{key:"moment",value:function moment(duration){var is=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'step';var step=this.durations.cast(duration,{is:is,as:'step'});var time=this.durations.cast(step,{as:'ms'});return this.times.origin+this.skew+time;}/**
+   * @param {Number} duration time value
+   * @param {Object} [lens] unit conversions
+   * @returns {Number}
+   */},{key:"globalize",value:function globalize(duration){var _ref102=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{},_ref102$is=_ref102.is,is=_ref102$is===void 0?'step':_ref102$is,_ref102$as=_ref102.as,as=_ref102$as===void 0?'step':_ref102$as;return this.durations.cyclic(duration,{is:is,as:as})+this.durations.cast(this.offset,{as:as});}/**
+   * Determines when a duration occurs (in milliseconds, by default) globalized to the run-time origin.
+   *
+   * @param {Number} duration time value
+   * @param {Object} [lens] unit conversions
+   * @returns {Number}
+   */},{key:"moment",value:function moment(duration){var _ref103=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{},_ref103$is=_ref103.is,is=_ref103$is===void 0?'step':_ref103$is,_ref103$as=_ref103.as,as=_ref103$as===void 0?'ms':_ref103$as;var time=this.globalize(duration,{is:is,as:'ms'});var moment=this.origin+time;return this.durations.cast(moment,{is:'ms',as:as});}/**
    * Moves playback cursor to the provided duration.
    *
    * WARN: Work in progress
-   */},{key:"travel",value:function travel(duration){var is=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'step';var step=this.durations.cast(duration,{is:is,as:'step'});var time=this.durations.cast(step,{as:'ms'});var last=this.durations.cast(Math.floor(step),{as:'ms'});this.index=Math.floor(step);this.times.last=last;this.times.origin=this.time-time;return this;}/**
+   */},{key:"travel",value:function travel(duration){var is=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'step';var step=this.durations.cast(duration,{is:is,as:'step'});var time=this.durations.cast(step,{as:'ms'});var index=Math.floor(step);var last=this.durations.cast(index,{as:'ms'});var beat=this.beat(index);this.index=index;this.times.last=last;this.times.origin=this.time-time;this.times.beat=this.moment(beat.index);return this;}/**
    * Resets the cursor indices to their initial unplayed state
-   */},{key:"reset",value:function reset(){this.index=0;this.times={origin:null,last:null};return this;}/**
+   */},{key:"reset",value:function reset(){this.index=0;this.times={origin:null,last:null,paused:null,beat:null};return this;}/**
    * Removes all active event listeners
    *
    * TODO: Consider automatically stopping the track here if already running
