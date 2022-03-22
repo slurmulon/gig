@@ -219,7 +219,7 @@ export class Gig extends Track {
   }
 
   /**
-   * The duration of the track's audio (in milliseconds).
+   * The total duration of the track's run-time (in milliseconds).
    *
    * @returns {Number}
    */
@@ -459,6 +459,8 @@ export class Gig extends Track {
 
     this.times.paused = this.time
 
+    console.log('[gig] PAUSED', this.times.paused, this.times.origin)
+
     this.clock.pause()
     this.emit('pause')
 
@@ -475,6 +477,9 @@ export class Gig extends Track {
 
     this.times.origin += skew
     this.times.last += skew
+    // experiment
+    this.times.beat += skew
+    //
     this.times.paused = null
 
     this.clock.resume()
@@ -515,8 +520,14 @@ export class Gig extends Track {
    * @param {Number} to position in the track in seconds
    * @fixme
    */
+  // TODO: Add `is` param so we don't have to pass in second, can be any unit
   seek (to) {
-    if (this.audible) this.music.seek(to)
+    if (this.audible) {
+      const time = this.durations.cyclic(to, { unit: 'second', max: this.music.duration() })
+
+      this.music.seek(time)
+      // this.music.seek(to)
+    }
 
     this.travel(to, 'second')
     this.emit('seek')
@@ -596,6 +607,15 @@ export class Gig extends Track {
    * WARN: Work in progress
    */
   travel (duration, is = 'step') {
+    // const origin = this.times.origin
+    // const origin = this.moment(this.current)
+    // const basis = this.moment(this.basis)
+    // const basis = this.moment(this.index)
+    // LAST
+    // const basis = this.durations.cast(this.elapsed, { is: 'ms', as: 'step' })
+    const basis = this.elapsed
+    // const orig = this.times.origin
+    const orig = this.origin
     const step = this.durations.cast(duration, { is, as: 'step' })
     const time = this.durations.cast(step, { as: 'ms' })
     const index = Math.floor(step)
@@ -604,8 +624,38 @@ export class Gig extends Track {
 
     this.index = index
     this.times.last = last
-    this.times.origin = this.time - time
+    // ORIG
+    // this.times.origin = this.time - time
+    // this.times.origin = (this.time + this.skew) - (time + this.skew)
+    // WORKS
+    this.times.origin = this.time - this.skew - time
     this.times.beat = this.moment(beat.index)
+    // TODO: adjust paused time as well
+
+    // if (this.paused) {
+    //   // const paused = this.durations.cast(this.times.paused, { is: 'ms', as: 'step' })
+
+    //   // const skew = this.times.origin - origin
+    //   // const skew = this.times.beat - origin
+    //   // const skew = this.times.beat - basis
+    //   // const skew = this.durations.cast(index - paused, { as: 'ms' })
+    //   // const skew = index - basis
+    //   // LAST
+    //   // const skew = this.durations.cast(index - basis, { as: 'ms' })
+    //   const skew = this.times.beat - basis
+
+    //   // console.log('[gig] travel paused!', skew, this.time - time)
+    //   // console.log('[gig] travel paused!', this.times.paused, skew, paused, beat.index)
+    //   // console.log('[gig] travel paused!', this.times.paused, skew, basis, index, index - basis, this.times.origin, origin)
+    //   console.log('[gig] travel paused!', this.times.origin, this.times.beat, orig, beat.index, this.durations.cast(this.times.beat - this.times.origin, { is: 'ms', as: 'step' }))
+
+    //   // this.times.origin += skew
+    //   // this.times.paused += skew
+
+    //   // console.log('  --- [gig] new paused!', this.times.paused)
+    //   // this.times.paused -= skew
+    //   // this.times.paused = this.time
+    // }
 
     return this
   }
