@@ -459,8 +459,6 @@ export class Gig extends Track {
 
     this.times.paused = this.time
 
-    console.log('[gig] PAUSED', this.times.paused, this.times.origin)
-
     this.clock.pause()
     this.emit('pause')
 
@@ -477,9 +475,7 @@ export class Gig extends Track {
 
     this.times.origin += skew
     this.times.last += skew
-    // experiment
     this.times.beat += skew
-    //
     this.times.paused = null
 
     this.clock.resume()
@@ -520,9 +516,12 @@ export class Gig extends Track {
    * @param {Number} to position in the track as a duration unit
    * @param {Object} [lens] unit conversions
    */
-  seek (to, { is = 'step', as = 'step' } = {}) {
+  // TODO: Only accept `is` instead of an entire lens (`as` is unused)
+  // seek (to, { is = 'step', as = 'step' } = {}) {
+  seek (to, is = 'step') {
     if (this.audible) {
-      const time = this.durations.cyclic(to, { is, as: 'second', max: this.music.duration() })
+      const max = this.durations.cast(this.music.duration(), { is: 'second', as: is })
+      const time = this.durations.cyclic(to, { is, as: 'second', max })
 
       this.music.seek(time)
     }
@@ -603,6 +602,9 @@ export class Gig extends Track {
    * Moves playback cursor to the provided duration.
    *
    * WARN: Work in progress
+   *
+   * @param {Number} duration time value
+   * @param {Object} [lens] unit conversions
    */
   travel (duration, is = 'step') {
     const step = this.durations.cast(duration, { is, as: 'step' })
