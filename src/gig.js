@@ -517,19 +517,17 @@ export class Gig extends Track {
   /**
    * Seek to a new position in the track
    *
-   * @param {Number} to position in the track in seconds
-   * @fixme
+   * @param {Number} to position in the track as a duration unit
+   * @param {Object} [lens] unit conversions
    */
-  // TODO: Add `is` param so we don't have to pass in second, can be any unit
-  seek (to) {
+  seek (to, { is = 'step', as = 'step' } = {}) {
     if (this.audible) {
-      const time = this.durations.cyclic(to, { unit: 'second', max: this.music.duration() })
+      const time = this.durations.cyclic(to, { is, as: 'second', max: this.music.duration() })
 
       this.music.seek(time)
-      // this.music.seek(to)
     }
 
-    this.travel(to, 'second')
+    this.travel(to, is)
     this.emit('seek')
 
     return this
@@ -607,55 +605,21 @@ export class Gig extends Track {
    * WARN: Work in progress
    */
   travel (duration, is = 'step') {
-    // const origin = this.times.origin
-    // const origin = this.moment(this.current)
-    // const basis = this.moment(this.basis)
-    // const basis = this.moment(this.index)
-    // LAST
-    // const basis = this.durations.cast(this.elapsed, { is: 'ms', as: 'step' })
-    const basis = this.elapsed
-    // const orig = this.times.origin
-    const orig = this.origin
     const step = this.durations.cast(duration, { is, as: 'step' })
     const time = this.durations.cast(step, { as: 'ms' })
     const index = Math.floor(step)
     const last = this.durations.cast(index, { as: 'ms' })
-    const beat = this.beat(index)
+    const { beat } = this.at(index)
 
     this.index = index
     this.times.last = last
-    // ORIG
-    // this.times.origin = this.time - time
-    // this.times.origin = (this.time + this.skew) - (time + this.skew)
-    // WORKS
     this.times.origin = this.time - this.skew - time
     this.times.beat = this.moment(beat.index)
-    // TODO: adjust paused time as well
 
-    // if (this.paused) {
-    //   // const paused = this.durations.cast(this.times.paused, { is: 'ms', as: 'step' })
-
-    //   // const skew = this.times.origin - origin
-    //   // const skew = this.times.beat - origin
-    //   // const skew = this.times.beat - basis
-    //   // const skew = this.durations.cast(index - paused, { as: 'ms' })
-    //   // const skew = index - basis
-    //   // LAST
-    //   // const skew = this.durations.cast(index - basis, { as: 'ms' })
-    //   const skew = this.times.beat - basis
-
-    //   // console.log('[gig] travel paused!', skew, this.time - time)
-    //   // console.log('[gig] travel paused!', this.times.paused, skew, paused, beat.index)
-    //   // console.log('[gig] travel paused!', this.times.paused, skew, basis, index, index - basis, this.times.origin, origin)
-    //   console.log('[gig] travel paused!', this.times.origin, this.times.beat, orig, beat.index, this.durations.cast(this.times.beat - this.times.origin, { is: 'ms', as: 'step' }))
-
-    //   // this.times.origin += skew
-    //   // this.times.paused += skew
-
-    //   // console.log('  --- [gig] new paused!', this.times.paused)
-    //   // this.times.paused -= skew
-    //   // this.times.paused = this.time
-    // }
+    // TODO: Determine if we want to emit a different event here instead for greater specificity and control
+    if (this.paused) {
+      this.emit('play:beat', beat)
+    }
 
     return this
   }
