@@ -513,20 +513,18 @@ export class Gig extends Track {
   /**
    * Seek to a new position in the track
    *
-   * @param {Number} to position in the track as a duration unit
-   * @param {Object} [lens] unit conversions
+   * @param {Number} duration time value
+   * @param {String} [is] duration unit
    */
-  // TODO: Only accept `is` instead of an entire lens (`as` is unused)
-  // seek (to, { is = 'step', as = 'step' } = {}) {
-  seek (to, is = 'step') {
+  seek (duration, is = 'step') {
     if (this.audible) {
       const max = this.durations.cast(this.music.duration(), { is: 'second', as: is })
-      const time = this.durations.cyclic(to, { is, as: 'second', max })
+      const time = this.durations.cyclic(duration, { is, as: 'second', max })
 
       this.music.seek(time)
     }
 
-    this.travel(to, is)
+    this.travel(duration, is)
     this.emit('seek')
 
     return this
@@ -601,26 +599,25 @@ export class Gig extends Track {
   /**
    * Moves playback cursor to the provided duration.
    *
-   * WARN: Work in progress
-   *
    * @param {Number} duration time value
-   * @param {Object} [lens] unit conversions
+   * @param {String} [is] duration unit
    */
   travel (duration, is = 'step') {
     const step = this.durations.cast(duration, { is, as: 'step' })
     const time = this.durations.cast(step, { as: 'ms' })
     const index = Math.floor(step)
     const last = this.durations.cast(index, { as: 'ms' })
-    const { beat } = this.at(index)
+    const state = this.at(index)
 
     this.index = index
     this.times.last = last
     this.times.origin = this.time - this.skew - time
-    this.times.beat = this.moment(beat.index)
+    this.times.beat = this.moment(state.beat.index)
 
     // TODO: Determine if we want to emit a different event here instead for greater specificity and control
-    if (this.paused) {
-      this.emit('play:beat', beat)
+    // TODO: Consider if we should emit `stop` as well on the beat we traveled from
+    if (state.play.length && this.paused) {
+      this.emit('play:beat', state.beat)
     }
 
     return this
