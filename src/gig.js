@@ -603,6 +603,12 @@ export class Gig extends Track {
    * @param {String} [is] duration unit
    */
   travel (duration, is = 'step') {
+    if (this.based) {
+      console.warn('[gig:travel] Currently unsupported on tracks that have not started playing')
+
+      return this
+    }
+
     const step = this.durations.cast(duration, { is, as: 'step' })
     const time = this.durations.cast(step, { as: 'ms' })
     const index = Math.floor(step)
