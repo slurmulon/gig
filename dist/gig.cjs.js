@@ -373,7 +373,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
       return BASED_STATUS.includes(this.status);
     }
     /**
-     * The duration of the track's audio (in milliseconds).
+     * The total duration of the track's run-time (in milliseconds).
      *
      * @returns {Number}
      */
@@ -677,6 +677,7 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
       var skew = this.time - this.times.paused;
       this.times.origin += skew;
       this.times.last += skew;
+      this.times.beat += skew;
       this.times.paused = null;
       this.clock.resume();
       this.emit('resume');
@@ -713,15 +714,29 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
     /**
      * Seek to a new position in the track
      *
-     * @param {Number} to position in the track in seconds
-     * @fixme
+     * @param {Number} duration time value
+     * @param {String} [is] duration unit
      */
 
   }, {
     key: "seek",
-    value: function seek(to) {
-      if (this.audible) this.music.seek(to);
-      this.travel(to, 'second');
+    value: function seek(duration) {
+      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+
+      if (this.audible) {
+        var max = this.durations.cast(this.music.duration(), {
+          is: 'second',
+          as: is
+        });
+        var time = this.durations.cyclic(duration, {
+          is: is,
+          as: 'second',
+          max: max
+        });
+        this.music.seek(time);
+      }
+
+      this.travel(duration, is);
       this.emit('seek');
       return this;
     }
@@ -821,13 +836,20 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
     /**
      * Moves playback cursor to the provided duration.
      *
-     * WARN: Work in progress
+     * @param {Number} duration time value
+     * @param {String} [is] duration unit
      */
 
   }, {
     key: "travel",
     value: function travel(duration) {
       var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+
+      if (this.based) {
+        console.warn('[gig:travel] Currently unsupported on tracks that have not started playing');
+        return this;
+      }
+
       var step = this.durations.cast(duration, {
         is: is,
         as: 'step'
@@ -839,11 +861,17 @@ var Gig = /*#__PURE__*/function (_bachJs$Music) {
       var last = this.durations.cast(index, {
         as: 'ms'
       });
-      var beat = this.beat(index);
+      var state = this.at(index);
       this.index = index;
       this.times.last = last;
-      this.times.origin = this.time - time;
-      this.times.beat = this.moment(beat.index);
+      this.times.origin = this.time - this.skew - time;
+      this.times.beat = this.moment(state.beat.index); // TODO: Determine if we want to emit a different event here instead for greater specificity and control
+      // TODO: Consider if we should emit `stop` as well on the beat we traveled from
+
+      if (state.play.length && this.paused) {
+        this.emit('play:beat', state.beat);
+      }
+
       return this;
     }
     /**
