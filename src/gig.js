@@ -39,6 +39,7 @@ export class Gig extends Track {
     if (audio) {
       this.music = new Howl(Object.assign({
         src: audio,
+        ctx: true,
         loop
       }, howler))
     }
@@ -416,6 +417,10 @@ export class Gig extends Track {
   play () {
     if (this.audible) {
       const ready = () => {
+        if (this.check('killed')) {
+          return
+        }
+
         this.start()
         this.music.play()
         this.emit('play')
@@ -571,7 +576,7 @@ export class Gig extends Track {
   }
 
   /**
-   * Converts a localized/cyclic duration into its globalized version.
+   * Converts a localized/relative/cyclic duration into its globalized/absolute version.
    * The inverse of this conversion can be achieved with Gig.durations.cyclic().
    *
    * @param {Number} duration time value
@@ -618,7 +623,8 @@ export class Gig extends Track {
     this.index = index
     this.times.last = last
     this.times.origin = this.time - this.skew - time
-    this.times.beat = this.moment(state.beat.index)
+    this.times.beat = this.moment(state.beat.index) - this.skew
+    // TODO: Probably also need to adjust times.paused if already paused (seems to be causing a sporadic bug in gig.drift when traveling while paused)
 
     // TODO: Determine if we want to emit a different event here instead for greater specificity and control
     // TODO: Consider if we should emit `stop` as well on the beat we traveled from
@@ -646,6 +652,9 @@ export class Gig extends Track {
    */
   // purge
   clear () {
+    this.reset()
+    this.music = null
+
     return this.removeAllListeners()
   }
 
