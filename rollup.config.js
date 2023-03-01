@@ -8,6 +8,7 @@ import pkg from './package.json'
 // browser-friendly UMD build
 export default [
   {
+    external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'raf', 'events'],
     input: 'src/index.js',
     output: {
       name: 'gig',
