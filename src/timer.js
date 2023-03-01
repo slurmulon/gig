@@ -1,5 +1,4 @@
 import raf from 'raf'
-import now from 'performance-now'
 
 /**
  * Default monotonic/stateless timer for Gig.
@@ -8,7 +7,8 @@ import now from 'performance-now'
  * @param {Gig} gig parent instance provided on construction
  * @param {function} [tick] optional function to call on each tick of the clock
  */
-export function clock (gig, tick) {
+// TODO: Allow clock to be configured to optionally cancelAnimationFrame(interval) on each tick
+export const clock = (gig, tick) => {
   let last = null
   let interval = null
 
@@ -16,6 +16,7 @@ export function clock (gig, tick) {
     const { time, cursor, expired } = gig
 
     if (expired) return cancel()
+
     if (cursor !== last) {
       last = cursor
 
@@ -37,7 +38,7 @@ export function clock (gig, tick) {
 
   const timer = {
     play () {
-      loop(now())
+      loop()
     },
 
     pause () {
