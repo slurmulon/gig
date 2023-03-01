@@ -9,7 +9,7 @@
     "build": "rollup -c",
     "dev": "npm link bach-js bach-cljs && npm run build && npm link",
     "prepublish": "npm run build",
-    "test": ""
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -45,6 +45,9 @@
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1",
+    "jest-fake-timers": "^1.0.2",
     "rollup": "^2.46.0",
     "rollup-plugin-node-polyfills": "^0.2.1"
   }
