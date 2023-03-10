@@ -1,2005 +1,935 @@
-(function(global,factory){if(typeof define==="function"&&define.amd){define(["exports","events"],factory);}else if(typeof exports!=="undefined"){factory(exports,require("events"));}else{var mod={exports:{}};factory(mod.exports,global.events);global.unknown=mod.exports;}})(typeof globalThis!=="undefined"?globalThis:typeof self!=="undefined"?self:this,function(_exports2,_events){"use strict";Object.defineProperty(_exports2,"__esModule",{value:true});_exports2.clock=clock;_exports2.STATUS=_exports2.INACTIVE_STATUS=_exports2.Gig=_exports2.EXPIRED_STATUS=_exports2.CONSTANTS=_exports2.BASED_STATUS=_exports2.ACTIVE_STATUS=void 0;_events=_interopRequireDefault2(_events);var _templateObject,_templateObject2,_templateObject3,_templateObject4,_templateObject5,_templateObject6,_templateObject7,_templateObject8,_templateObject9,_templateObject10,_templateObject11,_templateObject12,_templateObject13,_templateObject14,_templateObject15,_templateObject16,_templateObject17,_templateObject18,_templateObject19,_templateObject20,_templateObject21,_templateObject22,_templateObject23,_templateObject24,_templateObject25,_templateObject26,_templateObject27,_templateObject28,_templateObject29,_templateObject30,_templateObject31,_templateObject32,_templateObject33,_templateObject34,_templateObject35,_templateObject36,_templateObject37,_templateObject38,_templateObject39,_templateObject40,_templateObject41,_templateObject42,_templateObject43,_templateObject44,_templateObject45,_templateObject46,_templateObject47,_templateObject48,_templateObject49,_templateObject50,_templateObject51,_templateObject52,_templateObject53,_templateObject54,_templateObject55,_templateObject56,_templateObject57,_templateObject58,_templateObject59,_templateObject60,_templateObject61,_templateObject62,_templateObject63,_templateObject64,_templateObject65,_templateObject66,_templateObject67,_templateObject68,_templateObject69,_templateObject70,_templateObject71,_templateObject72,_templateObject73,_templateObject74,_templateObject75,_templateObject76,_templateObject77,_templateObject78,_templateObject79,_templateObject80,_templateObject81,_templateObject82,_templateObject83,_templateObject84,_templateObject85,_templateObject86,_templateObject87,_templateObject88,_templateObject89,_templateObject90,_templateObject91,_templateObject92,_templateObject93,_templateObject94,_templateObject95,_templateObject96,_templateObject97,_templateObject98,_templateObject99,_templateObject100,_templateObject101,_templateObject102,_templateObject103,_templateObject104,_templateObject105,_templateObject106,_templateObject107,_templateObject108,_templateObject109,_templateObject110,_templateObject111,_templateObject112,_templateObject113,_templateObject114,_templateObject115,_templateObject116,_templateObject117,_templateObject118,_templateObject119,_templateObject120,_templateObject121,_templateObject122,_templateObject123,_templateObject124,_templateObject125,_templateObject126,_templateObject127,_templateObject128,_templateObject129,_templateObject130,_templateObject131,_templateObject132,_templateObject133,_templateObject134,_templateObject135,_templateObject136,_templateObject137,_templateObject138,_templateObject139,_templateObject140,_templateObject141,_templateObject142,_templateObject143,_templateObject144,_templateObject145,_templateObject146,_templateObject147,_templateObject148,_templateObject149,_templateObject150,_templateObject151,_templateObject152,_templateObject153,_templateObject154,_templateObject155,_templateObject156,_templateObject157,_templateObject158,_templateObject159,_templateObject160,_templateObject161,_templateObject162,_templateObject163,_templateObject164,_templateObject165,_templateObject166,_templateObject167,_templateObject168,_templateObject169,_templateObject170,_templateObject171,_templateObject172,_templateObject173,_templateObject174,_templateObject175,_templateObject176,_templateObject177,_templateObject178,_templateObject179,_templateObject180,_templateObject181,_templateObject182,_templateObject183,_templateObject184,_templateObject185,_templateObject186,_templateObject187,_templateObject188,_templateObject189,_templateObject190,_templateObject191,_templateObject192,_templateObject193,_templateObject194,_templateObject195,_templateObject196,_templateObject197,_templateObject198,_templateObject199,_templateObject200,_templateObject201,_templateObject202,_templateObject203,_templateObject204,_templateObject205,_templateObject206,_templateObject207,_templateObject208,_templateObject209,_templateObject210,_templateObject211,_templateObject212,_templateObject213,_templateObject214,_templateObject215,_templateObject216,_templateObject217,_templateObject218,_templateObject219,_templateObject220,_templateObject221,_templateObject222,_templateObject223,_templateObject224,_templateObject225,_templateObject226,_templateObject227,_templateObject228,_templateObject229,_templateObject230,_templateObject231,_templateObject232,_templateObject233,_templateObject234,_templateObject235,_templateObject236,_templateObject237,_templateObject238,_templateObject239,_templateObject240,_templateObject241,_templateObject242,_templateObject243,_templateObject244,_templateObject245,_templateObject246,_templateObject247,_templateObject248,_templateObject249,_templateObject250,_templateObject251,_templateObject252,_templateObject253,_templateObject254,_templateObject255,_templateObject256,_templateObject257,_templateObject258,_templateObject259,_templateObject260,_templateObject261,_templateObject262,_templateObject263,_templateObject264,_templateObject265,_templateObject266,_templateObject267,_templateObject268,_templateObject269,_templateObject270,_templateObject271,_templateObject272,_templateObject273,_templateObject274,_templateObject275,_templateObject276,_templateObject277,_templateObject278,_templateObject279,_templateObject280;function _interopRequireDefault2(obj){return obj&&obj.__esModule?obj:{"default":obj};}function asyncGeneratorStep(gen,resolve,reject,_next,_throw,key,arg){try{var info=gen[key](arg);var value=info.value;}catch(error){reject(error);return;}if(info.done){resolve(value);}else{Promise.resolve(value).then(_next,_throw);}}function _asyncToGenerator(fn){return function(){var self=this,args=arguments;return new Promise(function(resolve,reject){var gen=fn.apply(self,args);function _next(value){asyncGeneratorStep(gen,resolve,reject,_next,_throw,"next",value);}function _throw(err){asyncGeneratorStep(gen,resolve,reject,_next,_throw,"throw",err);}_next(undefined);});};}function _createForOfIteratorHelper(o,allowArrayLike){var it=typeof Symbol!=="undefined"&&o[Symbol.iterator]||o["@@iterator"];if(!it){if(Array.isArray(o)||(it=_unsupportedIterableToArray2(o))||allowArrayLike&&o&&typeof o.length==="number"){if(it)o=it;var i=0;var F=function F(){};return{s:F,n:function n(){if(i>=o.length)return{done:true};return{done:false,value:o[i++]};},e:function e(_e2){throw _e2;},f:F};}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}var normalCompletion=true,didErr=false,err;return{s:function s(){it=it.call(o);},n:function n(){var step=it.next();normalCompletion=step.done;return step;},e:function e(_e3){didErr=true;err=_e3;},f:function f(){try{if(!normalCompletion&&it["return"]!=null)it["return"]();}finally{if(didErr)throw err;}}};}function _slicedToArray3(arr,i){return _arrayWithHoles2(arr)||_iterableToArrayLimit2(arr,i)||_unsupportedIterableToArray2(arr,i)||_nonIterableRest2();}function _nonIterableRest2(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _iterableToArrayLimit2(arr,i){var _i=arr==null?null:typeof Symbol!=="undefined"&&arr[Symbol.iterator]||arr["@@iterator"];if(_i==null)return;var _arr=[];var _n=true;var _d=false;var _s,_e;try{for(_i=_i.call(arr);!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"]!=null)_i["return"]();}finally{if(_d)throw _e;}}return _arr;}function _arrayWithHoles2(arr){if(Array.isArray(arr))return arr;}function _get(target,property,receiver){if(typeof Reflect!=="undefined"&&Reflect.get){_get=Reflect.get;}else{_get=function _get(target,property,receiver){var base=_superPropBase(target,property);if(!base)return;var desc=Object.getOwnPropertyDescriptor(base,property);if(desc.get){return desc.get.call(receiver);}return desc.value;};}return _get(target,property,receiver||target);}function _superPropBase(object,property){while(!Object.prototype.hasOwnProperty.call(object,property)){object=_getPrototypeOf3(object);if(object===null)break;}return object;}function _ownKeys(object,enumerableOnly){var keys=Object.keys(object);if(Object.getOwnPropertySymbols){var symbols=Object.getOwnPropertySymbols(object);if(enumerableOnly){symbols=symbols.filter(function(sym){return Object.getOwnPropertyDescriptor(object,sym).enumerable;});}keys.push.apply(keys,symbols);}return keys;}function _objectSpread2(target){for(var i=1;i<arguments.length;i++){var source=arguments[i]!=null?arguments[i]:{};if(i%2){_ownKeys(Object(source),true).forEach(function(key){_defineProperty3(target,key,source[key]);});}else if(Object.getOwnPropertyDescriptors){Object.defineProperties(target,Object.getOwnPropertyDescriptors(source));}else{_ownKeys(Object(source)).forEach(function(key){Object.defineProperty(target,key,Object.getOwnPropertyDescriptor(source,key));});}}return target;}function _wrapNativeSuper(Class){var _cache=typeof Map==="function"?new Map():undefined;_wrapNativeSuper=function _wrapNativeSuper(Class){if(Class===null||!_isNativeFunction(Class))return Class;if(typeof Class!=="function"){throw new TypeError("Super expression must either be null or a function");}if(typeof _cache!=="undefined"){if(_cache.has(Class))return _cache.get(Class);_cache.set(Class,Wrapper);}function Wrapper(){return _construct(Class,arguments,_getPrototypeOf3(this).constructor);}Wrapper.prototype=Object.create(Class.prototype,{constructor:{value:Wrapper,enumerable:false,writable:true,configurable:true}});return _setPrototypeOf2(Wrapper,Class);};return _wrapNativeSuper(Class);}function _construct(Parent,args,Class){if(_isNativeReflectConstruct2()){_construct=Reflect.construct;}else{_construct=function _construct(Parent,args,Class){var a=[null];a.push.apply(a,args);var Constructor=Function.bind.apply(Parent,a);var instance=new Constructor();if(Class)_setPrototypeOf2(instance,Class.prototype);return instance;};}return _construct.apply(null,arguments);}function _isNativeFunction(fn){return Function.toString.call(fn).indexOf("[native code]")!==-1;}function _taggedTemplateLiteral(strings,raw){if(!raw){raw=strings.slice(0);}return Object.freeze(Object.defineProperties(strings,{raw:{value:Object.freeze(raw)}}));}function _toConsumableArray3(arr){return _arrayWithoutHoles2(arr)||_iterableToArray2(arr)||_unsupportedIterableToArray2(arr)||_nonIterableSpread2();}function _nonIterableSpread2(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray2(o,minLen){if(!o)return;if(typeof o==="string")return _arrayLikeToArray2(o,minLen);var n=Object.prototype.toString.call(o).slice(8,-1);if(n==="Object"&&o.constructor)n=o.constructor.name;if(n==="Map"||n==="Set")return Array.from(o);if(n==="Arguments"||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return _arrayLikeToArray2(o,minLen);}function _iterableToArray2(iter){if(typeof Symbol!=="undefined"&&iter[Symbol.iterator]!=null||iter["@@iterator"]!=null)return Array.from(iter);}function _arrayWithoutHoles2(arr){if(Array.isArray(arr))return _arrayLikeToArray2(arr);}function _arrayLikeToArray2(arr,len){if(len==null||len>arr.length)len=arr.length;for(var i=0,arr2=new Array(len);i<len;i++){arr2[i]=arr[i];}return arr2;}function _defineProperty3(obj,key,value){if(key in obj){Object.defineProperty(obj,key,{value:value,enumerable:true,configurable:true,writable:true});}else{obj[key]=value;}return obj;}function __defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}function _createClass3(Constructor,protoProps,staticProps){if(protoProps)__defineProperties(Constructor.prototype,protoProps);if(staticProps)__defineProperties(Constructor,staticProps);return Constructor;}function _inherits3(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function");}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,writable:true,configurable:true}});if(superClass)_setPrototypeOf2(subClass,superClass);}function _setPrototypeOf2(o,p){_setPrototypeOf2=Object.setPrototypeOf||function _setPrototypeOf(o,p){o.__proto__=p;return o;};return _setPrototypeOf2(o,p);}function _createSuper2(Derived){var hasNativeReflectConstruct=_isNativeReflectConstruct2();return function _createSuperInternal(){var Super=_getPrototypeOf3(Derived),result;if(hasNativeReflectConstruct){var NewTarget=_getPrototypeOf3(this).constructor;result=Reflect.construct(Super,arguments,NewTarget);}else{result=Super.apply(this,arguments);}return _possibleConstructorReturn3(this,result);};}function _possibleConstructorReturn3(self,call){if(call&&(_typeof3(call)==="object"||typeof call==="function")){return call;}else if(call!==void 0){throw new TypeError("Derived constructors may only return object or undefined");}return _assertThisInitialized2(self);}function _assertThisInitialized2(self){if(self===void 0){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return self;}function _isNativeReflectConstruct2(){if(typeof Reflect==="undefined"||!Reflect.construct)return false;if(Reflect.construct.sham)return false;if(typeof Proxy==="function")return true;try{Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}));return true;}catch(e){return false;}}function _getPrototypeOf3(o){_getPrototypeOf3=Object.setPrototypeOf?Object.getPrototypeOf:function _getPrototypeOf(o){return o.__proto__||Object.getPrototypeOf(o);};return _getPrototypeOf3(o);}function _classCallCheck3(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _typeof3(obj){"@babel/helpers - typeof";if(typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"){_typeof3=function _typeof3(obj){return typeof obj;};}else{_typeof3=function _typeof3(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};}return _typeof3(obj);}var commonjsGlobal=typeof globalThis!=='undefined'?globalThis:typeof window!=='undefined'?window:typeof global!=='undefined'?global:typeof self!=='undefined'?self:{};function getAugmentedNamespace(n){if(n.__esModule)return n;var a=Object.defineProperty({},'__esModule',{value:true});Object.keys(n).forEach(function(k){var d=Object.getOwnPropertyDescriptor(n,k);Object.defineProperty(a,k,d.get?d:{enumerable:true,get:function get(){return n[k];}});});return a;}function createCommonjsModule(fn){var module={exports:{}};return fn(module,module.exports),module.exports;}var check=function check(it){return it&&it.Math==Math&&it;};// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-var global$1=// eslint-disable-next-line es/no-global-this -- safe
-check((typeof globalThis==="undefined"?"undefined":_typeof3(globalThis))=='object'&&globalThis)||check((typeof window==="undefined"?"undefined":_typeof3(window))=='object'&&window)||// eslint-disable-next-line no-restricted-globals -- safe
-check((typeof self==="undefined"?"undefined":_typeof3(self))=='object'&&self)||check(_typeof3(commonjsGlobal)=='object'&&commonjsGlobal)||// eslint-disable-next-line no-new-func -- fallback
-function(){return this;}()||Function('return this')();var fails=function fails(exec){try{return!!exec();}catch(error){return true;}};// Detect IE8's incomplete defineProperty implementation
-var descriptors=!fails(function(){// eslint-disable-next-line es/no-object-defineproperty -- required for testing
-return Object.defineProperty({},1,{get:function get(){return 7;}})[1]!=7;});var $propertyIsEnumerable$1={}.propertyIsEnumerable;// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-var getOwnPropertyDescriptor$3=Object.getOwnPropertyDescriptor;// Nashorn ~ JDK8 bug
-var NASHORN_BUG=getOwnPropertyDescriptor$3&&!$propertyIsEnumerable$1.call({1:2},1);// `Object.prototype.propertyIsEnumerable` method implementation
-// https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
-var f$6=NASHORN_BUG?function propertyIsEnumerable(V){var descriptor=getOwnPropertyDescriptor$3(this,V);return!!descriptor&&descriptor.enumerable;}:$propertyIsEnumerable$1;var objectPropertyIsEnumerable={f:f$6};var createPropertyDescriptor=function createPropertyDescriptor(bitmap,value){return{enumerable:!(bitmap&1),configurable:!(bitmap&2),writable:!(bitmap&4),value:value};};var toString$2={}.toString;var classofRaw=function classofRaw(it){return toString$2.call(it).slice(8,-1);};var split=''.split;// fallback for non-array-like ES3 and non-enumerable old V8 strings
-var indexedObject=fails(function(){// throws an error in rhino, see https://github.com/mozilla/rhino/issues/346
-// eslint-disable-next-line no-prototype-builtins -- safe
-return!Object('z').propertyIsEnumerable(0);})?function(it){return classofRaw(it)=='String'?split.call(it,''):Object(it);}:Object;// `RequireObjectCoercible` abstract operation
-// https://tc39.es/ecma262/#sec-requireobjectcoercible
-var requireObjectCoercible=function requireObjectCoercible(it){if(it==undefined)throw TypeError("Can't call method on "+it);return it;};// toObject with fallback for non-array-like ES3 strings
-var toIndexedObject=function toIndexedObject(it){return indexedObject(requireObjectCoercible(it));};var isObject=function isObject(it){return _typeof3(it)==='object'?it!==null:typeof it==='function';};var path={};var aFunction$1=function aFunction$1(variable){return typeof variable=='function'?variable:undefined;};var getBuiltIn=function getBuiltIn(namespace,method){return arguments.length<2?aFunction$1(path[namespace])||aFunction$1(global$1[namespace]):path[namespace]&&path[namespace][method]||global$1[namespace]&&global$1[namespace][method];};var engineUserAgent=getBuiltIn('navigator','userAgent')||'';var process$1=global$1.process;var Deno=global$1.Deno;var versions=process$1&&process$1.versions||Deno&&Deno.version;var v8=versions&&versions.v8;var match,version;if(v8){match=v8.split('.');version=match[0]<4?1:match[0]+match[1];}else if(engineUserAgent){match=engineUserAgent.match(/Edge\/(\d+)/);if(!match||match[1]>=74){match=engineUserAgent.match(/Chrome\/(\d+)/);if(match)version=match[1];}}var engineV8Version=version&&+version;/* eslint-disable es/no-symbol -- required for testing */ // eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
-var nativeSymbol=!!Object.getOwnPropertySymbols&&!fails(function(){var symbol=Symbol();// Chrome 38 Symbol has incorrect toString conversion
-// `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
-return!String(symbol)||!(Object(symbol)instanceof Symbol)||// Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
-!Symbol.sham&&engineV8Version&&engineV8Version<41;});/* eslint-disable es/no-symbol -- required for testing */var useSymbolAsUid=nativeSymbol&&!Symbol.sham&&_typeof3(Symbol.iterator)=='symbol';var isSymbol=useSymbolAsUid?function(it){return _typeof3(it)=='symbol';}:function(it){var $Symbol=getBuiltIn('Symbol');return typeof $Symbol=='function'&&Object(it)instanceof $Symbol;};// `OrdinaryToPrimitive` abstract operation
-// https://tc39.es/ecma262/#sec-ordinarytoprimitive
-var ordinaryToPrimitive=function ordinaryToPrimitive(input,pref){var fn,val;if(pref==='string'&&typeof(fn=input.toString)=='function'&&!isObject(val=fn.call(input)))return val;if(typeof(fn=input.valueOf)=='function'&&!isObject(val=fn.call(input)))return val;if(pref!=='string'&&typeof(fn=input.toString)=='function'&&!isObject(val=fn.call(input)))return val;throw TypeError("Can't convert object to primitive value");};var setGlobal=function setGlobal(key,value){try{// eslint-disable-next-line es/no-object-defineproperty -- safe
-Object.defineProperty(global$1,key,{value:value,configurable:true,writable:true});}catch(error){global$1[key]=value;}return value;};var SHARED='__core-js_shared__';var store$1=global$1[SHARED]||setGlobal(SHARED,{});var sharedStore=store$1;var shared=createCommonjsModule(function(module){(module.exports=function(key,value){return sharedStore[key]||(sharedStore[key]=value!==undefined?value:{});})('versions',[]).push({version:'3.17.3',mode:'pure',copyright:'© 2021 Denis Pushkarev (zloirock.ru)'});});// `ToObject` abstract operation
-// https://tc39.es/ecma262/#sec-toobject
-var toObject=function toObject(argument){return Object(requireObjectCoercible(argument));};var hasOwnProperty={}.hasOwnProperty;var has$1=Object.hasOwn||function hasOwn(it,key){return hasOwnProperty.call(toObject(it),key);};var id$3=0;var postfix=Math.random();var uid=function uid(key){return'Symbol('+String(key===undefined?'':key)+')_'+(++id$3+postfix).toString(36);};var WellKnownSymbolsStore$1=shared('wks');var Symbol$1=global$1.Symbol;var createWellKnownSymbol=useSymbolAsUid?Symbol$1:Symbol$1&&Symbol$1.withoutSetter||uid;var wellKnownSymbol=function wellKnownSymbol(name){if(!has$1(WellKnownSymbolsStore$1,name)||!(nativeSymbol||typeof WellKnownSymbolsStore$1[name]=='string')){if(nativeSymbol&&has$1(Symbol$1,name)){WellKnownSymbolsStore$1[name]=Symbol$1[name];}else{WellKnownSymbolsStore$1[name]=createWellKnownSymbol('Symbol.'+name);}}return WellKnownSymbolsStore$1[name];};var TO_PRIMITIVE$1=wellKnownSymbol('toPrimitive');// `ToPrimitive` abstract operation
-// https://tc39.es/ecma262/#sec-toprimitive
-var toPrimitive=function toPrimitive(input,pref){if(!isObject(input)||isSymbol(input))return input;var exoticToPrim=input[TO_PRIMITIVE$1];var result;if(exoticToPrim!==undefined){if(pref===undefined)pref='default';result=exoticToPrim.call(input,pref);if(!isObject(result)||isSymbol(result))return result;throw TypeError("Can't convert object to primitive value");}if(pref===undefined)pref='number';return ordinaryToPrimitive(input,pref);};// `ToPropertyKey` abstract operation
-// https://tc39.es/ecma262/#sec-topropertykey
-var toPropertyKey=function toPropertyKey(argument){var key=toPrimitive(argument,'string');return isSymbol(key)?key:String(key);};var document$1=global$1.document;// typeof document.createElement is 'object' in old IE
-var EXISTS=isObject(document$1)&&isObject(document$1.createElement);var documentCreateElement=function documentCreateElement(it){return EXISTS?document$1.createElement(it):{};};// Thank's IE8 for his funny defineProperty
-var ie8DomDefine=!descriptors&&!fails(function(){// eslint-disable-next-line es/no-object-defineproperty -- requied for testing
-return Object.defineProperty(documentCreateElement('div'),'a',{get:function get(){return 7;}}).a!=7;});// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-var $getOwnPropertyDescriptor$1=Object.getOwnPropertyDescriptor;// `Object.getOwnPropertyDescriptor` method
-// https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
-var f$5=descriptors?$getOwnPropertyDescriptor$1:function getOwnPropertyDescriptor(O,P){O=toIndexedObject(O);P=toPropertyKey(P);if(ie8DomDefine)try{return $getOwnPropertyDescriptor$1(O,P);}catch(error){/* empty */}if(has$1(O,P))return createPropertyDescriptor(!objectPropertyIsEnumerable.f.call(O,P),O[P]);};var objectGetOwnPropertyDescriptor={f:f$5};var replacement=/#|\.prototype\./;var isForced=function isForced(feature,detection){var value=data[normalize(feature)];return value==POLYFILL?true:value==NATIVE?false:typeof detection=='function'?fails(detection):!!detection;};var normalize=isForced.normalize=function(string){return String(string).replace(replacement,'.').toLowerCase();};var data=isForced.data={};var NATIVE=isForced.NATIVE='N';var POLYFILL=isForced.POLYFILL='P';var isForced_1=isForced;var aFunction=function aFunction(it){if(typeof it!='function'){throw TypeError(String(it)+' is not a function');}return it;};// optional / simple context binding
-var functionBindContext=function functionBindContext(fn,that,length){aFunction(fn);if(that===undefined)return fn;switch(length){case 0:return function(){return fn.call(that);};case 1:return function(a){return fn.call(that,a);};case 2:return function(a,b){return fn.call(that,a,b);};case 3:return function(a,b,c){return fn.call(that,a,b,c);};}return function(){return fn.apply(that,arguments);};};var anObject=function anObject(it){if(!isObject(it)){throw TypeError(String(it)+' is not an object');}return it;};// eslint-disable-next-line es/no-object-defineproperty -- safe
-var $defineProperty$1=Object.defineProperty;// `Object.defineProperty` method
-// https://tc39.es/ecma262/#sec-object.defineproperty
-var f$4=descriptors?$defineProperty$1:function defineProperty(O,P,Attributes){anObject(O);P=toPropertyKey(P);anObject(Attributes);if(ie8DomDefine)try{return $defineProperty$1(O,P,Attributes);}catch(error){/* empty */}if('get'in Attributes||'set'in Attributes)throw TypeError('Accessors not supported');if('value'in Attributes)O[P]=Attributes.value;return O;};var objectDefineProperty={f:f$4};var createNonEnumerableProperty=descriptors?function(object,key,value){return objectDefineProperty.f(object,key,createPropertyDescriptor(1,value));}:function(object,key,value){object[key]=value;return object;};var getOwnPropertyDescriptor$2=objectGetOwnPropertyDescriptor.f;var wrapConstructor=function wrapConstructor(NativeConstructor){var Wrapper=function Wrapper(a,b,c){if(this instanceof NativeConstructor){switch(arguments.length){case 0:return new NativeConstructor();case 1:return new NativeConstructor(a);case 2:return new NativeConstructor(a,b);}return new NativeConstructor(a,b,c);}return NativeConstructor.apply(this,arguments);};Wrapper.prototype=NativeConstructor.prototype;return Wrapper;};/*
-  options.target      - name of the target object
-  options.global      - target is the global object
-  options.stat        - export as static methods of target
-  options.proto       - export as prototype methods of target
-  options.real        - real prototype method for the `pure` version
-  options.forced      - export even if the native feature is available
-  options.bind        - bind methods to the target, required for the `pure` version
-  options.wrap        - wrap constructors to preventing global pollution, required for the `pure` version
-  options.unsafe      - use the simple assignment of property instead of delete + defineProperty
-  options.sham        - add a flag to not completely full polyfills
-  options.enumerable  - export as enumerable property
-  options.noTargetGet - prevent calling a getter on target
-*/var _export=function _export(options,source){var TARGET=options.target;var GLOBAL=options.global;var STATIC=options.stat;var PROTO=options.proto;var nativeSource=GLOBAL?global$1:STATIC?global$1[TARGET]:(global$1[TARGET]||{}).prototype;var target=GLOBAL?path:path[TARGET]||createNonEnumerableProperty(path,TARGET,{})[TARGET];var targetPrototype=target.prototype;var FORCED,USE_NATIVE,VIRTUAL_PROTOTYPE;var key,sourceProperty,targetProperty,nativeProperty,resultProperty,descriptor;for(key in source){FORCED=isForced_1(GLOBAL?key:TARGET+(STATIC?'.':'#')+key,options.forced);// contains in native
-USE_NATIVE=!FORCED&&nativeSource&&has$1(nativeSource,key);targetProperty=target[key];if(USE_NATIVE)if(options.noTargetGet){descriptor=getOwnPropertyDescriptor$2(nativeSource,key);nativeProperty=descriptor&&descriptor.value;}else nativeProperty=nativeSource[key];// export native or implementation
-sourceProperty=USE_NATIVE&&nativeProperty?nativeProperty:source[key];if(USE_NATIVE&&_typeof3(targetProperty)===_typeof3(sourceProperty))continue;// bind timers to global for call from export context
-if(options.bind&&USE_NATIVE)resultProperty=functionBindContext(sourceProperty,global$1);// wrap global constructors for prevent changs in this version
-else if(options.wrap&&USE_NATIVE)resultProperty=wrapConstructor(sourceProperty);// make static versions for prototype methods
-else if(PROTO&&typeof sourceProperty=='function')resultProperty=functionBindContext(Function.call,sourceProperty);// default case
-else resultProperty=sourceProperty;// add a flag to not completely full polyfills
-if(options.sham||sourceProperty&&sourceProperty.sham||targetProperty&&targetProperty.sham){createNonEnumerableProperty(resultProperty,'sham',true);}createNonEnumerableProperty(target,key,resultProperty);if(PROTO){VIRTUAL_PROTOTYPE=TARGET+'Prototype';if(!has$1(path,VIRTUAL_PROTOTYPE)){createNonEnumerableProperty(path,VIRTUAL_PROTOTYPE,{});}// export virtual prototype methods
-createNonEnumerableProperty(path[VIRTUAL_PROTOTYPE],key,sourceProperty);// export real prototype methods
-if(options.real&&targetPrototype&&!targetPrototype[key]){createNonEnumerableProperty(targetPrototype,key,sourceProperty);}}}};// `IsArray` abstract operation
-// https://tc39.es/ecma262/#sec-isarray
-// eslint-disable-next-line es/no-array-isarray -- safe
-var isArray$5=Array.isArray||function isArray(arg){return classofRaw(arg)=='Array';};var ceil=Math.ceil;var floor$1=Math.floor;// `ToInteger` abstract operation
-// https://tc39.es/ecma262/#sec-tointeger
-var toInteger=function toInteger(argument){return isNaN(argument=+argument)?0:(argument>0?floor$1:ceil)(argument);};var min$1=Math.min;// `ToLength` abstract operation
-// https://tc39.es/ecma262/#sec-tolength
-var toLength=function toLength(argument){return argument>0?min$1(toInteger(argument),0x1FFFFFFFFFFFFF):0;// 2 ** 53 - 1 == 9007199254740991
-};var createProperty=function createProperty(object,key,value){var propertyKey=toPropertyKey(key);if(propertyKey in object)objectDefineProperty.f(object,propertyKey,createPropertyDescriptor(0,value));else object[propertyKey]=value;};var SPECIES$3=wellKnownSymbol('species');// a part of `ArraySpeciesCreate` abstract operation
-// https://tc39.es/ecma262/#sec-arrayspeciescreate
-var arraySpeciesConstructor=function arraySpeciesConstructor(originalArray){var C;if(isArray$5(originalArray)){C=originalArray.constructor;// cross-realm fallback
-if(typeof C=='function'&&(C===Array||isArray$5(C.prototype)))C=undefined;else if(isObject(C)){C=C[SPECIES$3];if(C===null)C=undefined;}}return C===undefined?Array:C;};// `ArraySpeciesCreate` abstract operation
-// https://tc39.es/ecma262/#sec-arrayspeciescreate
-var arraySpeciesCreate=function arraySpeciesCreate(originalArray,length){return new(arraySpeciesConstructor(originalArray))(length===0?0:length);};var SPECIES$2=wellKnownSymbol('species');var arrayMethodHasSpeciesSupport=function arrayMethodHasSpeciesSupport(METHOD_NAME){// We can't use this feature detection in V8 since it causes
-// deoptimization and serious performance degradation
-// https://github.com/zloirock/core-js/issues/677
-return engineV8Version>=51||!fails(function(){var array=[];var constructor=array.constructor={};constructor[SPECIES$2]=function(){return{foo:1};};return array[METHOD_NAME](Boolean).foo!==1;});};var IS_CONCAT_SPREADABLE=wellKnownSymbol('isConcatSpreadable');var MAX_SAFE_INTEGER=0x1FFFFFFFFFFFFF;var MAXIMUM_ALLOWED_INDEX_EXCEEDED='Maximum allowed index exceeded';// We can't use this feature detection in V8 since it causes
-// deoptimization and serious performance degradation
-// https://github.com/zloirock/core-js/issues/679
-var IS_CONCAT_SPREADABLE_SUPPORT=engineV8Version>=51||!fails(function(){var array=[];array[IS_CONCAT_SPREADABLE]=false;return array.concat()[0]!==array;});var SPECIES_SUPPORT=arrayMethodHasSpeciesSupport('concat');var isConcatSpreadable=function isConcatSpreadable(O){if(!isObject(O))return false;var spreadable=O[IS_CONCAT_SPREADABLE];return spreadable!==undefined?!!spreadable:isArray$5(O);};var FORCED$4=!IS_CONCAT_SPREADABLE_SUPPORT||!SPECIES_SUPPORT;// `Array.prototype.concat` method
-// https://tc39.es/ecma262/#sec-array.prototype.concat
-// with adding support of @@isConcatSpreadable and @@species
-_export({target:'Array',proto:true,forced:FORCED$4},{// eslint-disable-next-line no-unused-vars -- required for `.length`
-concat:function concat(arg){var O=toObject(this);var A=arraySpeciesCreate(O,0);var n=0;var i,k,length,len,E;for(i=-1,length=arguments.length;i<length;i++){E=i===-1?O:arguments[i];if(isConcatSpreadable(E)){len=toLength(E.length);if(n+len>MAX_SAFE_INTEGER)throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);for(k=0;k<len;k++,n++){if(k in E)createProperty(A,n,E[k]);}}else{if(n>=MAX_SAFE_INTEGER)throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);createProperty(A,n++,E);}}A.length=n;return A;}});var toString$1=function toString$1(argument){if(isSymbol(argument))throw TypeError('Cannot convert a Symbol value to a string');return String(argument);};var max$1=Math.max;var min=Math.min;// Helper for a popular repeating case of the spec:
-// Let integer be ? ToInteger(index).
-// If integer < 0, let result be max((length + integer), 0); else let result be min(integer, length).
-var toAbsoluteIndex=function toAbsoluteIndex(index,length){var integer=toInteger(index);return integer<0?max$1(integer+length,0):min(integer,length);};// `Array.prototype.{ indexOf, includes }` methods implementation
-var createMethod$4=function createMethod$4(IS_INCLUDES){return function($this,el,fromIndex){var O=toIndexedObject($this);var length=toLength(O.length);var index=toAbsoluteIndex(fromIndex,length);var value;// Array#includes uses SameValueZero equality algorithm
-// eslint-disable-next-line no-self-compare -- NaN check
-if(IS_INCLUDES&&el!=el)while(length>index){value=O[index++];// eslint-disable-next-line no-self-compare -- NaN check
-if(value!=value)return true;// Array#indexOf ignores holes, Array#includes - not
-}else for(;length>index;index++){if((IS_INCLUDES||index in O)&&O[index]===el)return IS_INCLUDES||index||0;}return!IS_INCLUDES&&-1;};};var arrayIncludes={// `Array.prototype.includes` method
-// https://tc39.es/ecma262/#sec-array.prototype.includes
-includes:createMethod$4(true),// `Array.prototype.indexOf` method
-// https://tc39.es/ecma262/#sec-array.prototype.indexof
-indexOf:createMethod$4(false)};var hiddenKeys$1={};var indexOf=arrayIncludes.indexOf;var objectKeysInternal=function objectKeysInternal(object,names){var O=toIndexedObject(object);var i=0;var result=[];var key;for(key in O){!has$1(hiddenKeys$1,key)&&has$1(O,key)&&result.push(key);}// Don't enum bug & hidden keys
-while(names.length>i){if(has$1(O,key=names[i++])){~indexOf(result,key)||result.push(key);}}return result;};// IE8- don't enum bug keys
-var enumBugKeys=['constructor','hasOwnProperty','isPrototypeOf','propertyIsEnumerable','toLocaleString','toString','valueOf'];// `Object.keys` method
-// https://tc39.es/ecma262/#sec-object.keys
-// eslint-disable-next-line es/no-object-keys -- safe
-var objectKeys=Object.keys||function keys(O){return objectKeysInternal(O,enumBugKeys);};// `Object.defineProperties` method
-// https://tc39.es/ecma262/#sec-object.defineproperties
-// eslint-disable-next-line es/no-object-defineproperties -- safe
-var objectDefineProperties=descriptors?Object.defineProperties:function defineProperties(O,Properties){anObject(O);var keys=objectKeys(Properties);var length=keys.length;var index=0;var key;while(length>index){objectDefineProperty.f(O,key=keys[index++],Properties[key]);}return O;};var html=getBuiltIn('document','documentElement');var keys$3=shared('keys');var sharedKey=function sharedKey(key){return keys$3[key]||(keys$3[key]=uid(key));};/* global ActiveXObject -- old IE, WSH */var GT='>';var LT='<';var PROTOTYPE$1='prototype';var SCRIPT='script';var IE_PROTO$1=sharedKey('IE_PROTO');var EmptyConstructor=function EmptyConstructor(){/* empty */};var scriptTag=function scriptTag(content){return LT+SCRIPT+GT+content+LT+'/'+SCRIPT+GT;};// Create object with fake `null` prototype: use ActiveX Object with cleared prototype
-var NullProtoObjectViaActiveX=function NullProtoObjectViaActiveX(activeXDocument){activeXDocument.write(scriptTag(''));activeXDocument.close();var temp=activeXDocument.parentWindow.Object;activeXDocument=null;// avoid memory leak
-return temp;};// Create object with fake `null` prototype: use iframe Object with cleared prototype
-var NullProtoObjectViaIFrame=function NullProtoObjectViaIFrame(){// Thrash, waste and sodomy: IE GC bug
-var iframe=documentCreateElement('iframe');var JS='java'+SCRIPT+':';var iframeDocument;iframe.style.display='none';html.appendChild(iframe);// https://github.com/zloirock/core-js/issues/475
-iframe.src=String(JS);iframeDocument=iframe.contentWindow.document;iframeDocument.open();iframeDocument.write(scriptTag('document.F=Object'));iframeDocument.close();return iframeDocument.F;};// Check for document.domain and active x support
-// No need to use active x approach when document.domain is not set
-// see https://github.com/es-shims/es5-shim/issues/150
-// variation of https://github.com/kitcambridge/es5-shim/commit/4f738ac066346
-// avoid IE GC bug
-var activeXDocument;var _NullProtoObject=function NullProtoObject(){try{activeXDocument=new ActiveXObject('htmlfile');}catch(error){/* ignore */}_NullProtoObject=typeof document!='undefined'?document.domain&&activeXDocument?NullProtoObjectViaActiveX(activeXDocument)// old IE
-:NullProtoObjectViaIFrame():NullProtoObjectViaActiveX(activeXDocument);// WSH
-var length=enumBugKeys.length;while(length--){delete _NullProtoObject[PROTOTYPE$1][enumBugKeys[length]];}return _NullProtoObject();};hiddenKeys$1[IE_PROTO$1]=true;// `Object.create` method
-// https://tc39.es/ecma262/#sec-object.create
-var objectCreate=Object.create||function create(O,Properties){var result;if(O!==null){EmptyConstructor[PROTOTYPE$1]=anObject(O);result=new EmptyConstructor();EmptyConstructor[PROTOTYPE$1]=null;// add "__proto__" for Object.getPrototypeOf polyfill
-result[IE_PROTO$1]=O;}else result=_NullProtoObject();return Properties===undefined?result:objectDefineProperties(result,Properties);};var hiddenKeys=enumBugKeys.concat('length','prototype');// `Object.getOwnPropertyNames` method
-// https://tc39.es/ecma262/#sec-object.getownpropertynames
-// eslint-disable-next-line es/no-object-getownpropertynames -- safe
-var f$3=Object.getOwnPropertyNames||function getOwnPropertyNames(O){return objectKeysInternal(O,hiddenKeys);};var objectGetOwnPropertyNames={f:f$3};/* eslint-disable es/no-object-getownpropertynames -- safe */var $getOwnPropertyNames$1=objectGetOwnPropertyNames.f;var toString={}.toString;var windowNames=(typeof window==="undefined"?"undefined":_typeof3(window))=='object'&&window&&Object.getOwnPropertyNames?Object.getOwnPropertyNames(window):[];var getWindowNames=function getWindowNames(it){try{return $getOwnPropertyNames$1(it);}catch(error){return windowNames.slice();}};// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
-var f$2=function getOwnPropertyNames(it){return windowNames&&toString.call(it)=='[object Window]'?getWindowNames(it):$getOwnPropertyNames$1(toIndexedObject(it));};var objectGetOwnPropertyNamesExternal={f:f$2};// eslint-disable-next-line es/no-object-getownpropertysymbols -- safe
-var f$1=Object.getOwnPropertySymbols;var objectGetOwnPropertySymbols={f:f$1};var redefine=function redefine(target,key,value,options){if(options&&options.enumerable)target[key]=value;else createNonEnumerableProperty(target,key,value);};var f=wellKnownSymbol;var wellKnownSymbolWrapped={f:f};var defineProperty$9=objectDefineProperty.f;var defineWellKnownSymbol=function defineWellKnownSymbol(NAME){var _Symbol=path.Symbol||(path.Symbol={});if(!has$1(_Symbol,NAME))defineProperty$9(_Symbol,NAME,{value:wellKnownSymbolWrapped.f(NAME)});};var TO_STRING_TAG$3=wellKnownSymbol('toStringTag');var test$2={};test$2[TO_STRING_TAG$3]='z';var toStringTagSupport=String(test$2)==='[object z]';var TO_STRING_TAG$2=wellKnownSymbol('toStringTag');// ES3 wrong here
-var CORRECT_ARGUMENTS=classofRaw(function(){return arguments;}())=='Arguments';// fallback for IE11 Script Access Denied error
-var tryGet=function tryGet(it,key){try{return it[key];}catch(error){/* empty */}};// getting tag from ES6+ `Object.prototype.toString`
-var classof=toStringTagSupport?classofRaw:function(it){var O,tag,result;return it===undefined?'Undefined':it===null?'Null'// @@toStringTag case
-:typeof(tag=tryGet(O=Object(it),TO_STRING_TAG$2))=='string'?tag// builtinTag case
-:CORRECT_ARGUMENTS?classofRaw(O)// ES3 arguments fallback
-:(result=classofRaw(O))=='Object'&&typeof O.callee=='function'?'Arguments':result;};// `Object.prototype.toString` method implementation
-// https://tc39.es/ecma262/#sec-object.prototype.tostring
-var objectToString=toStringTagSupport?{}.toString:function toString(){return'[object '+classof(this)+']';};var defineProperty$8=objectDefineProperty.f;var TO_STRING_TAG$1=wellKnownSymbol('toStringTag');var setToStringTag=function setToStringTag(it,TAG,STATIC,SET_METHOD){if(it){var target=STATIC?it:it.prototype;if(!has$1(target,TO_STRING_TAG$1)){defineProperty$8(target,TO_STRING_TAG$1,{configurable:true,value:TAG});}if(SET_METHOD&&!toStringTagSupport){createNonEnumerableProperty(target,'toString',objectToString);}}};var functionToString=Function.toString;// this helper broken in `core-js@3.4.1-3.4.4`, so we can't use `shared` helper
-if(typeof sharedStore.inspectSource!='function'){sharedStore.inspectSource=function(it){return functionToString.call(it);};}var inspectSource=sharedStore.inspectSource;var WeakMap$1=global$1.WeakMap;var nativeWeakMap=typeof WeakMap$1==='function'&&/native code/.test(inspectSource(WeakMap$1));var OBJECT_ALREADY_INITIALIZED='Object already initialized';var WeakMap=global$1.WeakMap;var set$3,get,has;var enforce=function enforce(it){return has(it)?get(it):set$3(it,{});};var getterFor=function getterFor(TYPE){return function(it){var state;if(!isObject(it)||(state=get(it)).type!==TYPE){throw TypeError('Incompatible receiver, '+TYPE+' required');}return state;};};if(nativeWeakMap||sharedStore.state){var store=sharedStore.state||(sharedStore.state=new WeakMap());var wmget=store.get;var wmhas=store.has;var wmset=store.set;set$3=function set$3(it,metadata){if(wmhas.call(store,it))throw new TypeError(OBJECT_ALREADY_INITIALIZED);metadata.facade=it;wmset.call(store,it,metadata);return metadata;};get=function get(it){return wmget.call(store,it)||{};};has=function has(it){return wmhas.call(store,it);};}else{var STATE=sharedKey('state');hiddenKeys$1[STATE]=true;set$3=function set$3(it,metadata){if(has$1(it,STATE))throw new TypeError(OBJECT_ALREADY_INITIALIZED);metadata.facade=it;createNonEnumerableProperty(it,STATE,metadata);return metadata;};get=function get(it){return has$1(it,STATE)?it[STATE]:{};};has=function has(it){return has$1(it,STATE);};}var internalState={set:set$3,get:get,has:has,enforce:enforce,getterFor:getterFor};var push=[].push;// `Array.prototype.{ forEach, map, filter, some, every, find, findIndex, filterReject }` methods implementation
-var createMethod$3=function createMethod$3(TYPE){var IS_MAP=TYPE==1;var IS_FILTER=TYPE==2;var IS_SOME=TYPE==3;var IS_EVERY=TYPE==4;var IS_FIND_INDEX=TYPE==6;var IS_FILTER_REJECT=TYPE==7;var NO_HOLES=TYPE==5||IS_FIND_INDEX;return function($this,callbackfn,that,specificCreate){var O=toObject($this);var self=indexedObject(O);var boundFunction=functionBindContext(callbackfn,that,3);var length=toLength(self.length);var index=0;var create=specificCreate||arraySpeciesCreate;var target=IS_MAP?create($this,length):IS_FILTER||IS_FILTER_REJECT?create($this,0):undefined;var value,result;for(;length>index;index++){if(NO_HOLES||index in self){value=self[index];result=boundFunction(value,index,O);if(TYPE){if(IS_MAP)target[index]=result;// map
-else if(result)switch(TYPE){case 3:return true;// some
-case 5:return value;// find
-case 6:return index;// findIndex
-case 2:push.call(target,value);// filter
-}else switch(TYPE){case 4:return false;// every
-case 7:push.call(target,value);// filterReject
-}}}}return IS_FIND_INDEX?-1:IS_SOME||IS_EVERY?IS_EVERY:target;};};var arrayIteration={// `Array.prototype.forEach` method
-// https://tc39.es/ecma262/#sec-array.prototype.foreach
-forEach:createMethod$3(0),// `Array.prototype.map` method
-// https://tc39.es/ecma262/#sec-array.prototype.map
-map:createMethod$3(1),// `Array.prototype.filter` method
-// https://tc39.es/ecma262/#sec-array.prototype.filter
-filter:createMethod$3(2),// `Array.prototype.some` method
-// https://tc39.es/ecma262/#sec-array.prototype.some
-some:createMethod$3(3),// `Array.prototype.every` method
-// https://tc39.es/ecma262/#sec-array.prototype.every
-every:createMethod$3(4),// `Array.prototype.find` method
-// https://tc39.es/ecma262/#sec-array.prototype.find
-find:createMethod$3(5),// `Array.prototype.findIndex` method
-// https://tc39.es/ecma262/#sec-array.prototype.findIndex
-findIndex:createMethod$3(6),// `Array.prototype.filterReject` method
-// https://github.com/tc39/proposal-array-filtering
-filterReject:createMethod$3(7)};var $forEach$1=arrayIteration.forEach;var HIDDEN=sharedKey('hidden');var SYMBOL='Symbol';var PROTOTYPE='prototype';var TO_PRIMITIVE=wellKnownSymbol('toPrimitive');var setInternalState$5=internalState.set;var getInternalState$2=internalState.getterFor(SYMBOL);var ObjectPrototype$1=Object[PROTOTYPE];var $Symbol=global$1.Symbol;var $stringify$1=getBuiltIn('JSON','stringify');var nativeGetOwnPropertyDescriptor$1=objectGetOwnPropertyDescriptor.f;var nativeDefineProperty=objectDefineProperty.f;var nativeGetOwnPropertyNames=objectGetOwnPropertyNamesExternal.f;var nativePropertyIsEnumerable=objectPropertyIsEnumerable.f;var AllSymbols=shared('symbols');var ObjectPrototypeSymbols=shared('op-symbols');var StringToSymbolRegistry=shared('string-to-symbol-registry');var SymbolToStringRegistry=shared('symbol-to-string-registry');var WellKnownSymbolsStore=shared('wks');var QObject=global$1.QObject;// Don't use setters in Qt Script, https://github.com/zloirock/core-js/issues/173
-var USE_SETTER=!QObject||!QObject[PROTOTYPE]||!QObject[PROTOTYPE].findChild;// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
-var setSymbolDescriptor=descriptors&&fails(function(){return objectCreate(nativeDefineProperty({},'a',{get:function get(){return nativeDefineProperty(this,'a',{value:7}).a;}})).a!=7;})?function(O,P,Attributes){var ObjectPrototypeDescriptor=nativeGetOwnPropertyDescriptor$1(ObjectPrototype$1,P);if(ObjectPrototypeDescriptor)delete ObjectPrototype$1[P];nativeDefineProperty(O,P,Attributes);if(ObjectPrototypeDescriptor&&O!==ObjectPrototype$1){nativeDefineProperty(ObjectPrototype$1,P,ObjectPrototypeDescriptor);}}:nativeDefineProperty;var wrap=function wrap(tag,description){var symbol=AllSymbols[tag]=objectCreate($Symbol[PROTOTYPE]);setInternalState$5(symbol,{type:SYMBOL,tag:tag,description:description});if(!descriptors)symbol.description=description;return symbol;};var $defineProperty=function defineProperty(O,P,Attributes){if(O===ObjectPrototype$1)$defineProperty(ObjectPrototypeSymbols,P,Attributes);anObject(O);var key=toPropertyKey(P);anObject(Attributes);if(has$1(AllSymbols,key)){if(!Attributes.enumerable){if(!has$1(O,HIDDEN))nativeDefineProperty(O,HIDDEN,createPropertyDescriptor(1,{}));O[HIDDEN][key]=true;}else{if(has$1(O,HIDDEN)&&O[HIDDEN][key])O[HIDDEN][key]=false;Attributes=objectCreate(Attributes,{enumerable:createPropertyDescriptor(0,false)});}return setSymbolDescriptor(O,key,Attributes);}return nativeDefineProperty(O,key,Attributes);};var $defineProperties=function defineProperties(O,Properties){anObject(O);var properties=toIndexedObject(Properties);var keys=objectKeys(properties).concat($getOwnPropertySymbols(properties));$forEach$1(keys,function(key){if(!descriptors||$propertyIsEnumerable.call(properties,key))$defineProperty(O,key,properties[key]);});return O;};var $create=function create(O,Properties){return Properties===undefined?objectCreate(O):$defineProperties(objectCreate(O),Properties);};var $propertyIsEnumerable=function propertyIsEnumerable(V){var P=toPropertyKey(V);var enumerable=nativePropertyIsEnumerable.call(this,P);if(this===ObjectPrototype$1&&has$1(AllSymbols,P)&&!has$1(ObjectPrototypeSymbols,P))return false;return enumerable||!has$1(this,P)||!has$1(AllSymbols,P)||has$1(this,HIDDEN)&&this[HIDDEN][P]?enumerable:true;};var $getOwnPropertyDescriptor=function getOwnPropertyDescriptor(O,P){var it=toIndexedObject(O);var key=toPropertyKey(P);if(it===ObjectPrototype$1&&has$1(AllSymbols,key)&&!has$1(ObjectPrototypeSymbols,key))return;var descriptor=nativeGetOwnPropertyDescriptor$1(it,key);if(descriptor&&has$1(AllSymbols,key)&&!(has$1(it,HIDDEN)&&it[HIDDEN][key])){descriptor.enumerable=true;}return descriptor;};var $getOwnPropertyNames=function getOwnPropertyNames(O){var names=nativeGetOwnPropertyNames(toIndexedObject(O));var result=[];$forEach$1(names,function(key){if(!has$1(AllSymbols,key)&&!has$1(hiddenKeys$1,key))result.push(key);});return result;};var $getOwnPropertySymbols=function getOwnPropertySymbols(O){var IS_OBJECT_PROTOTYPE=O===ObjectPrototype$1;var names=nativeGetOwnPropertyNames(IS_OBJECT_PROTOTYPE?ObjectPrototypeSymbols:toIndexedObject(O));var result=[];$forEach$1(names,function(key){if(has$1(AllSymbols,key)&&(!IS_OBJECT_PROTOTYPE||has$1(ObjectPrototype$1,key))){result.push(AllSymbols[key]);}});return result;};// `Symbol` constructor
-// https://tc39.es/ecma262/#sec-symbol-constructor
-if(!nativeSymbol){$Symbol=function _Symbol2(){if(this instanceof $Symbol)throw TypeError('Symbol is not a constructor');var description=!arguments.length||arguments[0]===undefined?undefined:toString$1(arguments[0]);var tag=uid(description);var setter=function setter(value){if(this===ObjectPrototype$1)setter.call(ObjectPrototypeSymbols,value);if(has$1(this,HIDDEN)&&has$1(this[HIDDEN],tag))this[HIDDEN][tag]=false;setSymbolDescriptor(this,tag,createPropertyDescriptor(1,value));};if(descriptors&&USE_SETTER)setSymbolDescriptor(ObjectPrototype$1,tag,{configurable:true,set:setter});return wrap(tag,description);};redefine($Symbol[PROTOTYPE],'toString',function toString(){return getInternalState$2(this).tag;});redefine($Symbol,'withoutSetter',function(description){return wrap(uid(description),description);});objectPropertyIsEnumerable.f=$propertyIsEnumerable;objectDefineProperty.f=$defineProperty;objectGetOwnPropertyDescriptor.f=$getOwnPropertyDescriptor;objectGetOwnPropertyNames.f=objectGetOwnPropertyNamesExternal.f=$getOwnPropertyNames;objectGetOwnPropertySymbols.f=$getOwnPropertySymbols;wellKnownSymbolWrapped.f=function(name){return wrap(wellKnownSymbol(name),name);};if(descriptors){// https://github.com/tc39/proposal-Symbol-description
-nativeDefineProperty($Symbol[PROTOTYPE],'description',{configurable:true,get:function description(){return getInternalState$2(this).description;}});}}_export({global:true,wrap:true,forced:!nativeSymbol,sham:!nativeSymbol},{Symbol:$Symbol});$forEach$1(objectKeys(WellKnownSymbolsStore),function(name){defineWellKnownSymbol(name);});_export({target:SYMBOL,stat:true,forced:!nativeSymbol},{// `Symbol.for` method
-// https://tc39.es/ecma262/#sec-symbol.for
-'for':function _for(key){var string=toString$1(key);if(has$1(StringToSymbolRegistry,string))return StringToSymbolRegistry[string];var symbol=$Symbol(string);StringToSymbolRegistry[string]=symbol;SymbolToStringRegistry[symbol]=string;return symbol;},// `Symbol.keyFor` method
-// https://tc39.es/ecma262/#sec-symbol.keyfor
-keyFor:function keyFor(sym){if(!isSymbol(sym))throw TypeError(sym+' is not a symbol');if(has$1(SymbolToStringRegistry,sym))return SymbolToStringRegistry[sym];},useSetter:function useSetter(){USE_SETTER=true;},useSimple:function useSimple(){USE_SETTER=false;}});_export({target:'Object',stat:true,forced:!nativeSymbol,sham:!descriptors},{// `Object.create` method
-// https://tc39.es/ecma262/#sec-object.create
-create:$create,// `Object.defineProperty` method
-// https://tc39.es/ecma262/#sec-object.defineproperty
-defineProperty:$defineProperty,// `Object.defineProperties` method
-// https://tc39.es/ecma262/#sec-object.defineproperties
-defineProperties:$defineProperties,// `Object.getOwnPropertyDescriptor` method
-// https://tc39.es/ecma262/#sec-object.getownpropertydescriptors
-getOwnPropertyDescriptor:$getOwnPropertyDescriptor});_export({target:'Object',stat:true,forced:!nativeSymbol},{// `Object.getOwnPropertyNames` method
-// https://tc39.es/ecma262/#sec-object.getownpropertynames
-getOwnPropertyNames:$getOwnPropertyNames,// `Object.getOwnPropertySymbols` method
-// https://tc39.es/ecma262/#sec-object.getownpropertysymbols
-getOwnPropertySymbols:$getOwnPropertySymbols});// Chrome 38 and 39 `Object.getOwnPropertySymbols` fails on primitives
-// https://bugs.chromium.org/p/v8/issues/detail?id=3443
-_export({target:'Object',stat:true,forced:fails(function(){objectGetOwnPropertySymbols.f(1);})},{getOwnPropertySymbols:function getOwnPropertySymbols(it){return objectGetOwnPropertySymbols.f(toObject(it));}});// `JSON.stringify` method behavior with symbols
-// https://tc39.es/ecma262/#sec-json.stringify
-if($stringify$1){var FORCED_JSON_STRINGIFY=!nativeSymbol||fails(function(){var symbol=$Symbol();// MS Edge converts symbol values to JSON as {}
-return $stringify$1([symbol])!='[null]'// WebKit converts symbol values to JSON as null
-||$stringify$1({a:symbol})!='{}'// V8 throws on boxed symbols
-||$stringify$1(Object(symbol))!='{}';});_export({target:'JSON',stat:true,forced:FORCED_JSON_STRINGIFY},{// eslint-disable-next-line no-unused-vars -- required for `.length`
-stringify:function stringify(it,replacer,space){var args=[it];var index=1;var $replacer;while(arguments.length>index){args.push(arguments[index++]);}$replacer=replacer;if(!isObject(replacer)&&it===undefined||isSymbol(it))return;// IE8 returns string on undefined
-if(!isArray$5(replacer))replacer=function replacer(key,value){if(typeof $replacer=='function')value=$replacer.call(this,key,value);if(!isSymbol(value))return value;};args[1]=replacer;return $stringify$1.apply(null,args);}});}// `Symbol.prototype[@@toPrimitive]` method
-// https://tc39.es/ecma262/#sec-symbol.prototype-@@toprimitive
-if(!$Symbol[PROTOTYPE][TO_PRIMITIVE]){createNonEnumerableProperty($Symbol[PROTOTYPE],TO_PRIMITIVE,$Symbol[PROTOTYPE].valueOf);}// `Symbol.prototype[@@toStringTag]` property
-// https://tc39.es/ecma262/#sec-symbol.prototype-@@tostringtag
-setToStringTag($Symbol,SYMBOL);hiddenKeys$1[HIDDEN]=true;// `Symbol.asyncIterator` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.asynciterator
-defineWellKnownSymbol('asyncIterator');// `Symbol.hasInstance` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.hasinstance
-defineWellKnownSymbol('hasInstance');// `Symbol.isConcatSpreadable` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.isconcatspreadable
-defineWellKnownSymbol('isConcatSpreadable');// `Symbol.iterator` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.iterator
-defineWellKnownSymbol('iterator');// `Symbol.match` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.match
-defineWellKnownSymbol('match');// `Symbol.matchAll` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.matchall
-defineWellKnownSymbol('matchAll');// `Symbol.replace` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.replace
-defineWellKnownSymbol('replace');// `Symbol.search` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.search
-defineWellKnownSymbol('search');// `Symbol.species` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.species
-defineWellKnownSymbol('species');// `Symbol.split` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.split
-defineWellKnownSymbol('split');// `Symbol.toPrimitive` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.toprimitive
-defineWellKnownSymbol('toPrimitive');// `Symbol.toStringTag` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.tostringtag
-defineWellKnownSymbol('toStringTag');// `Symbol.unscopables` well-known symbol
-// https://tc39.es/ecma262/#sec-symbol.unscopables
-defineWellKnownSymbol('unscopables');// JSON[@@toStringTag] property
-// https://tc39.es/ecma262/#sec-json-@@tostringtag
-setToStringTag(global$1.JSON,'JSON',true);var symbol$3=path.Symbol;var iterators={};var correctPrototypeGetter=!fails(function(){function F(){/* empty */}F.prototype.constructor=null;// eslint-disable-next-line es/no-object-getprototypeof -- required for testing
-return Object.getPrototypeOf(new F())!==F.prototype;});var IE_PROTO=sharedKey('IE_PROTO');var ObjectPrototype=Object.prototype;// `Object.getPrototypeOf` method
-// https://tc39.es/ecma262/#sec-object.getprototypeof
-// eslint-disable-next-line es/no-object-getprototypeof -- safe
-var objectGetPrototypeOf=correctPrototypeGetter?Object.getPrototypeOf:function(O){O=toObject(O);if(has$1(O,IE_PROTO))return O[IE_PROTO];if(typeof O.constructor=='function'&&O instanceof O.constructor){return O.constructor.prototype;}return O instanceof Object?ObjectPrototype:null;};var ITERATOR$4=wellKnownSymbol('iterator');var BUGGY_SAFARI_ITERATORS$1=false;// `%IteratorPrototype%` object
-// https://tc39.es/ecma262/#sec-%iteratorprototype%-object
-var IteratorPrototype$1,PrototypeOfArrayIteratorPrototype,arrayIterator;/* eslint-disable es/no-array-prototype-keys -- safe */if([].keys){arrayIterator=[].keys();// Safari 8 has buggy iterators w/o `next`
-if(!('next'in arrayIterator))BUGGY_SAFARI_ITERATORS$1=true;else{PrototypeOfArrayIteratorPrototype=objectGetPrototypeOf(objectGetPrototypeOf(arrayIterator));if(PrototypeOfArrayIteratorPrototype!==Object.prototype)IteratorPrototype$1=PrototypeOfArrayIteratorPrototype;}}var NEW_ITERATOR_PROTOTYPE=IteratorPrototype$1==undefined||fails(function(){var test={};// FF44- legacy iterators case
-return IteratorPrototype$1[ITERATOR$4].call(test)!==test;});if(NEW_ITERATOR_PROTOTYPE)IteratorPrototype$1={};else IteratorPrototype$1=objectCreate(IteratorPrototype$1);// `%IteratorPrototype%[@@iterator]()` method
-// https://tc39.es/ecma262/#sec-%iteratorprototype%-@@iterator
-if(typeof IteratorPrototype$1[ITERATOR$4]!=='function'){createNonEnumerableProperty(IteratorPrototype$1,ITERATOR$4,function(){return this;});}var iteratorsCore={IteratorPrototype:IteratorPrototype$1,BUGGY_SAFARI_ITERATORS:BUGGY_SAFARI_ITERATORS$1};var IteratorPrototype=iteratorsCore.IteratorPrototype;var returnThis$1=function returnThis$1(){return this;};var createIteratorConstructor=function createIteratorConstructor(IteratorConstructor,NAME,next){var TO_STRING_TAG=NAME+' Iterator';IteratorConstructor.prototype=objectCreate(IteratorPrototype,{next:createPropertyDescriptor(1,next)});setToStringTag(IteratorConstructor,TO_STRING_TAG,false,true);iterators[TO_STRING_TAG]=returnThis$1;return IteratorConstructor;};var aPossiblePrototype=function aPossiblePrototype(it){if(!isObject(it)&&it!==null){throw TypeError("Can't set "+String(it)+' as a prototype');}return it;};/* eslint-disable no-proto -- safe */ // `Object.setPrototypeOf` method
-// https://tc39.es/ecma262/#sec-object.setprototypeof
-// Works with __proto__ only. Old v8 can't work with null proto objects.
-// eslint-disable-next-line es/no-object-setprototypeof -- safe
-var objectSetPrototypeOf=Object.setPrototypeOf||('__proto__'in{}?function(){var CORRECT_SETTER=false;var test={};var setter;try{// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-setter=Object.getOwnPropertyDescriptor(Object.prototype,'__proto__').set;setter.call(test,[]);CORRECT_SETTER=test instanceof Array;}catch(error){/* empty */}return function setPrototypeOf(O,proto){anObject(O);aPossiblePrototype(proto);if(CORRECT_SETTER)setter.call(O,proto);else O.__proto__=proto;return O;};}():undefined);var BUGGY_SAFARI_ITERATORS=iteratorsCore.BUGGY_SAFARI_ITERATORS;var ITERATOR$3=wellKnownSymbol('iterator');var KEYS='keys';var VALUES='values';var ENTRIES='entries';var returnThis=function returnThis(){return this;};var defineIterator=function defineIterator(Iterable,NAME,IteratorConstructor,next,DEFAULT,IS_SET,FORCED){createIteratorConstructor(IteratorConstructor,NAME,next);var getIterationMethod=function getIterationMethod(KIND){if(KIND===DEFAULT&&defaultIterator)return defaultIterator;if(!BUGGY_SAFARI_ITERATORS&&KIND in IterablePrototype)return IterablePrototype[KIND];switch(KIND){case KEYS:return function keys(){return new IteratorConstructor(this,KIND);};case VALUES:return function values(){return new IteratorConstructor(this,KIND);};case ENTRIES:return function entries(){return new IteratorConstructor(this,KIND);};}return function(){return new IteratorConstructor(this);};};var TO_STRING_TAG=NAME+' Iterator';var INCORRECT_VALUES_NAME=false;var IterablePrototype=Iterable.prototype;var nativeIterator=IterablePrototype[ITERATOR$3]||IterablePrototype['@@iterator']||DEFAULT&&IterablePrototype[DEFAULT];var defaultIterator=!BUGGY_SAFARI_ITERATORS&&nativeIterator||getIterationMethod(DEFAULT);var anyNativeIterator=NAME=='Array'?IterablePrototype.entries||nativeIterator:nativeIterator;var CurrentIteratorPrototype,methods,KEY;// fix native
-if(anyNativeIterator){CurrentIteratorPrototype=objectGetPrototypeOf(anyNativeIterator.call(new Iterable()));if(CurrentIteratorPrototype!==Object.prototype&&CurrentIteratorPrototype.next){// Set @@toStringTag to native iterators
-setToStringTag(CurrentIteratorPrototype,TO_STRING_TAG,true,true);iterators[TO_STRING_TAG]=returnThis;}}// fix Array.prototype.{ values, @@iterator }.name in V8 / FF
-if(DEFAULT==VALUES&&nativeIterator&&nativeIterator.name!==VALUES){INCORRECT_VALUES_NAME=true;defaultIterator=function values(){return nativeIterator.call(this);};}// define iterator
-if(FORCED&&IterablePrototype[ITERATOR$3]!==defaultIterator){createNonEnumerableProperty(IterablePrototype,ITERATOR$3,defaultIterator);}iterators[NAME]=defaultIterator;// export additional methods
-if(DEFAULT){methods={values:getIterationMethod(VALUES),keys:IS_SET?defaultIterator:getIterationMethod(KEYS),entries:getIterationMethod(ENTRIES)};if(FORCED)for(KEY in methods){if(BUGGY_SAFARI_ITERATORS||INCORRECT_VALUES_NAME||!(KEY in IterablePrototype)){redefine(IterablePrototype,KEY,methods[KEY]);}}else _export({target:NAME,proto:true,forced:BUGGY_SAFARI_ITERATORS||INCORRECT_VALUES_NAME},methods);}return methods;};var ARRAY_ITERATOR='Array Iterator';var setInternalState$4=internalState.set;var getInternalState$1=internalState.getterFor(ARRAY_ITERATOR);// `Array.prototype.entries` method
-// https://tc39.es/ecma262/#sec-array.prototype.entries
-// `Array.prototype.keys` method
-// https://tc39.es/ecma262/#sec-array.prototype.keys
-// `Array.prototype.values` method
-// https://tc39.es/ecma262/#sec-array.prototype.values
-// `Array.prototype[@@iterator]` method
-// https://tc39.es/ecma262/#sec-array.prototype-@@iterator
-// `CreateArrayIterator` internal method
-// https://tc39.es/ecma262/#sec-createarrayiterator
-defineIterator(Array,'Array',function(iterated,kind){setInternalState$4(this,{type:ARRAY_ITERATOR,target:toIndexedObject(iterated),// target
-index:0,// next index
-kind:kind// kind
-});// `%ArrayIteratorPrototype%.next` method
-// https://tc39.es/ecma262/#sec-%arrayiteratorprototype%.next
-},function(){var state=getInternalState$1(this);var target=state.target;var kind=state.kind;var index=state.index++;if(!target||index>=target.length){state.target=undefined;return{value:undefined,done:true};}if(kind=='keys')return{value:index,done:false};if(kind=='values')return{value:target[index],done:false};return{value:[index,target[index]],done:false};},'values');// argumentsList[@@iterator] is %ArrayProto_values%
-// https://tc39.es/ecma262/#sec-createunmappedargumentsobject
-// https://tc39.es/ecma262/#sec-createmappedargumentsobject
-iterators.Arguments=iterators.Array;// iterable DOM collections
-// flag - `iterable` interface - 'entries', 'keys', 'values', 'forEach' methods
-var domIterables={CSSRuleList:0,CSSStyleDeclaration:0,CSSValueList:0,ClientRectList:0,DOMRectList:0,DOMStringList:0,DOMTokenList:1,DataTransferItemList:0,FileList:0,HTMLAllCollection:0,HTMLCollection:0,HTMLFormElement:0,HTMLSelectElement:0,MediaList:0,MimeTypeArray:0,NamedNodeMap:0,NodeList:1,PaintRequestList:0,Plugin:0,PluginArray:0,SVGLengthList:0,SVGNumberList:0,SVGPathSegList:0,SVGPointList:0,SVGStringList:0,SVGTransformList:0,SourceBufferList:0,StyleSheetList:0,TextTrackCueList:0,TextTrackList:0,TouchList:0};var TO_STRING_TAG=wellKnownSymbol('toStringTag');for(var COLLECTION_NAME in domIterables){var Collection=global$1[COLLECTION_NAME];var CollectionPrototype=Collection&&Collection.prototype;if(CollectionPrototype&&classof(CollectionPrototype)!==TO_STRING_TAG){createNonEnumerableProperty(CollectionPrototype,TO_STRING_TAG,COLLECTION_NAME);}iterators[COLLECTION_NAME]=iterators.Array;}var symbol$2=symbol$3;// `Symbol.asyncDispose` well-known symbol
-// https://github.com/tc39/proposal-using-statement
-defineWellKnownSymbol('asyncDispose');// `Symbol.dispose` well-known symbol
-// https://github.com/tc39/proposal-using-statement
-defineWellKnownSymbol('dispose');// `Symbol.matcher` well-known symbol
-// https://github.com/tc39/proposal-pattern-matching
-defineWellKnownSymbol('matcher');// `Symbol.metadata` well-known symbol
-// https://github.com/tc39/proposal-decorators
-defineWellKnownSymbol('metadata');// `Symbol.observable` well-known symbol
-// https://github.com/tc39/proposal-observable
-defineWellKnownSymbol('observable');// TODO: remove from `core-js@4`
-// `Symbol.patternMatch` well-known symbol
-// https://github.com/tc39/proposal-pattern-matching
-defineWellKnownSymbol('patternMatch');// TODO: remove from `core-js@4`
-defineWellKnownSymbol('replaceAll');// TODO: Remove from `core-js@4`
-// TODO: Remove from `core-js@4`
-var symbol$1=symbol$2;var symbol=symbol$1;// `String.prototype.codePointAt` methods implementation
-var createMethod$2=function createMethod$2(CONVERT_TO_STRING){return function($this,pos){var S=toString$1(requireObjectCoercible($this));var position=toInteger(pos);var size=S.length;var first,second;if(position<0||position>=size)return CONVERT_TO_STRING?'':undefined;first=S.charCodeAt(position);return first<0xD800||first>0xDBFF||position+1===size||(second=S.charCodeAt(position+1))<0xDC00||second>0xDFFF?CONVERT_TO_STRING?S.charAt(position):first:CONVERT_TO_STRING?S.slice(position,position+2):(first-0xD800<<10)+(second-0xDC00)+0x10000;};};var stringMultibyte={// `String.prototype.codePointAt` method
-// https://tc39.es/ecma262/#sec-string.prototype.codepointat
-codeAt:createMethod$2(false),// `String.prototype.at` method
-// https://github.com/mathiasbynens/String.prototype.at
-charAt:createMethod$2(true)};var charAt=stringMultibyte.charAt;var STRING_ITERATOR='String Iterator';var setInternalState$3=internalState.set;var getInternalState=internalState.getterFor(STRING_ITERATOR);// `String.prototype[@@iterator]` method
-// https://tc39.es/ecma262/#sec-string.prototype-@@iterator
-defineIterator(String,'String',function(iterated){setInternalState$3(this,{type:STRING_ITERATOR,string:toString$1(iterated),index:0});// `%StringIteratorPrototype%.next` method
-// https://tc39.es/ecma262/#sec-%stringiteratorprototype%.next
-},function next(){var state=getInternalState(this);var string=state.string;var index=state.index;var point;if(index>=string.length)return{value:undefined,done:true};point=charAt(string,index);state.index+=point.length;return{value:point,done:false};});var iterator$3=wellKnownSymbolWrapped.f('iterator');var iterator$2=iterator$3;var iterator$1=iterator$2;var iterator=iterator$1;var _typeof_1=createCommonjsModule(function(module){function _typeof(obj){"@babel/helpers - typeof";if(typeof symbol==="function"&&typeof iterator==="symbol"){module.exports=_typeof=function _typeof(obj){return typeof obj;};module.exports["default"]=module.exports,module.exports.__esModule=true;}else{module.exports=_typeof=function _typeof(obj){return obj&&typeof symbol==="function"&&obj.constructor===symbol&&obj!==symbol.prototype?"symbol":typeof obj;};module.exports["default"]=module.exports,module.exports.__esModule=true;}return _typeof(obj);}module.exports=_typeof;module.exports["default"]=module.exports,module.exports.__esModule=true;});var entryVirtual=function entryVirtual(CONSTRUCTOR){return path[CONSTRUCTOR+'Prototype'];};var concat$2=entryVirtual('Array').concat;var ArrayPrototype$d=Array.prototype;var concat_1=function concat_1(it){var own=it.concat;return it===ArrayPrototype$d||it instanceof Array&&own===ArrayPrototype$d.concat?concat$2:own;};var concat$1=concat_1;var concat=concat$1;var HAS_SPECIES_SUPPORT$2=arrayMethodHasSpeciesSupport('slice');var SPECIES$1=wellKnownSymbol('species');var nativeSlice=[].slice;var max=Math.max;// `Array.prototype.slice` method
-// https://tc39.es/ecma262/#sec-array.prototype.slice
-// fallback for not array-like ES3 strings and DOM objects
-_export({target:'Array',proto:true,forced:!HAS_SPECIES_SUPPORT$2},{slice:function slice(start,end){var O=toIndexedObject(this);var length=toLength(O.length);var k=toAbsoluteIndex(start,length);var fin=toAbsoluteIndex(end===undefined?length:end,length);// inline `ArraySpeciesCreate` for usage native `Array#slice` where it's possible
-var Constructor,result,n;if(isArray$5(O)){Constructor=O.constructor;// cross-realm fallback
-if(typeof Constructor=='function'&&(Constructor===Array||isArray$5(Constructor.prototype))){Constructor=undefined;}else if(isObject(Constructor)){Constructor=Constructor[SPECIES$1];if(Constructor===null)Constructor=undefined;}if(Constructor===Array||Constructor===undefined){return nativeSlice.call(O,k,fin);}}result=new(Constructor===undefined?Array:Constructor)(max(fin-k,0));for(n=0;k<fin;k++,n++){if(k in O)createProperty(result,n,O[k]);}result.length=n;return result;}});var slice$5=entryVirtual('Array').slice;var ArrayPrototype$c=Array.prototype;var slice_1=function slice_1(it){var own=it.slice;return it===ArrayPrototype$c||it instanceof Array&&own===ArrayPrototype$c.slice?slice$5:own;};var slice$4=slice_1;var slice$3=slice$4;var $map=arrayIteration.map;var HAS_SPECIES_SUPPORT$1=arrayMethodHasSpeciesSupport('map');// `Array.prototype.map` method
-// https://tc39.es/ecma262/#sec-array.prototype.map
-// with adding support of @@species
-_export({target:'Array',proto:true,forced:!HAS_SPECIES_SUPPORT$1},{map:function map(callbackfn/* , thisArg */){return $map(this,callbackfn,arguments.length>1?arguments[1]:undefined);}});var map$2=entryVirtual('Array').map;var ArrayPrototype$b=Array.prototype;var map_1=function map_1(it){var own=it.map;return it===ArrayPrototype$b||it instanceof Array&&own===ArrayPrototype$b.map?map$2:own;};var map$1=map_1;var map=map$1;var $filter=arrayIteration.filter;var HAS_SPECIES_SUPPORT=arrayMethodHasSpeciesSupport('filter');// `Array.prototype.filter` method
-// https://tc39.es/ecma262/#sec-array.prototype.filter
-// with adding support of @@species
-_export({target:'Array',proto:true,forced:!HAS_SPECIES_SUPPORT},{filter:function filter(callbackfn/* , thisArg */){return $filter(this,callbackfn,arguments.length>1?arguments[1]:undefined);}});var filter$2=entryVirtual('Array').filter;var ArrayPrototype$a=Array.prototype;var filter_1=function filter_1(it){var own=it.filter;return it===ArrayPrototype$a||it instanceof Array&&own===ArrayPrototype$a.filter?filter$2:own;};var filter$1=filter_1;var filter=filter$1;var $includes=arrayIncludes.includes;// `Array.prototype.includes` method
-// https://tc39.es/ecma262/#sec-array.prototype.includes
-_export({target:'Array',proto:true},{includes:function includes(el/* , fromIndex = 0 */){return $includes(this,el,arguments.length>1?arguments[1]:undefined);}});var includes$4=entryVirtual('Array').includes;var MATCH$1=wellKnownSymbol('match');// `IsRegExp` abstract operation
-// https://tc39.es/ecma262/#sec-isregexp
-var isRegexp=function isRegexp(it){var isRegExp;return isObject(it)&&((isRegExp=it[MATCH$1])!==undefined?!!isRegExp:classofRaw(it)=='RegExp');};var notARegexp=function notARegexp(it){if(isRegexp(it)){throw TypeError("The method doesn't accept regular expressions");}return it;};var MATCH=wellKnownSymbol('match');var correctIsRegexpLogic=function correctIsRegexpLogic(METHOD_NAME){var regexp=/./;try{'/./'[METHOD_NAME](regexp);}catch(error1){try{regexp[MATCH]=false;return'/./'[METHOD_NAME](regexp);}catch(error2){/* empty */}}return false;};// `String.prototype.includes` method
-// https://tc39.es/ecma262/#sec-string.prototype.includes
-_export({target:'String',proto:true,forced:!correctIsRegexpLogic('includes')},{includes:function includes(searchString/* , position = 0 */){return!!~toString$1(requireObjectCoercible(this)).indexOf(toString$1(notARegexp(searchString)),arguments.length>1?arguments[1]:undefined);}});var includes$3=entryVirtual('String').includes;var ArrayPrototype$9=Array.prototype;var StringPrototype=String.prototype;var includes$2=function includes$2(it){var own=it.includes;if(it===ArrayPrototype$9||it instanceof Array&&own===ArrayPrototype$9.includes)return includes$4;if(typeof it==='string'||it===StringPrototype||it instanceof String&&own===StringPrototype.includes){return includes$3;}return own;};var includes$1=includes$2;var includes=includes$1;// `Array.prototype.{ reduce, reduceRight }` methods implementation
-var createMethod$1=function createMethod$1(IS_RIGHT){return function(that,callbackfn,argumentsLength,memo){aFunction(callbackfn);var O=toObject(that);var self=indexedObject(O);var length=toLength(O.length);var index=IS_RIGHT?length-1:0;var i=IS_RIGHT?-1:1;if(argumentsLength<2)while(true){if(index in self){memo=self[index];index+=i;break;}index+=i;if(IS_RIGHT?index<0:length<=index){throw TypeError('Reduce of empty array with no initial value');}}for(;IS_RIGHT?index>=0:length>index;index+=i){if(index in self){memo=callbackfn(memo,self[index],index,O);}}return memo;};};var arrayReduce={// `Array.prototype.reduce` method
-// https://tc39.es/ecma262/#sec-array.prototype.reduce
-left:createMethod$1(false),// `Array.prototype.reduceRight` method
-// https://tc39.es/ecma262/#sec-array.prototype.reduceright
-right:createMethod$1(true)};var arrayMethodIsStrict=function arrayMethodIsStrict(METHOD_NAME,argument){var method=[][METHOD_NAME];return!!method&&fails(function(){// eslint-disable-next-line no-useless-call,no-throw-literal -- required for testing
-method.call(null,argument||function(){throw 1;},1);});};var engineIsNode=classofRaw(global$1.process)=='process';var $reduce=arrayReduce.left;var STRICT_METHOD$4=arrayMethodIsStrict('reduce');// Chrome 80-82 has a critical bug
-// https://bugs.chromium.org/p/chromium/issues/detail?id=1049982
-var CHROME_BUG=!engineIsNode&&engineV8Version>79&&engineV8Version<83;// `Array.prototype.reduce` method
-// https://tc39.es/ecma262/#sec-array.prototype.reduce
-_export({target:'Array',proto:true,forced:!STRICT_METHOD$4||CHROME_BUG},{reduce:function reduce(callbackfn/* , initialValue */){return $reduce(this,callbackfn,arguments.length,arguments.length>1?arguments[1]:undefined);}});var reduce$2=entryVirtual('Array').reduce;var ArrayPrototype$8=Array.prototype;var reduce_1=function reduce_1(it){var own=it.reduce;return it===ArrayPrototype$8||it instanceof Array&&own===ArrayPrototype$8.reduce?reduce$2:own;};var reduce$1=reduce_1;var reduce=reduce$1;var $some=arrayIteration.some;var STRICT_METHOD$3=arrayMethodIsStrict('some');// `Array.prototype.some` method
-// https://tc39.es/ecma262/#sec-array.prototype.some
-_export({target:'Array',proto:true,forced:!STRICT_METHOD$3},{some:function some(callbackfn/* , thisArg */){return $some(this,callbackfn,arguments.length>1?arguments[1]:undefined);}});var some$2=entryVirtual('Array').some;var ArrayPrototype$7=Array.prototype;var some_1=function some_1(it){var own=it.some;return it===ArrayPrototype$7||it instanceof Array&&own===ArrayPrototype$7.some?some$2:own;};var some$1=some_1;var some=some$1;entryVirtual('Array').entries;// TODO: use something more complex like timsort?
-var floor=Math.floor;var mergeSort=function mergeSort(array,comparefn){var length=array.length;var middle=floor(length/2);return length<8?insertionSort(array,comparefn):merge(mergeSort(array.slice(0,middle),comparefn),mergeSort(array.slice(middle),comparefn),comparefn);};var insertionSort=function insertionSort(array,comparefn){var length=array.length;var i=1;var element,j;while(i<length){j=i;element=array[i];while(j&&comparefn(array[j-1],element)>0){array[j]=array[--j];}if(j!==i++)array[j]=element;}return array;};var merge=function merge(left,right,comparefn){var llength=left.length;var rlength=right.length;var lindex=0;var rindex=0;var result=[];while(lindex<llength||rindex<rlength){if(lindex<llength&&rindex<rlength){result.push(comparefn(left[lindex],right[rindex])<=0?left[lindex++]:right[rindex++]);}else{result.push(lindex<llength?left[lindex++]:right[rindex++]);}}return result;};var arraySort=mergeSort;var firefox=engineUserAgent.match(/firefox\/(\d+)/i);var engineFfVersion=!!firefox&&+firefox[1];var engineIsIeOrEdge=/MSIE|Trident/.test(engineUserAgent);var webkit=engineUserAgent.match(/AppleWebKit\/(\d+)\./);var engineWebkitVersion=!!webkit&&+webkit[1];var test$1=[];var nativeSort=test$1.sort;// IE8-
-var FAILS_ON_UNDEFINED=fails(function(){test$1.sort(undefined);});// V8 bug
-var FAILS_ON_NULL=fails(function(){test$1.sort(null);});// Old WebKit
-var STRICT_METHOD$2=arrayMethodIsStrict('sort');var STABLE_SORT=!fails(function(){// feature detection can be too slow, so check engines versions
-if(engineV8Version)return engineV8Version<70;if(engineFfVersion&&engineFfVersion>3)return;if(engineIsIeOrEdge)return true;if(engineWebkitVersion)return engineWebkitVersion<603;var result='';var code,chr,value,index;// generate an array with more 512 elements (Chakra and old V8 fails only in this case)
-for(code=65;code<76;code++){chr=String.fromCharCode(code);switch(code){case 66:case 69:case 70:case 72:value=3;break;case 68:case 71:value=4;break;default:value=2;}for(index=0;index<47;index++){test$1.push({k:chr+index,v:value});}}test$1.sort(function(a,b){return b.v-a.v;});for(index=0;index<test$1.length;index++){chr=test$1[index].k.charAt(0);if(result.charAt(result.length-1)!==chr)result+=chr;}return result!=='DGBEFHACIJK';});var FORCED$3=FAILS_ON_UNDEFINED||!FAILS_ON_NULL||!STRICT_METHOD$2||!STABLE_SORT;var getSortCompare=function getSortCompare(comparefn){return function(x,y){if(y===undefined)return-1;if(x===undefined)return 1;if(comparefn!==undefined)return+comparefn(x,y)||0;return toString$1(x)>toString$1(y)?1:-1;};};// `Array.prototype.sort` method
-// https://tc39.es/ecma262/#sec-array.prototype.sort
-_export({target:'Array',proto:true,forced:FORCED$3},{sort:function sort(comparefn){if(comparefn!==undefined)aFunction(comparefn);var array=toObject(this);if(STABLE_SORT)return comparefn===undefined?nativeSort.call(array):nativeSort.call(array,comparefn);var items=[];var arrayLength=toLength(array.length);var itemsLength,index;for(index=0;index<arrayLength;index++){if(index in array)items.push(array[index]);}items=arraySort(items,getSortCompare(comparefn));itemsLength=items.length;index=0;while(index<itemsLength){array[index]=items[index++];}while(index<arrayLength){delete array[index++];}return array;}});var sort$2=entryVirtual('Array').sort;var ArrayPrototype$6=Array.prototype;var sort_1=function sort_1(it){var own=it.sort;return it===ArrayPrototype$6||it instanceof Array&&own===ArrayPrototype$6.sort?sort$2:own;};var sort$1=sort_1;var sort=sort$1;// `FlattenIntoArray` abstract operation
-// https://tc39.github.io/proposal-flatMap/#sec-FlattenIntoArray
-var flattenIntoArray=function flattenIntoArray(target,original,source,sourceLen,start,depth,mapper,thisArg){var targetIndex=start;var sourceIndex=0;var mapFn=mapper?functionBindContext(mapper,thisArg,3):false;var element;while(sourceIndex<sourceLen){if(sourceIndex in source){element=mapFn?mapFn(source[sourceIndex],sourceIndex,original):source[sourceIndex];if(depth>0&&isArray$5(element)){targetIndex=flattenIntoArray(target,original,element,toLength(element.length),targetIndex,depth-1)-1;}else{if(targetIndex>=0x1FFFFFFFFFFFFF)throw TypeError('Exceed the acceptable array length');target[targetIndex]=element;}targetIndex++;}sourceIndex++;}return targetIndex;};var flattenIntoArray_1=flattenIntoArray;// `Array.prototype.flatMap` method
-// https://tc39.es/ecma262/#sec-array.prototype.flatmap
-_export({target:'Array',proto:true},{flatMap:function flatMap(callbackfn/* , thisArg */){var O=toObject(this);var sourceLen=toLength(O.length);var A;aFunction(callbackfn);A=arraySpeciesCreate(O,0);A.length=flattenIntoArray_1(A,O,O,sourceLen,0,1,callbackfn,arguments.length>1?arguments[1]:undefined);return A;}});var flatMap$2=entryVirtual('Array').flatMap;var ArrayPrototype$5=Array.prototype;var flatMap_1=function flatMap_1(it){var own=it.flatMap;return it===ArrayPrototype$5||it instanceof Array&&own===ArrayPrototype$5.flatMap?flatMap$2:own;};var flatMap$1=flatMap_1;var flatMap=flatMap$1;var $every=arrayIteration.every;var STRICT_METHOD$1=arrayMethodIsStrict('every');// `Array.prototype.every` method
-// https://tc39.es/ecma262/#sec-array.prototype.every
-_export({target:'Array',proto:true,forced:!STRICT_METHOD$1},{every:function every(callbackfn/* , thisArg */){return $every(this,callbackfn,arguments.length>1?arguments[1]:undefined);}});var every$2=entryVirtual('Array').every;var ArrayPrototype$4=Array.prototype;var every_1=function every_1(it){var own=it.every;return it===ArrayPrototype$4||it instanceof Array&&own===ArrayPrototype$4.every?every$2:own;};var every$1=every_1;var every=every$1;entryVirtual('Array').keys;entryVirtual('Array').values;var $find=arrayIteration.find;var FIND='find';var SKIPS_HOLES=true;// Shouldn't skip holes
-if(FIND in[])Array(1)[FIND](function(){SKIPS_HOLES=false;});// `Array.prototype.find` method
-// https://tc39.es/ecma262/#sec-array.prototype.find
-_export({target:'Array',proto:true,forced:SKIPS_HOLES},{find:function find(callbackfn/* , that = undefined */){return $find(this,callbackfn,arguments.length>1?arguments[1]:undefined);}});var find$3=entryVirtual('Array').find;var ArrayPrototype$3=Array.prototype;var find_1=function find_1(it){var own=it.find;return it===ArrayPrototype$3||it instanceof Array&&own===ArrayPrototype$3.find?find$3:own;};var find$2=find_1;var find$1=find$2;var nativeReverse=[].reverse;var test=[1,2];// `Array.prototype.reverse` method
-// https://tc39.es/ecma262/#sec-array.prototype.reverse
-// fix for Safari 12.0 bug
-// https://bugs.webkit.org/show_bug.cgi?id=188794
-_export({target:'Array',proto:true,forced:String(test)===String(test.reverse())},{reverse:function reverse(){// eslint-disable-next-line no-self-assign -- dirty hack
-if(isArray$5(this))this.length=this.length;return nativeReverse.call(this);}});var reverse$2=entryVirtual('Array').reverse;var ArrayPrototype$2=Array.prototype;var reverse_1=function reverse_1(it){var own=it.reverse;return it===ArrayPrototype$2||it instanceof Array&&own===ArrayPrototype$2.reverse?reverse$2:own;};var reverse$1=reverse_1;var reverse=reverse$1;// `Object.defineProperty` method
-// https://tc39.es/ecma262/#sec-object.defineproperty
-_export({target:'Object',stat:true,forced:!descriptors,sham:!descriptors},{defineProperty:objectDefineProperty.f});var defineProperty_1=createCommonjsModule(function(module){var Object=path.Object;var defineProperty=module.exports=function defineProperty(it,key,desc){return Object.defineProperty(it,key,desc);};if(Object.defineProperty.sham)defineProperty.sham=true;});var defineProperty$7=defineProperty_1;var defineProperty$6=defineProperty$7;var redefineAll=function redefineAll(target,src,options){for(var key in src){if(options&&options.unsafe&&target[key])target[key]=src[key];else redefine(target,key,src[key],options);}return target;};var freezing=!fails(function(){// eslint-disable-next-line es/no-object-isextensible, es/no-object-preventextensions -- required for testing
-return Object.isExtensible(Object.preventExtensions({}));});var internalMetadata=createCommonjsModule(function(module){var defineProperty=objectDefineProperty.f;var REQUIRED=false;var METADATA=uid('meta');var id=0;// eslint-disable-next-line es/no-object-isextensible -- safe
-var isExtensible=Object.isExtensible||function(){return true;};var setMetadata=function setMetadata(it){defineProperty(it,METADATA,{value:{objectID:'O'+id++,// object ID
-weakData:{}// weak collections IDs
-}});};var fastKey=function fastKey(it,create){// return a primitive with prefix
-if(!isObject(it))return _typeof3(it)=='symbol'?it:(typeof it=='string'?'S':'P')+it;if(!has$1(it,METADATA)){// can't set metadata to uncaught frozen object
-if(!isExtensible(it))return'F';// not necessary to add metadata
-if(!create)return'E';// add missing metadata
-setMetadata(it);// return object ID
-}return it[METADATA].objectID;};var getWeakData=function getWeakData(it,create){if(!has$1(it,METADATA)){// can't set metadata to uncaught frozen object
-if(!isExtensible(it))return true;// not necessary to add metadata
-if(!create)return false;// add missing metadata
-setMetadata(it);// return the store of weak collections IDs
-}return it[METADATA].weakData;};// add metadata on freeze-family methods calling
-var onFreeze=function onFreeze(it){if(freezing&&REQUIRED&&isExtensible(it)&&!has$1(it,METADATA))setMetadata(it);return it;};var enable=function enable(){meta.enable=function(){/* empty */};REQUIRED=true;var getOwnPropertyNames=objectGetOwnPropertyNames.f;var splice=[].splice;var test={};test[METADATA]=1;// prevent exposing of metadata key
-if(getOwnPropertyNames(test).length){objectGetOwnPropertyNames.f=function(it){var result=getOwnPropertyNames(it);for(var i=0,length=result.length;i<length;i++){if(result[i]===METADATA){splice.call(result,i,1);break;}}return result;};_export({target:'Object',stat:true,forced:true},{getOwnPropertyNames:objectGetOwnPropertyNamesExternal.f});}};var meta=module.exports={enable:enable,fastKey:fastKey,getWeakData:getWeakData,onFreeze:onFreeze};hiddenKeys$1[METADATA]=true;});var ITERATOR$2=wellKnownSymbol('iterator');var ArrayPrototype$1=Array.prototype;// check on default Array iterator
-var isArrayIteratorMethod=function isArrayIteratorMethod(it){return it!==undefined&&(iterators.Array===it||ArrayPrototype$1[ITERATOR$2]===it);};var ITERATOR$1=wellKnownSymbol('iterator');var getIteratorMethod$3=function getIteratorMethod$3(it){if(it!=undefined)return it[ITERATOR$1]||it['@@iterator']||iterators[classof(it)];};var getIterator=function getIterator(it,usingIterator){var iteratorMethod=arguments.length<2?getIteratorMethod$3(it):usingIterator;if(typeof iteratorMethod!='function'){throw TypeError(String(it)+' is not iterable');}return anObject(iteratorMethod.call(it));};var iteratorClose=function iteratorClose(iterator,kind,value){var innerResult,innerError;anObject(iterator);try{innerResult=iterator['return'];if(innerResult===undefined){if(kind==='throw')throw value;return value;}innerResult=innerResult.call(iterator);}catch(error){innerError=true;innerResult=error;}if(kind==='throw')throw value;if(innerError)throw innerResult;anObject(innerResult);return value;};var Result=function Result(stopped,result){this.stopped=stopped;this.result=result;};var iterate=function iterate(iterable,unboundFunction,options){var that=options&&options.that;var AS_ENTRIES=!!(options&&options.AS_ENTRIES);var IS_ITERATOR=!!(options&&options.IS_ITERATOR);var INTERRUPTED=!!(options&&options.INTERRUPTED);var fn=functionBindContext(unboundFunction,that,1+AS_ENTRIES+INTERRUPTED);var iterator,iterFn,index,length,result,next,step;var stop=function stop(condition){if(iterator)iteratorClose(iterator,'normal',condition);return new Result(true,condition);};var callFn=function callFn(value){if(AS_ENTRIES){anObject(value);return INTERRUPTED?fn(value[0],value[1],stop):fn(value[0],value[1]);}return INTERRUPTED?fn(value,stop):fn(value);};if(IS_ITERATOR){iterator=iterable;}else{iterFn=getIteratorMethod$3(iterable);if(typeof iterFn!='function')throw TypeError('Target is not iterable');// optimisation for array iterators
-if(isArrayIteratorMethod(iterFn)){for(index=0,length=toLength(iterable.length);length>index;index++){result=callFn(iterable[index]);if(result&&result instanceof Result)return result;}return new Result(false);}iterator=getIterator(iterable,iterFn);}next=iterator.next;while(!(step=next.call(iterator)).done){try{result=callFn(step.value);}catch(error){iteratorClose(iterator,'throw',error);}if(_typeof3(result)=='object'&&result&&result instanceof Result)return result;}return new Result(false);};var anInstance=function anInstance(it,Constructor,name){if(!(it instanceof Constructor)){throw TypeError('Incorrect '+(name?name+' ':'')+'invocation');}return it;};var defineProperty$5=objectDefineProperty.f;var forEach$3=arrayIteration.forEach;var setInternalState$2=internalState.set;var internalStateGetterFor$2=internalState.getterFor;var collection=function collection(CONSTRUCTOR_NAME,wrapper,common){var IS_MAP=CONSTRUCTOR_NAME.indexOf('Map')!==-1;var IS_WEAK=CONSTRUCTOR_NAME.indexOf('Weak')!==-1;var ADDER=IS_MAP?'set':'add';var NativeConstructor=global$1[CONSTRUCTOR_NAME];var NativePrototype=NativeConstructor&&NativeConstructor.prototype;var exported={};var Constructor;if(!descriptors||typeof NativeConstructor!='function'||!(IS_WEAK||NativePrototype.forEach&&!fails(function(){new NativeConstructor().entries().next();}))){// create collection constructor
-Constructor=common.getConstructor(wrapper,CONSTRUCTOR_NAME,IS_MAP,ADDER);internalMetadata.enable();}else{Constructor=wrapper(function(target,iterable){setInternalState$2(anInstance(target,Constructor,CONSTRUCTOR_NAME),{type:CONSTRUCTOR_NAME,collection:new NativeConstructor()});if(iterable!=undefined)iterate(iterable,target[ADDER],{that:target,AS_ENTRIES:IS_MAP});});var getInternalState=internalStateGetterFor$2(CONSTRUCTOR_NAME);forEach$3(['add','clear','delete','forEach','get','has','set','keys','values','entries'],function(KEY){var IS_ADDER=KEY=='add'||KEY=='set';if(KEY in NativePrototype&&!(IS_WEAK&&KEY=='clear')){createNonEnumerableProperty(Constructor.prototype,KEY,function(a,b){var collection=getInternalState(this).collection;if(!IS_ADDER&&IS_WEAK&&!isObject(a))return KEY=='get'?undefined:false;var result=collection[KEY](a===0?0:a,b);return IS_ADDER?this:result;});}});IS_WEAK||defineProperty$5(Constructor.prototype,'size',{configurable:true,get:function get(){return getInternalState(this).collection.size;}});}setToStringTag(Constructor,CONSTRUCTOR_NAME,false,true);exported[CONSTRUCTOR_NAME]=Constructor;_export({global:true,forced:true},exported);if(!IS_WEAK)common.setStrong(Constructor,CONSTRUCTOR_NAME,IS_MAP);return Constructor;};var getWeakData=internalMetadata.getWeakData;var setInternalState$1=internalState.set;var internalStateGetterFor$1=internalState.getterFor;var find=arrayIteration.find;var findIndex=arrayIteration.findIndex;var id$2=0;// fallback for uncaught frozen keys
-var uncaughtFrozenStore=function uncaughtFrozenStore(store){return store.frozen||(store.frozen=new UncaughtFrozenStore());};var UncaughtFrozenStore=function UncaughtFrozenStore(){this.entries=[];};var findUncaughtFrozen=function findUncaughtFrozen(store,key){return find(store.entries,function(it){return it[0]===key;});};UncaughtFrozenStore.prototype={get:function get(key){var entry=findUncaughtFrozen(this,key);if(entry)return entry[1];},has:function has(key){return!!findUncaughtFrozen(this,key);},set:function set(key,value){var entry=findUncaughtFrozen(this,key);if(entry)entry[1]=value;else this.entries.push([key,value]);},'delete':function _delete(key){var index=findIndex(this.entries,function(it){return it[0]===key;});if(~index)this.entries.splice(index,1);return!!~index;}};var collectionWeak={getConstructor:function getConstructor(wrapper,CONSTRUCTOR_NAME,IS_MAP,ADDER){var C=wrapper(function(that,iterable){anInstance(that,C,CONSTRUCTOR_NAME);setInternalState$1(that,{type:CONSTRUCTOR_NAME,id:id$2++,frozen:undefined});if(iterable!=undefined)iterate(iterable,that[ADDER],{that:that,AS_ENTRIES:IS_MAP});});var getInternalState=internalStateGetterFor$1(CONSTRUCTOR_NAME);var define=function define(that,key,value){var state=getInternalState(that);var data=getWeakData(anObject(key),true);if(data===true)uncaughtFrozenStore(state).set(key,value);else data[state.id]=value;return that;};redefineAll(C.prototype,{// `{ WeakMap, WeakSet }.prototype.delete(key)` methods
-// https://tc39.es/ecma262/#sec-weakmap.prototype.delete
-// https://tc39.es/ecma262/#sec-weakset.prototype.delete
-'delete':function _delete(key){var state=getInternalState(this);if(!isObject(key))return false;var data=getWeakData(key);if(data===true)return uncaughtFrozenStore(state)['delete'](key);return data&&has$1(data,state.id)&&delete data[state.id];},// `{ WeakMap, WeakSet }.prototype.has(key)` methods
-// https://tc39.es/ecma262/#sec-weakmap.prototype.has
-// https://tc39.es/ecma262/#sec-weakset.prototype.has
-has:function has(key){var state=getInternalState(this);if(!isObject(key))return false;var data=getWeakData(key);if(data===true)return uncaughtFrozenStore(state).has(key);return data&&has$1(data,state.id);}});redefineAll(C.prototype,IS_MAP?{// `WeakMap.prototype.get(key)` method
-// https://tc39.es/ecma262/#sec-weakmap.prototype.get
-get:function get(key){var state=getInternalState(this);if(isObject(key)){var data=getWeakData(key);if(data===true)return uncaughtFrozenStore(state).get(key);return data?data[state.id]:undefined;}},// `WeakMap.prototype.set(key, value)` method
-// https://tc39.es/ecma262/#sec-weakmap.prototype.set
-set:function set(key,value){return define(this,key,value);}}:{// `WeakSet.prototype.add(value)` method
-// https://tc39.es/ecma262/#sec-weakset.prototype.add
-add:function add(value){return define(this,value,true);}});return C;}};createCommonjsModule(function(module){var enforceIternalState=internalState.enforce;var IS_IE11=!global$1.ActiveXObject&&'ActiveXObject'in global$1;// eslint-disable-next-line es/no-object-isextensible -- safe
-var isExtensible=Object.isExtensible;var InternalWeakMap;var wrapper=function wrapper(init){return function WeakMap(){return init(this,arguments.length?arguments[0]:undefined);};};// `WeakMap` constructor
-// https://tc39.es/ecma262/#sec-weakmap-constructor
-var $WeakMap=module.exports=collection('WeakMap',wrapper,collectionWeak);// IE11 WeakMap frozen keys fix
-// We can't use feature detection because it crash some old IE builds
-// https://github.com/zloirock/core-js/issues/485
-if(nativeWeakMap&&IS_IE11){InternalWeakMap=collectionWeak.getConstructor(wrapper,'WeakMap',true);internalMetadata.enable();var WeakMapPrototype=$WeakMap.prototype;var nativeDelete=WeakMapPrototype['delete'];var nativeHas=WeakMapPrototype.has;var nativeGet=WeakMapPrototype.get;var nativeSet=WeakMapPrototype.set;redefineAll(WeakMapPrototype,{'delete':function _delete(key){if(isObject(key)&&!isExtensible(key)){var state=enforceIternalState(this);if(!state.frozen)state.frozen=new InternalWeakMap();return nativeDelete.call(this,key)||state.frozen['delete'](key);}return nativeDelete.call(this,key);},has:function has(key){if(isObject(key)&&!isExtensible(key)){var state=enforceIternalState(this);if(!state.frozen)state.frozen=new InternalWeakMap();return nativeHas.call(this,key)||state.frozen.has(key);}return nativeHas.call(this,key);},get:function get(key){if(isObject(key)&&!isExtensible(key)){var state=enforceIternalState(this);if(!state.frozen)state.frozen=new InternalWeakMap();return nativeHas.call(this,key)?nativeGet.call(this,key):state.frozen.get(key);}return nativeGet.call(this,key);},set:function set(key,value){if(isObject(key)&&!isExtensible(key)){var state=enforceIternalState(this);if(!state.frozen)state.frozen=new InternalWeakMap();nativeHas.call(this,key)?nativeSet.call(this,key,value):state.frozen.set(key,value);}else nativeSet.call(this,key,value);return this;}});}});var weakMap$2=path.WeakMap;var weakMap$1=weakMap$2;var weakMap=weakMap$1;var nativeGetOwnPropertyDescriptor=objectGetOwnPropertyDescriptor.f;var FAILS_ON_PRIMITIVES$2=fails(function(){nativeGetOwnPropertyDescriptor(1);});var FORCED$2=!descriptors||FAILS_ON_PRIMITIVES$2;// `Object.getOwnPropertyDescriptor` method
-// https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
-_export({target:'Object',stat:true,forced:FORCED$2,sham:!descriptors},{getOwnPropertyDescriptor:function getOwnPropertyDescriptor(it,key){return nativeGetOwnPropertyDescriptor(toIndexedObject(it),key);}});var getOwnPropertyDescriptor_1=createCommonjsModule(function(module){var Object=path.Object;var getOwnPropertyDescriptor=module.exports=function getOwnPropertyDescriptor(it,key){return Object.getOwnPropertyDescriptor(it,key);};if(Object.getOwnPropertyDescriptor.sham)getOwnPropertyDescriptor.sham=true;});var getOwnPropertyDescriptor$1=getOwnPropertyDescriptor_1;var getOwnPropertyDescriptor=getOwnPropertyDescriptor$1;var FAILS_ON_PRIMITIVES$1=fails(function(){objectKeys(1);});// `Object.keys` method
-// https://tc39.es/ecma262/#sec-object.keys
-_export({target:'Object',stat:true,forced:FAILS_ON_PRIMITIVES$1},{keys:function keys(it){return objectKeys(toObject(it));}});var keys$2=path.Object.keys;var keys$1=keys$2;var keys=keys$1;var getOwnPropertySymbols$2=path.Object.getOwnPropertySymbols;var getOwnPropertySymbols$1=getOwnPropertySymbols$2;var getOwnPropertySymbols=getOwnPropertySymbols$1;var $forEach=arrayIteration.forEach;var STRICT_METHOD=arrayMethodIsStrict('forEach');// `Array.prototype.forEach` method implementation
-// https://tc39.es/ecma262/#sec-array.prototype.foreach
-var arrayForEach=!STRICT_METHOD?function forEach(callbackfn/* , thisArg */){return $forEach(this,callbackfn,arguments.length>1?arguments[1]:undefined);// eslint-disable-next-line es/no-array-prototype-foreach -- safe
-}:[].forEach;// `Array.prototype.forEach` method
-// https://tc39.es/ecma262/#sec-array.prototype.foreach
-// eslint-disable-next-line es/no-array-prototype-foreach -- safe
-_export({target:'Array',proto:true,forced:[].forEach!=arrayForEach},{forEach:arrayForEach});var forEach$2=entryVirtual('Array').forEach;var forEach$1=forEach$2;var ArrayPrototype=Array.prototype;var DOMIterables={DOMTokenList:true,NodeList:true};var forEach_1=function forEach_1(it){var own=it.forEach;return it===ArrayPrototype||it instanceof Array&&own===ArrayPrototype.forEach// eslint-disable-next-line no-prototype-builtins -- safe
-||DOMIterables.hasOwnProperty(classof(it))?forEach$1:own;};var forEach=forEach_1;// all object keys, includes non-enumerable and symbols
-var ownKeys=getBuiltIn('Reflect','ownKeys')||function ownKeys(it){var keys=objectGetOwnPropertyNames.f(anObject(it));var getOwnPropertySymbols=objectGetOwnPropertySymbols.f;return getOwnPropertySymbols?keys.concat(getOwnPropertySymbols(it)):keys;};// `Object.getOwnPropertyDescriptors` method
-// https://tc39.es/ecma262/#sec-object.getownpropertydescriptors
-_export({target:'Object',stat:true,sham:!descriptors},{getOwnPropertyDescriptors:function getOwnPropertyDescriptors(object){var O=toIndexedObject(object);var getOwnPropertyDescriptor=objectGetOwnPropertyDescriptor.f;var keys=ownKeys(O);var result={};var index=0;var key,descriptor;while(keys.length>index){descriptor=getOwnPropertyDescriptor(O,key=keys[index++]);if(descriptor!==undefined)createProperty(result,key,descriptor);}return result;}});var getOwnPropertyDescriptors$2=path.Object.getOwnPropertyDescriptors;var getOwnPropertyDescriptors$1=getOwnPropertyDescriptors$2;var getOwnPropertyDescriptors=getOwnPropertyDescriptors$1;// `Object.defineProperties` method
-// https://tc39.es/ecma262/#sec-object.defineproperties
-_export({target:'Object',stat:true,forced:!descriptors,sham:!descriptors},{defineProperties:objectDefineProperties});var defineProperties_1=createCommonjsModule(function(module){var Object=path.Object;var defineProperties=module.exports=function defineProperties(T,D){return Object.defineProperties(T,D);};if(Object.defineProperties.sham)defineProperties.sham=true;});var defineProperties$1=defineProperties_1;var defineProperties=defineProperties$1;var slice$2=[].slice;var factories={};var construct$3=function construct$3(C,argsLength,args){if(!(argsLength in factories)){for(var list=[],i=0;i<argsLength;i++){list[i]='a['+i+']';}// eslint-disable-next-line no-new-func -- we have no proper alternatives, IE8- only
-factories[argsLength]=Function('C,a','return new C('+list.join(',')+')');}return factories[argsLength](C,args);};// `Function.prototype.bind` method implementation
-// https://tc39.es/ecma262/#sec-function.prototype.bind
-var functionBind=Function.bind||function bind(that/* , ...args */){var fn=aFunction(this);var partArgs=slice$2.call(arguments,1);var boundFunction=function bound(){var args=partArgs.concat(slice$2.call(arguments));return this instanceof boundFunction?construct$3(fn,args.length,args):fn.apply(that,args);};if(isObject(fn.prototype))boundFunction.prototype=fn.prototype;return boundFunction;};var nativeConstruct=getBuiltIn('Reflect','construct');// `Reflect.construct` method
-// https://tc39.es/ecma262/#sec-reflect.construct
-// MS Edge supports only 2 arguments and argumentsList argument is optional
-// FF Nightly sets third argument as `new.target`, but does not create `this` from it
-var NEW_TARGET_BUG=fails(function(){function F(){/* empty */}return!(nativeConstruct(function(){/* empty */},[],F)instanceof F);});var ARGS_BUG=!fails(function(){nativeConstruct(function(){/* empty */});});var FORCED$1=NEW_TARGET_BUG||ARGS_BUG;_export({target:'Reflect',stat:true,forced:FORCED$1,sham:FORCED$1},{construct:function construct(Target,args/* , newTarget */){aFunction(Target);anObject(args);var newTarget=arguments.length<3?Target:aFunction(arguments[2]);if(ARGS_BUG&&!NEW_TARGET_BUG)return nativeConstruct(Target,args,newTarget);if(Target==newTarget){// w/o altered newTarget, optimization for 0-4 arguments
-switch(args.length){case 0:return new Target();case 1:return new Target(args[0]);case 2:return new Target(args[0],args[1]);case 3:return new Target(args[0],args[1],args[2]);case 4:return new Target(args[0],args[1],args[2],args[3]);}// w/o altered newTarget, lot of arguments case
-var $args=[null];$args.push.apply($args,args);return new(functionBind.apply(Target,$args))();}// with altered newTarget, not support built-in constructors
-var proto=newTarget.prototype;var instance=objectCreate(isObject(proto)?proto:Object.prototype);var result=Function.apply.call(Target,instance,args);return isObject(result)?result:instance;}});var construct$2=path.Reflect.construct;var construct$1=construct$2;var construct=construct$1;// `Array.isArray` method
-// https://tc39.es/ecma262/#sec-array.isarray
-_export({target:'Array',stat:true},{isArray:isArray$5});var isArray$4=path.Array.isArray;var isArray$3=isArray$4;var isArray$2=isArray$3;var isArray$1=isArray$2;function _arrayLikeToArray(arr,len){if(len==null||len>arr.length)len=arr.length;for(var i=0,arr2=new Array(len);i<len;i++){arr2[i]=arr[i];}return arr2;}function _arrayWithoutHoles(arr){if(isArray$1(arr))return _arrayLikeToArray(arr);}var getIteratorMethod_1=getIteratorMethod$3;var getIteratorMethod$2=getIteratorMethod_1;var getIteratorMethod$1=getIteratorMethod$2;var getIteratorMethod=getIteratorMethod$1;// call something on iterator step with safe closing on error
-var callWithSafeIterationClosing=function callWithSafeIterationClosing(iterator,fn,value,ENTRIES){try{return ENTRIES?fn(anObject(value)[0],value[1]):fn(value);}catch(error){iteratorClose(iterator,'throw',error);}};// `Array.from` method implementation
-// https://tc39.es/ecma262/#sec-array.from
-var arrayFrom=function from(arrayLike/* , mapfn = undefined, thisArg = undefined */){var O=toObject(arrayLike);var C=typeof this=='function'?this:Array;var argumentsLength=arguments.length;var mapfn=argumentsLength>1?arguments[1]:undefined;var mapping=mapfn!==undefined;var iteratorMethod=getIteratorMethod$3(O);var index=0;var length,result,step,iterator,next,value;if(mapping)mapfn=functionBindContext(mapfn,argumentsLength>2?arguments[2]:undefined,2);// if the target is not iterable or it's an array with the default iterator - use a simple case
-if(iteratorMethod!=undefined&&!(C==Array&&isArrayIteratorMethod(iteratorMethod))){iterator=getIterator(O,iteratorMethod);next=iterator.next;result=new C();for(;!(step=next.call(iterator)).done;index++){value=mapping?callWithSafeIterationClosing(iterator,mapfn,[step.value,index],true):step.value;createProperty(result,index,value);}}else{length=toLength(O.length);result=new C(length);for(;length>index;index++){value=mapping?mapfn(O[index],index):O[index];createProperty(result,index,value);}}result.length=index;return result;};var ITERATOR=wellKnownSymbol('iterator');var SAFE_CLOSING=false;try{var called=0;var iteratorWithReturn={next:function next(){return{done:!!called++};},'return':function _return(){SAFE_CLOSING=true;}};iteratorWithReturn[ITERATOR]=function(){return this;};// eslint-disable-next-line es/no-array-from, no-throw-literal -- required for testing
-Array.from(iteratorWithReturn,function(){throw 2;});}catch(error){/* empty */}var checkCorrectnessOfIteration=function checkCorrectnessOfIteration(exec,SKIP_CLOSING){if(!SKIP_CLOSING&&!SAFE_CLOSING)return false;var ITERATION_SUPPORT=false;try{var object={};object[ITERATOR]=function(){return{next:function next(){return{done:ITERATION_SUPPORT=true};}};};exec(object);}catch(error){/* empty */}return ITERATION_SUPPORT;};var INCORRECT_ITERATION=!checkCorrectnessOfIteration(function(iterable){// eslint-disable-next-line es/no-array-from -- required for testing
-Array.from(iterable);});// `Array.from` method
-// https://tc39.es/ecma262/#sec-array.from
-_export({target:'Array',stat:true,forced:INCORRECT_ITERATION},{from:arrayFrom});var from$3=path.Array.from;var from$2=from$3;var from$1=from$2;var from=from$1;function _iterableToArray(iter){if(typeof symbol!=="undefined"&&getIteratorMethod(iter)!=null||iter["@@iterator"]!=null)return from(iter);}var slice$1=slice$4;var slice=slice$1;function _unsupportedIterableToArray(o,minLen){var _context;if(!o)return;if(typeof o==="string")return _arrayLikeToArray(o,minLen);var n=slice(_context=Object.prototype.toString.call(o)).call(_context,8,-1);if(n==="Object"&&o.constructor)n=o.constructor.name;if(n==="Map"||n==="Set")return from(o);if(n==="Arguments"||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return _arrayLikeToArray(o,minLen);}function _nonIterableSpread(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _toConsumableArray(arr){return _arrayWithoutHoles(arr)||_iterableToArray(arr)||_unsupportedIterableToArray(arr)||_nonIterableSpread();}var toConsumableArray=/*#__PURE__*/Object.freeze({__proto__:null,'default':_toConsumableArray});// `Object.create` method
-// https://tc39.es/ecma262/#sec-object.create
-_export({target:'Object',stat:true,sham:!descriptors},{create:objectCreate});var Object$1=path.Object;var create$3=function create(P,D){return Object$1.create(P,D);};var create$2=create$3;var create$1=create$2;var create=create$1;// `Object.setPrototypeOf` method
-// https://tc39.es/ecma262/#sec-object.setprototypeof
-_export({target:'Object',stat:true},{setPrototypeOf:objectSetPrototypeOf});var setPrototypeOf$3=path.Object.setPrototypeOf;var setPrototypeOf$2=setPrototypeOf$3;var setPrototypeOf$1=setPrototypeOf$2;var setPrototypeOf=setPrototypeOf$1;function _setPrototypeOf(o,p){_setPrototypeOf=setPrototypeOf||function _setPrototypeOf(o,p){o.__proto__=p;return o;};return _setPrototypeOf(o,p);}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function");}subClass.prototype=create(superClass&&superClass.prototype,{constructor:{value:subClass,writable:true,configurable:true}});if(superClass)_setPrototypeOf(subClass,superClass);}var inherits=/*#__PURE__*/Object.freeze({__proto__:null,'default':_inherits});function _typeof(obj){"@babel/helpers - typeof";if(typeof symbol==="function"&&typeof iterator==="symbol"){_typeof=function _typeof(obj){return typeof obj;};}else{_typeof=function _typeof(obj){return obj&&typeof symbol==="function"&&obj.constructor===symbol&&obj!==symbol.prototype?"symbol":typeof obj;};}return _typeof(obj);}var _typeof$1=/*#__PURE__*/Object.freeze({__proto__:null,'default':_typeof});function _assertThisInitialized(self){if(self===void 0){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return self;}function _possibleConstructorReturn(self,call){if(call&&(_typeof(call)==="object"||typeof call==="function")){return call;}else if(call!==void 0){throw new TypeError("Derived constructors may only return object or undefined");}return _assertThisInitialized(self);}var possibleConstructorReturn=/*#__PURE__*/Object.freeze({__proto__:null,'default':_possibleConstructorReturn});var FAILS_ON_PRIMITIVES=fails(function(){objectGetPrototypeOf(1);});// `Object.getPrototypeOf` method
-// https://tc39.es/ecma262/#sec-object.getprototypeof
-_export({target:'Object',stat:true,forced:FAILS_ON_PRIMITIVES,sham:!correctPrototypeGetter},{getPrototypeOf:function getPrototypeOf(it){return objectGetPrototypeOf(toObject(it));}});var getPrototypeOf$4=path.Object.getPrototypeOf;var getPrototypeOf$3=getPrototypeOf$4;var getPrototypeOf$2=getPrototypeOf$3;var getPrototypeOf$1=getPrototypeOf$2;function _getPrototypeOf(o){_getPrototypeOf=setPrototypeOf?getPrototypeOf$1:function _getPrototypeOf(o){return o.__proto__||getPrototypeOf$1(o);};return _getPrototypeOf(o);}var getPrototypeOf=/*#__PURE__*/Object.freeze({__proto__:null,'default':_getPrototypeOf});var defineProperty$4=defineProperty$7;var defineProperty$3=defineProperty$4;function _defineProperty(obj,key,value){if(key in obj){defineProperty$3(obj,key,{value:value,enumerable:true,configurable:true,writable:true});}else{obj[key]=value;}return obj;}var defineProperty$2=/*#__PURE__*/Object.freeze({__proto__:null,'default':_defineProperty});function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var classCallCheck=/*#__PURE__*/Object.freeze({__proto__:null,'default':_classCallCheck});function _defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;defineProperty$3(target,descriptor.key,descriptor);}}function _createClass(Constructor,protoProps,staticProps){if(protoProps)_defineProperties(Constructor.prototype,protoProps);if(staticProps)_defineProperties(Constructor,staticProps);return Constructor;}var createClass=/*#__PURE__*/Object.freeze({__proto__:null,'default':_createClass});function _arrayWithHoles(arr){if(isArray$1(arr))return arr;}function _iterableToArrayLimit(arr,i){var _i=arr==null?null:typeof symbol!=="undefined"&&getIteratorMethod(arr)||arr["@@iterator"];if(_i==null)return;var _arr=[];var _n=true;var _d=false;var _s,_e;try{for(_i=_i.call(arr);!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"]!=null)_i["return"]();}finally{if(_d)throw _e;}}return _arr;}function _nonIterableRest(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _slicedToArray(arr,i){return _arrayWithHoles(arr)||_iterableToArrayLimit(arr,i)||_unsupportedIterableToArray(arr,i)||_nonIterableRest();}var slicedToArray=/*#__PURE__*/Object.freeze({__proto__:null,'default':_slicedToArray});var $stringify=getBuiltIn('JSON','stringify');var re=/[\uD800-\uDFFF]/g;var low=/^[\uD800-\uDBFF]$/;var hi=/^[\uDC00-\uDFFF]$/;var fix=function fix(match,offset,string){var prev=string.charAt(offset-1);var next=string.charAt(offset+1);if(low.test(match)&&!hi.test(next)||hi.test(match)&&!low.test(prev)){return"\\u"+match.charCodeAt(0).toString(16);}return match;};var FORCED=fails(function(){return $stringify("\uDF06\uD834")!=="\"\\udf06\\ud834\""||$stringify("\uDEAD")!=="\"\\udead\"";});if($stringify){// `JSON.stringify` method
-// https://tc39.es/ecma262/#sec-json.stringify
-// https://github.com/tc39/proposal-well-formed-stringify
-_export({target:'JSON',stat:true,forced:FORCED},{// eslint-disable-next-line no-unused-vars -- required for `.length`
-stringify:function stringify(it,replacer,space){var result=$stringify.apply(null,arguments);return typeof result=='string'?result.replace(re,fix):result;}});}// eslint-disable-next-line es/no-json -- safe
-if(!path.JSON)path.JSON={stringify:JSON.stringify};// eslint-disable-next-line no-unused-vars -- required for `.length`
-var stringify$2=function stringify(it,replacer,space){return path.JSON.stringify.apply(null,arguments);};var stringify$1=stringify$2;var stringify=stringify$1;// `Number.MAX_SAFE_INTEGER` constant
-// https://tc39.es/ecma262/#sec-number.max_safe_integer
-_export({target:'Number',stat:true},{MAX_SAFE_INTEGER:0x1FFFFFFFFFFFFF});var maxSafeInteger$2=0x1FFFFFFFFFFFFF;var maxSafeInteger$1=maxSafeInteger$2;var maxSafeInteger=maxSafeInteger$1;// eslint-disable-next-line es/no-object-assign -- safe
-var $assign=Object.assign;// eslint-disable-next-line es/no-object-defineproperty -- required for testing
-var defineProperty$1=Object.defineProperty;// `Object.assign` method
-// https://tc39.es/ecma262/#sec-object.assign
-var objectAssign=!$assign||fails(function(){// should have correct order of operations (Edge bug)
-if(descriptors&&$assign({b:1},$assign(defineProperty$1({},'a',{enumerable:true,get:function get(){defineProperty$1(this,'b',{value:3,enumerable:false});}}),{b:2})).b!==1)return true;// should work with symbols and should have deterministic property order (V8 bug)
-var A={};var B={};// eslint-disable-next-line es/no-symbol -- safe
-var symbol=Symbol();var alphabet='abcdefghijklmnopqrst';A[symbol]=7;alphabet.split('').forEach(function(chr){B[chr]=chr;});return $assign({},A)[symbol]!=7||objectKeys($assign({},B)).join('')!=alphabet;})?function assign(target,source){// eslint-disable-line no-unused-vars -- required for `.length`
-var T=toObject(target);var argumentsLength=arguments.length;var index=1;var getOwnPropertySymbols=objectGetOwnPropertySymbols.f;var propertyIsEnumerable=objectPropertyIsEnumerable.f;while(argumentsLength>index){var S=indexedObject(arguments[index++]);var keys=getOwnPropertySymbols?objectKeys(S).concat(getOwnPropertySymbols(S)):objectKeys(S);var length=keys.length;var j=0;var key;while(length>j){key=keys[j++];if(!descriptors||propertyIsEnumerable.call(S,key))T[key]=S[key];}}return T;}:$assign;// `Object.assign` method
-// https://tc39.es/ecma262/#sec-object.assign
-// eslint-disable-next-line es/no-object-assign -- required for testing
-_export({target:'Object',stat:true,forced:Object.assign!==objectAssign},{assign:objectAssign});var assign$2=path.Object.assign;var assign$1=assign$2;var assign=assign$1;var propertyIsEnumerable=objectPropertyIsEnumerable.f;// `Object.{ entries, values }` methods implementation
-var createMethod=function createMethod(TO_ENTRIES){return function(it){var O=toIndexedObject(it);var keys=objectKeys(O);var length=keys.length;var i=0;var result=[];var key;while(length>i){key=keys[i++];if(!descriptors||propertyIsEnumerable.call(O,key)){result.push(TO_ENTRIES?[key,O[key]]:O[key]);}}return result;};};var objectToArray={// `Object.entries` method
-// https://tc39.es/ecma262/#sec-object.entries
-entries:createMethod(true),// `Object.values` method
-// https://tc39.es/ecma262/#sec-object.values
-values:createMethod(false)};var $entries=objectToArray.entries;// `Object.entries` method
-// https://tc39.es/ecma262/#sec-object.entries
-_export({target:'Object',stat:true},{entries:function entries(O){return $entries(O);}});var entries$2=path.Object.entries;var entries$1=entries$2;var entries=entries$1;var $values=objectToArray.values;// `Object.values` method
-// https://tc39.es/ecma262/#sec-object.values
-_export({target:'Object',stat:true},{values:function values(O){return $values(O);}});var values$2=path.Object.values;var values$1=values$2;var values=values$1;var isArray=isArray$3;var SPECIES=wellKnownSymbol('species');var setSpecies=function setSpecies(CONSTRUCTOR_NAME){var Constructor=getBuiltIn(CONSTRUCTOR_NAME);var defineProperty=objectDefineProperty.f;if(descriptors&&Constructor&&!Constructor[SPECIES]){defineProperty(Constructor,SPECIES,{configurable:true,get:function get(){return this;}});}};var defineProperty=objectDefineProperty.f;var fastKey=internalMetadata.fastKey;var setInternalState=internalState.set;var internalStateGetterFor=internalState.getterFor;var collectionStrong={getConstructor:function getConstructor(wrapper,CONSTRUCTOR_NAME,IS_MAP,ADDER){var C=wrapper(function(that,iterable){anInstance(that,C,CONSTRUCTOR_NAME);setInternalState(that,{type:CONSTRUCTOR_NAME,index:objectCreate(null),first:undefined,last:undefined,size:0});if(!descriptors)that.size=0;if(iterable!=undefined)iterate(iterable,that[ADDER],{that:that,AS_ENTRIES:IS_MAP});});var getInternalState=internalStateGetterFor(CONSTRUCTOR_NAME);var define=function define(that,key,value){var state=getInternalState(that);var entry=getEntry(that,key);var previous,index;// change existing entry
-if(entry){entry.value=value;// create new entry
-}else{state.last=entry={index:index=fastKey(key,true),key:key,value:value,previous:previous=state.last,next:undefined,removed:false};if(!state.first)state.first=entry;if(previous)previous.next=entry;if(descriptors)state.size++;else that.size++;// add to index
-if(index!=='F')state.index[index]=entry;}return that;};var getEntry=function getEntry(that,key){var state=getInternalState(that);// fast case
-var index=fastKey(key);var entry;if(index!=='F')return state.index[index];// frozen object case
-for(entry=state.first;entry;entry=entry.next){if(entry.key==key)return entry;}};redefineAll(C.prototype,{// `{ Map, Set }.prototype.clear()` methods
-// https://tc39.es/ecma262/#sec-map.prototype.clear
-// https://tc39.es/ecma262/#sec-set.prototype.clear
-clear:function clear(){var that=this;var state=getInternalState(that);var data=state.index;var entry=state.first;while(entry){entry.removed=true;if(entry.previous)entry.previous=entry.previous.next=undefined;delete data[entry.index];entry=entry.next;}state.first=state.last=undefined;if(descriptors)state.size=0;else that.size=0;},// `{ Map, Set }.prototype.delete(key)` methods
-// https://tc39.es/ecma262/#sec-map.prototype.delete
-// https://tc39.es/ecma262/#sec-set.prototype.delete
-'delete':function _delete(key){var that=this;var state=getInternalState(that);var entry=getEntry(that,key);if(entry){var next=entry.next;var prev=entry.previous;delete state.index[entry.index];entry.removed=true;if(prev)prev.next=next;if(next)next.previous=prev;if(state.first==entry)state.first=next;if(state.last==entry)state.last=prev;if(descriptors)state.size--;else that.size--;}return!!entry;},// `{ Map, Set }.prototype.forEach(callbackfn, thisArg = undefined)` methods
-// https://tc39.es/ecma262/#sec-map.prototype.foreach
-// https://tc39.es/ecma262/#sec-set.prototype.foreach
-forEach:function forEach(callbackfn/* , that = undefined */){var state=getInternalState(this);var boundFunction=functionBindContext(callbackfn,arguments.length>1?arguments[1]:undefined,3);var entry;while(entry=entry?entry.next:state.first){boundFunction(entry.value,entry.key,this);// revert to the last existing entry
-while(entry&&entry.removed){entry=entry.previous;}}},// `{ Map, Set}.prototype.has(key)` methods
-// https://tc39.es/ecma262/#sec-map.prototype.has
-// https://tc39.es/ecma262/#sec-set.prototype.has
-has:function has(key){return!!getEntry(this,key);}});redefineAll(C.prototype,IS_MAP?{// `Map.prototype.get(key)` method
-// https://tc39.es/ecma262/#sec-map.prototype.get
-get:function get(key){var entry=getEntry(this,key);return entry&&entry.value;},// `Map.prototype.set(key, value)` method
-// https://tc39.es/ecma262/#sec-map.prototype.set
-set:function set(key,value){return define(this,key===0?0:key,value);}}:{// `Set.prototype.add(value)` method
-// https://tc39.es/ecma262/#sec-set.prototype.add
-add:function add(value){return define(this,value=value===0?0:value,value);}});if(descriptors)defineProperty(C.prototype,'size',{get:function get(){return getInternalState(this).size;}});return C;},setStrong:function setStrong(C,CONSTRUCTOR_NAME,IS_MAP){var ITERATOR_NAME=CONSTRUCTOR_NAME+' Iterator';var getInternalCollectionState=internalStateGetterFor(CONSTRUCTOR_NAME);var getInternalIteratorState=internalStateGetterFor(ITERATOR_NAME);// `{ Map, Set }.prototype.{ keys, values, entries, @@iterator }()` methods
-// https://tc39.es/ecma262/#sec-map.prototype.entries
-// https://tc39.es/ecma262/#sec-map.prototype.keys
-// https://tc39.es/ecma262/#sec-map.prototype.values
-// https://tc39.es/ecma262/#sec-map.prototype-@@iterator
-// https://tc39.es/ecma262/#sec-set.prototype.entries
-// https://tc39.es/ecma262/#sec-set.prototype.keys
-// https://tc39.es/ecma262/#sec-set.prototype.values
-// https://tc39.es/ecma262/#sec-set.prototype-@@iterator
-defineIterator(C,CONSTRUCTOR_NAME,function(iterated,kind){setInternalState(this,{type:ITERATOR_NAME,target:iterated,state:getInternalCollectionState(iterated),kind:kind,last:undefined});},function(){var state=getInternalIteratorState(this);var kind=state.kind;var entry=state.last;// revert to the last existing entry
-while(entry&&entry.removed){entry=entry.previous;}// get next entry
-if(!state.target||!(state.last=entry=entry?entry.next:state.state.first)){// or finish the iteration
-state.target=undefined;return{value:undefined,done:true};}// return step by kind
-if(kind=='keys')return{value:entry.key,done:false};if(kind=='values')return{value:entry.value,done:false};return{value:[entry.key,entry.value],done:false};},IS_MAP?'entries':'values',!IS_MAP,true);// `{ Map, Set }.prototype[@@species]` accessors
-// https://tc39.es/ecma262/#sec-get-map-@@species
-// https://tc39.es/ecma262/#sec-get-set-@@species
-setSpecies(CONSTRUCTOR_NAME);}};// `Set` constructor
-// https://tc39.es/ecma262/#sec-set-objects
-collection('Set',function(init){return function Set(){return init(this,arguments.length?arguments[0]:undefined);};},collectionStrong);var set$2=path.Set;var set$1=set$2;var set=set$1;// First coord is octaves, second is fifths. Distances are relative to c
-var notes={c:[0,0],d:[-1,2],e:[-2,4],f:[1,-1],g:[0,1],a:[-1,3],b:[-2,5],h:[-2,5]};var notecoord=function notecoord(name){return name in notes?[notes[name][0],notes[name][1]]:null;};var notes_1=notes;var A4=[3,3];// Relative to C0 (scientic notation, ~16.35Hz)
-var sharp$1=[-4,7];notecoord.notes=notes_1;notecoord.A4=A4;notecoord.sharp=sharp$1;var accidentalValues={'bb':-2,'b':-1,'':0,'#':1,'x':2};var accidentalValue=function accidentalNumber(acc){return accidentalValues[acc];};var interval$1=function accidentalInterval(acc){var val=accidentalValues[acc];return[-4*val,7*val];};accidentalValue.interval=interval$1;var scientificNotation=function scientific(name){var format=/^([a-h])(x|#|bb|b?)(-?\d*)/i;var parser=name.match(format);if(!(parser&&name===parser[0]&&parser[3].length))return;var noteName=parser[1];var octave=+parser[3];var accidental=parser[2].length?parser[2].toLowerCase():'';var accidentalValue$1=accidentalValue.interval(accidental);var coord=notecoord(noteName.toLowerCase());coord[0]+=octave;coord[0]+=accidentalValue$1[0]-notecoord.A4[0];coord[1]+=accidentalValue$1[1]-notecoord.A4[1];return coord;};var helmholtz=function helmholtz(name){var name=name.replace(/\u2032/g,"'").replace(/\u0375/g,',');var parts=name.match(/^(,*)([a-h])(x|#|bb|b?)([,\']*)$/i);if(!parts||name!==parts[0])throw new Error('Invalid formatting');var note=parts[2];var octaveFirst=parts[1];var octaveLast=parts[4];var lower=note===note.toLowerCase();var octave;if(octaveFirst){if(lower)throw new Error('Invalid formatting - found commas before lowercase note');octave=2-octaveFirst.length;}else if(octaveLast){if(octaveLast.match(/^'+$/)&&lower)octave=3+octaveLast.length;else if(octaveLast.match(/^,+$/)&&!lower)octave=2-octaveLast.length;else throw new Error('Invalid formatting - mismatch between octave '+'indicator and letter case');}else octave=lower?3:2;var accidentalValue$1=accidentalValue.interval(parts[3].toLowerCase());var coord=notecoord(note.toLowerCase());coord[0]+=octave;coord[0]+=accidentalValue$1[0]-notecoord.A4[0];coord[1]+=accidentalValue$1[1]-notecoord.A4[1];return coord;};var pitchFq=function pitchFq(coord,stdPitch){if(typeof coord==='number'){stdPitch=coord;return function(coord){return stdPitch*Math.pow(2,(coord[0]*12+coord[1]*7)/12);};}stdPitch=stdPitch||440;return stdPitch*Math.pow(2,(coord[0]*12+coord[1]*7)/12);};// Note coordinates [octave, fifth] relative to C
-var knowledge={notes:{c:[0,0],d:[-1,2],e:[-2,4],f:[1,-1],g:[0,1],a:[-1,3],b:[-2,5],h:[-2,5]},intervals:{unison:[0,0],second:[3,-5],third:[2,-3],fourth:[1,-1],fifth:[0,1],sixth:[3,-4],seventh:[2,-2],octave:[1,0]},intervalFromFifth:['second','sixth','third','seventh','fourth','unison','fifth'],intervalsIndex:['unison','second','third','fourth','fifth','sixth','seventh','octave','ninth','tenth','eleventh','twelfth','thirteenth','fourteenth','fifteenth'],// linear index to fifth = (2 * index + 1) % 7
-fifths:['f','c','g','d','a','e','b'],accidentals:['bb','b','','#','x'],sharp:[-4,7],A4:[3,3],durations:{'0.25':'longa','0.5':'breve','1':'whole','2':'half','4':'quarter','8':'eighth','16':'sixteenth','32':'thirty-second','64':'sixty-fourth','128':'hundred-twenty-eighth'},qualityLong:{P:'perfect',M:'major',m:'minor',A:'augmented',AA:'doubly augmented',d:'diminished',dd:'doubly diminished'},alterations:{perfect:['dd','d','P','A','AA'],minor:['dd','d','m','M','A','AA']},symbols:{'min':['m3','P5'],'m':['m3','P5'],'-':['m3','P5'],'M':['M3','P5'],'':['M3','P5'],'+':['M3','A5'],'aug':['M3','A5'],'dim':['m3','d5'],'o':['m3','d5'],'maj':['M3','P5','M7'],'dom':['M3','P5','m7'],'ø':['m3','d5','m7'],'5':['P5']},chordShort:{'major':'M','minor':'m','augmented':'aug','diminished':'dim','half-diminished':'7b5','power':'5','dominant':'7'},stepNumber:{'unison':1,'first':1,'second':2,'third':3,'fourth':4,'fifth':5,'sixth':6,'seventh':7,'octave':8,'ninth':9,'eleventh':11,'thirteenth':13},// Adjusted Shearer syllables - Chromatic solfege system
-// Some intervals are not provided for. These include:
-// dd2 - Doubly diminished second
-// dd3 - Doubly diminished third
-// AA3 - Doubly augmented third
-// dd6 - Doubly diminished sixth
-// dd7 - Doubly diminished seventh
-// AA7 - Doubly augmented seventh
-intervalSolfege:{'dd1':'daw','d1':'de','P1':'do','A1':'di','AA1':'dai','d2':'raw','m2':'ra','M2':'re','A2':'ri','AA2':'rai','d3':'maw','m3':'me','M3':'mi','A3':'mai','dd4':'faw','d4':'fe','P4':'fa','A4':'fi','AA4':'fai','dd5':'saw','d5':'se','P5':'so','A5':'si','AA5':'sai','d6':'law','m6':'le','M6':'la','A6':'li','AA6':'lai','d7':'taw','m7':'te','M7':'ti','A7':'tai','dd8':'daw','d8':'de','P8':'do','A8':'di','AA8':'dai'}};var vector={add:function add(note,interval){return[note[0]+interval[0],note[1]+interval[1]];},sub:function sub(note,interval){return[note[0]-interval[0],note[1]-interval[1]];},mul:function mul(note,interval){if(typeof interval==='number')return[note[0]*interval,note[1]*interval];else return[note[0]*interval[0],note[1]*interval[1]];},sum:function sum(coord){return coord[0]+coord[1];}};var pattern$1=/^(AA|A|P|M|m|d|dd)(-?\d+)$/;// The interval it takes to raise a note a semitone
-var sharp=[-4,7];var pAlts=['dd','d','P','A','AA'];var mAlts=['dd','d','m','M','A','AA'];var baseIntervals=[[0,0],[3,-5],[2,-3],[1,-1],[0,1],[3,-4],[2,-2],[1,0]];var intervalCoords=function intervalCoords(simple){var parser=simple.match(pattern$1);if(!parser)return null;var quality=parser[1];var number=+parser[2];var sign=number<0?-1:1;number=sign<0?-number:number;var lower=number>8?number%7||7:number;var octaves=(number-lower)/7;var base=baseIntervals[lower-1];var alts=base[0]<=1?pAlts:mAlts;var alt=alts.indexOf(quality)-2;// this happens, if the alteration wasn't suitable for this type
-// of interval, such as P2 or M5 (no "perfect second" or "major fifth")
-if(alt===-3)return null;return[sign*(base[0]+octaves+sharp[0]*alt),sign*(base[1]+sharp[1]*alt)];};// Copy to avoid overwriting internal base intervals
-var coords=baseIntervals.slice(0);intervalCoords.coords=coords;function Interval(coord){if(!(this instanceof Interval))return new Interval(coord);this.coord=coord;}Interval.prototype={name:function name(){return knowledge.intervalsIndex[this.number()-1];},semitones:function semitones(){return vector.sum(vector.mul(this.coord,[12,7]));},number:function number(){return Math.abs(this.value());},value:function value(){var toMultiply=Math.floor((this.coord[1]-2)/7)+1;var product=vector.mul(knowledge.sharp,toMultiply);var without=vector.sub(this.coord,product);var i=knowledge.intervalFromFifth[without[1]+5];var diff=without[0]-knowledge.intervals[i][0];var val=knowledge.stepNumber[i]+diff*7;return val>0?val:val-2;},type:function type(){return knowledge.intervals[this.base()][0]<=1?'perfect':'minor';},base:function base(){var product=vector.mul(knowledge.sharp,this.qualityValue());var fifth=vector.sub(this.coord,product)[1];fifth=this.value()>0?fifth+5:-(fifth-5)%7;fifth=fifth<0?knowledge.intervalFromFifth.length+fifth:fifth;var name=knowledge.intervalFromFifth[fifth];if(name==='unison'&&this.number()>=8)name='octave';return name;},direction:function direction(dir){if(dir){var is=this.value()>=1?'up':'down';if(is!==dir)this.coord=vector.mul(this.coord,-1);return this;}else return this.value()>=1?'up':'down';},simple:function simple(ignore){// Get the (upwards) base interval (with quality)
-var simple=knowledge.intervals[this.base()];var toAdd=vector.mul(knowledge.sharp,this.qualityValue());simple=vector.add(simple,toAdd);// Turn it around if necessary
-if(!ignore)simple=this.direction()==='down'?vector.mul(simple,-1):simple;return new Interval(simple);},isCompound:function isCompound(){return this.number()>8;},octaves:function octaves(){var toSubtract,without,octaves;if(this.direction()==='up'){toSubtract=vector.mul(knowledge.sharp,this.qualityValue());without=vector.sub(this.coord,toSubtract);octaves=without[0]-knowledge.intervals[this.base()][0];}else{toSubtract=vector.mul(knowledge.sharp,-this.qualityValue());without=vector.sub(this.coord,toSubtract);octaves=-(without[0]+knowledge.intervals[this.base()][0]);}return octaves;},invert:function invert(){var i=this.base();var qual=this.qualityValue();var acc=this.type()==='minor'?-(qual-1):-qual;var idx=9-knowledge.stepNumber[i]-1;var coord=knowledge.intervals[knowledge.intervalsIndex[idx]];coord=vector.add(coord,vector.mul(knowledge.sharp,acc));return new Interval(coord);},quality:function quality(lng){var quality=knowledge.alterations[this.type()][this.qualityValue()+2];return lng?knowledge.qualityLong[quality]:quality;},qualityValue:function qualityValue(){if(this.direction()==='down')return Math.floor((-this.coord[1]-2)/7)+1;else return Math.floor((this.coord[1]-2)/7)+1;},equal:function equal(interval){return this.coord[0]===interval.coord[0]&&this.coord[1]===interval.coord[1];},greater:function greater(interval){var semi=this.semitones();var isemi=interval.semitones();// If equal in absolute size, measure which interval is bigger
-// For example P4 is bigger than A3
-return semi===isemi?this.number()>interval.number():semi>isemi;},smaller:function smaller(interval){return!this.equal(interval)&&!this.greater(interval);},add:function add(interval){return new Interval(vector.add(this.coord,interval.coord));},toString:function toString(ignore){// If given true, return the positive value
-var number=ignore?this.number():this.value();return this.quality()+number;}};Interval.toCoord=function(simple){var coord=intervalCoords(simple);if(!coord)throw new Error('Invalid simple format interval');return new Interval(coord);};Interval.from=function(from,to){return from.interval(to);};Interval.between=function(from,to){return new Interval(vector.sub(to.coord,from.coord));};Interval.invert=function(sInterval){return Interval.toCoord(sInterval).invert().toString();};var _interval=Interval;function pad(str,ch,len){for(;len>0;len--){str+=ch;}return str;}function Note(coord,duration){if(!(this instanceof Note))return new Note(coord,duration);duration=duration||{};this.duration={value:duration.value||4,dots:duration.dots||0};this.coord=coord;}Note.prototype={octave:function octave(){return this.coord[0]+knowledge.A4[0]-knowledge.notes[this.name()][0]+this.accidentalValue()*4;},name:function name(){var value=this.accidentalValue();var idx=this.coord[1]+knowledge.A4[1]-value*7+1;return knowledge.fifths[idx];},accidentalValue:function accidentalValue(){return Math.round((this.coord[1]+knowledge.A4[1]-2)/7);},accidental:function accidental(){return knowledge.accidentals[this.accidentalValue()+2];},/**
-   * Returns the key number of the note
-   */key:function key(white){if(white)return this.coord[0]*7+this.coord[1]*4+29;else return this.coord[0]*12+this.coord[1]*7+49;},/**
-  * Returns a number ranging from 0-127 representing a MIDI note value
-  */midi:function midi(){return this.key()+20;},/**
-   * Calculates and returns the frequency of the note.
-   * Optional concert pitch (def. 440)
-   */fq:function fq(concertPitch){return pitchFq(this.coord,concertPitch);},/**
-   * Returns the pitch class index (chroma) of the note
-   */chroma:function chroma(){var value=(vector.sum(vector.mul(this.coord,[12,7]))-3)%12;return value<0?value+12:value;},interval:function interval(interval$1){if(typeof interval$1==='string')interval$1=_interval.toCoord(interval$1);if(interval$1 instanceof _interval)return new Note(vector.add(this.coord,interval$1.coord),this.duration);else if(interval$1 instanceof Note)return new _interval(vector.sub(interval$1.coord,this.coord));},transpose:function transpose(interval){this.coord=vector.add(this.coord,interval.coord);return this;},/**
-   * Returns the Helmholtz notation form of the note (fx C,, d' F# g#'')
-   */helmholtz:function helmholtz(){var octave=this.octave();var name=this.name();name=octave<3?name.toUpperCase():name.toLowerCase();var padchar=octave<3?',':'\'';var padcount=octave<2?2-octave:octave-3;return pad(name+this.accidental(),padchar,padcount);},/**
-   * Returns the scientific notation form of the note (fx E4, Bb3, C#7 etc.)
-   */scientific:function scientific(){return this.name().toUpperCase()+this.accidental()+this.octave();},/**
-   * Returns notes that are enharmonic with this note.
-   */enharmonics:function enharmonics(oneaccidental){var key=this.key(),limit=oneaccidental?2:3;return['m3','m2','m-2','m-3'].map(this.interval.bind(this)).filter(function(note){var acc=note.accidentalValue();var diff=key-(note.key()-acc);if(diff<limit&&diff>-limit){var product=vector.mul(knowledge.sharp,diff-acc);note.coord=vector.add(note.coord,product);return true;}});},solfege:function solfege(scale,showOctaves){var interval=scale.tonic.interval(this),solfege,stroke,count;if(interval.direction()==='down')interval=interval.invert();if(showOctaves){count=(this.key(true)-scale.tonic.key(true))/7;count=count>=0?Math.floor(count):-Math.ceil(-count);stroke=count>=0?'\'':',';}solfege=knowledge.intervalSolfege[interval.simple(true).toString()];return showOctaves?pad(solfege,stroke,Math.abs(count)):solfege;},scaleDegree:function scaleDegree(scale){var inter=scale.tonic.interval(this);// If the direction is down, or we're dealing with an octave - invert it
-if(inter.direction()==='down'||inter.coord[1]===0&&inter.coord[0]!==0){inter=inter.invert();}inter=inter.simple(true).coord;return scale.scale.reduce(function(index,current,i){var coord=_interval.toCoord(current).coord;return coord[0]===inter[0]&&coord[1]===inter[1]?i+1:index;},0);},/**
-   * Returns the name of the duration value,
-   * such as 'whole', 'quarter', 'sixteenth' etc.
-   */durationName:function durationName(){return knowledge.durations[this.duration.value];},/**
-   * Returns the duration of the note (including dots)
-   * in seconds. The first argument is the tempo in beats
-   * per minute, the second is the beat unit (i.e. the
-   * lower numeral in a time signature).
-   */durationInSeconds:function durationInSeconds(bpm,beatUnit){var secs=60/bpm/(this.duration.value/4)/(beatUnit/4);return secs*2-secs/Math.pow(2,this.duration.dots);},/**
-   * Returns the name of the note, with an optional display of octave number
-   */toString:function toString(dont){return this.name()+this.accidental()+(dont?'':this.octave());}};Note.fromString=function(name,dur){var coord=scientificNotation(name);if(!coord)coord=helmholtz(name);return new Note(coord,dur);};Note.fromKey=function(key){var octave=Math.floor((key-4)/12);var distance=key-octave*12-4;var name=knowledge.fifths[(2*Math.round(distance/2)+1)%7];var subDiff=vector.sub(knowledge.notes[name],knowledge.A4);var note=vector.add(subDiff,[octave+1,0]);var diff=key-49-vector.sum(vector.mul(note,[12,7]));var arg=diff?vector.add(note,vector.mul(knowledge.sharp,diff)):note;return new Note(arg);};Note.fromFrequency=function(fq,concertPitch){var key,cents,originalFq;concertPitch=concertPitch||440;key=49+12*((Math.log(fq)-Math.log(concertPitch))/Math.log(2));key=Math.round(key);originalFq=concertPitch*Math.pow(2,(key-49)/12);cents=1200*(Math.log(fq/originalFq)/Math.log(2));return{note:Note.fromKey(key),cents:cents};};Note.fromMIDI=function(note){return Note.fromKey(note-20);};var note=Note;var SYMBOLS={'m':['m3','P5'],'mi':['m3','P5'],'min':['m3','P5'],'-':['m3','P5'],'M':['M3','P5'],'ma':['M3','P5'],'':['M3','P5'],'+':['M3','A5'],'aug':['M3','A5'],'dim':['m3','d5'],'o':['m3','d5'],'maj':['M3','P5','M7'],'dom':['M3','P5','m7'],'ø':['m3','d5','m7'],'5':['P5'],'6/9':['M3','P5','M6','M9']};var daccord=function daccord(symbol){var c,parsing='quality',additionals=[],name,chordLength=2;var notes=['P1','M3','P5','m7','M9','P11','M13'];var explicitMajor=false;function setChord(name){var intervals=SYMBOLS[name];for(var i=0,len=intervals.length;i<len;i++){notes[i+1]=intervals[i];}chordLength=intervals.length;}// Remove whitespace, commas and parentheses
-symbol=symbol.replace(/[,\s\(\)]/g,'');for(var i=0,len=symbol.length;i<len;i++){if(!(c=symbol[i]))return;if(parsing==='quality'){var sub3=i+2<len?symbol.substr(i,3).toLowerCase():null;var sub2=i+1<len?symbol.substr(i,2).toLowerCase():null;if(sub3 in SYMBOLS)name=sub3;else if(sub2 in SYMBOLS)name=sub2;else if(c in SYMBOLS)name=c;else name='';if(name)setChord(name);if(name==='M'||name==='ma'||name==='maj')explicitMajor=true;i+=name.length-1;parsing='extension';}else if(parsing==='extension'){c=c==='1'&&symbol[i+1]?+symbol.substr(i,2):+c;if(!isNaN(c)&&c!==6){chordLength=(c-1)/2;if(chordLength!==Math.round(chordLength))return new Error('Invalid interval extension: '+c.toString(10));if(name==='o'||name==='dim')notes[3]='d7';else if(explicitMajor)notes[3]='M7';i+=c>=10?1:0;}else if(c===6){notes[3]='M6';chordLength=Math.max(3,chordLength);}else i-=1;parsing='alterations';}else if(parsing==='alterations'){var alterations=symbol.substr(i).split(/(#|b|add|maj|sus|M)/i),flat=false,sharp=false;if(alterations.length===1)return new Error('Invalid alteration');else if(alterations[0].length!==0)return new Error('Invalid token: \''+alterations[0]+'\'');var ignore=false;alterations.forEach(function(alt,i,arr){if(ignore||!alt.length)return ignore=false;var next=arr[i+1],lower=alt.toLowerCase();if(alt==='M'||lower==='maj'){if(next==='7')ignore=true;chordLength=Math.max(3,chordLength);notes[3]='M7';}else if(lower==='sus'){var type='P4';if(next==='2'||next==='4'){ignore=true;if(next==='2')type='M2';}notes[1]=type;// Replace third with M2 or P4
-}else if(lower==='add'){if(next==='9')additionals.push('M9');else if(next==='11')additionals.push('P11');else if(next==='13')additionals.push('M13');ignore=true;}else if(lower==='b'){flat=true;}else if(lower==='#'){sharp=true;}else{var token=+alt,quality,intPos;if(isNaN(token)||String(token).length!==alt.length)return new Error('Invalid token: \''+alt+'\'');if(token===6){if(sharp)notes[3]='A6';else if(flat)notes[3]='m6';else notes[3]='M6';chordLength=Math.max(3,chordLength);return;}// Calculate the position in the 'note' array
-intPos=(token-1)/2;if(chordLength<intPos)chordLength=intPos;if(token<5||token===7||intPos!==Math.round(intPos))return new Error('Invalid interval alteration: '+token);quality=notes[intPos][0];// Alterate the quality of the interval according the accidentals
-if(sharp){if(quality==='d')quality='m';else if(quality==='m')quality='M';else if(quality==='M'||quality==='P')quality='A';}else if(flat){if(quality==='A')quality='M';else if(quality==='M')quality='m';else if(quality==='m'||quality==='P')quality='d';}sharp=flat=false;notes[intPos]=quality+token;}});parsing='ended';}else if(parsing==='ended'){break;}}return notes.slice(0,chordLength+1).concat(additionals);};function Chord(root,name){if(!(this instanceof Chord))return new Chord(root,name);name=name||'';this.name=root.name().toUpperCase()+root.accidental()+name;this.symbol=name;this.root=root;this.intervals=[];this._voicing=[];var bass=name.split('/');if(bass.length===2&&bass[1].trim()!=='9'){name=bass[0];bass=bass[1].trim();}else{bass=null;}this.intervals=daccord(name).map(_interval.toCoord);this._voicing=this.intervals.slice();if(bass){var intervals=this.intervals,bassInterval,note$1;// Make sure the bass is atop of the root note
-note$1=note.fromString(bass+(root.octave()+1));// crude
-bassInterval=_interval.between(root,note$1);bass=bassInterval.simple();bassInterval=bassInterval.invert().direction('down');this._voicing=[bassInterval];for(var i=0,length=intervals.length;i<length;i++){if(!intervals[i].simple().equal(bass))this._voicing.push(intervals[i]);}}}Chord.prototype={notes:function notes(){var root=this.root;return this.voicing().map(function(interval){return root.interval(interval);});},simple:function simple(){return this.notes().map(function(n){return n.toString(true);});},bass:function bass(){return this.root.interval(this._voicing[0]);},voicing:function voicing(_voicing){// Get the voicing
-if(!_voicing){return this._voicing;}// Set the voicing
-this._voicing=[];for(var i=0,length=_voicing.length;i<length;i++){this._voicing[i]=_interval.toCoord(_voicing[i]);}return this;},resetVoicing:function resetVoicing(){this._voicing=this.intervals;},dominant:function dominant(additional){additional=additional||'';return new Chord(this.root.interval('P5'),additional);},subdominant:function subdominant(additional){additional=additional||'';return new Chord(this.root.interval('P4'),additional);},parallel:function parallel(additional){var quality=this.quality();if(this.chordType()!=='triad'||quality==='diminished'||quality==='augmented'){throw new Error('Only major/minor triads have parallel chords');}if(quality==='major'){return new Chord(this.root.interval('m3','down'),'m');}else{return new Chord(this.root.interval('m3','up'));}},quality:function quality(){var third,fifth,seventh,intervals=this.intervals;for(var i=0,length=intervals.length;i<length;i++){if(intervals[i].number()===3){third=intervals[i];}else if(intervals[i].number()===5){fifth=intervals[i];}else if(intervals[i].number()===7){seventh=intervals[i];}}if(!third){return;}third=third.direction()==='down'?third.invert():third;third=third.simple().toString();if(fifth){fifth=fifth.direction==='down'?fifth.invert():fifth;fifth=fifth.simple().toString();}if(seventh){seventh=seventh.direction==='down'?seventh.invert():seventh;seventh=seventh.simple().toString();}if(third==='M3'){if(fifth==='A5'){return'augmented';}else if(fifth==='P5'){return seventh==='m7'?'dominant':'major';}return'major';}else if(third==='m3'){if(fifth==='P5'){return'minor';}else if(fifth==='d5'){return seventh==='m7'?'half-diminished':'diminished';}return'minor';}},chordType:function chordType(){// In need of better name
-var length=this.intervals.length,interval,has,invert,i,name;if(length===2){return'dyad';}else if(length===3){has={unison:false,third:false,fifth:false};for(i=0;i<length;i++){interval=this.intervals[i];invert=interval.invert();if(interval.base()in has){has[interval.base()]=true;}else if(invert.base()in has){has[invert.base()]=true;}}name=has.unison&&has.third&&has.fifth?'triad':'trichord';}else if(length===4){has={unison:false,third:false,fifth:false,seventh:false};for(i=0;i<length;i++){interval=this.intervals[i];invert=interval.invert();if(interval.base()in has){has[interval.base()]=true;}else if(invert.base()in has){has[invert.base()]=true;}}if(has.unison&&has.third&&has.fifth&&has.seventh){name='tetrad';}}return name||'unknown';},get:function get(interval){if(typeof interval==='string'&&interval in knowledge.stepNumber){var intervals=this.intervals,i,length;interval=knowledge.stepNumber[interval];for(i=0,length=intervals.length;i<length;i++){if(intervals[i].number()===interval){return this.root.interval(intervals[i]);}}return null;}else{throw new Error('Invalid interval name');}},interval:function interval(_interval2){return new Chord(this.root.interval(_interval2),this.symbol);},transpose:function transpose(interval){this.root.transpose(interval);this.name=this.root.name().toUpperCase()+this.root.accidental()+this.symbol;return this;},toString:function toString(){return this.name;}};var chord=Chord;var scales={aeolian:['P1','M2','m3','P4','P5','m6','m7'],blues:['P1','m3','P4','d5','P5','m7'],chromatic:['P1','m2','M2','m3','M3','P4','A4','P5','m6','M6','m7','M7'],dorian:['P1','M2','m3','P4','P5','M6','m7'],doubleharmonic:['P1','m2','M3','P4','P5','m6','M7'],harmonicminor:['P1','M2','m3','P4','P5','m6','M7'],ionian:['P1','M2','M3','P4','P5','M6','M7'],locrian:['P1','m2','m3','P4','d5','m6','m7'],lydian:['P1','M2','M3','A4','P5','M6','M7'],majorpentatonic:['P1','M2','M3','P5','M6'],melodicminor:['P1','M2','m3','P4','P5','M6','M7'],minorpentatonic:['P1','m3','P4','P5','m7'],mixolydian:['P1','M2','M3','P4','P5','M6','m7'],phrygian:['P1','m2','m3','P4','P5','m6','m7'],wholetone:['P1','M2','M3','A4','A5','A6']};// synonyms
-scales.harmonicchromatic=scales.chromatic;scales.minor=scales.aeolian;scales.major=scales.ionian;scales.flamenco=scales.doubleharmonic;function Scale(tonic,scale){if(!(this instanceof Scale))return new Scale(tonic,scale);var scaleName,i;if(!('coord'in tonic)){throw new Error('Invalid Tonic');}if(typeof scale==='string'){scaleName=scale;scale=scales[scale];if(!scale)throw new Error('Invalid Scale');}else{for(i in scales){if(scales.hasOwnProperty(i)){if(scales[i].toString()===scale.toString()){scaleName=i;break;}}}}this.name=scaleName;this.tonic=tonic;this.scale=scale;}Scale.prototype={notes:function notes(){var notes=[];for(var i=0,length=this.scale.length;i<length;i++){notes.push(this.tonic.interval(this.scale[i]));}return notes;},simple:function simple(){return this.notes().map(function(n){return n.toString(true);});},type:function type(){var length=this.scale.length-2;if(length<8){return['di','tri','tetra','penta','hexa','hepta','octa'][length]+'tonic';}},get:function get(i){var isStepStr=typeof i==='string'&&i in knowledge.stepNumber;i=isStepStr?knowledge.stepNumber[i]:i;var len=this.scale.length;var interval$1,octaves;if(i<0){interval$1=this.scale[i%len+len-1];octaves=Math.floor((i-1)/len);}else if(i%len===0){interval$1=this.scale[len-1];octaves=i/len-1;}else{interval$1=this.scale[i%len-1];octaves=Math.floor(i/len);}return this.tonic.interval(interval$1).interval(new _interval([octaves,0]));},solfege:function solfege(index,showOctaves){if(index)return this.get(index).solfege(this,showOctaves);return this.notes().map(function(n){return n.solfege(this,showOctaves);});},interval:function interval(interval$1){interval$1=typeof interval$1==='string'?_interval.toCoord(interval$1):interval$1;return new Scale(this.tonic.interval(interval$1),this.scale);},transpose:function transpose(interval){var scale=this.interval(interval);this.scale=scale.scale;this.tonic=scale.tonic;return this;}};Scale.KNOWN_SCALES=Object.keys(scales);var scale=Scale;var sugar=function sugar(teoria){var Note=teoria.Note;var Chord=teoria.Chord;var Scale=teoria.Scale;Note.prototype.chord=function(chord){var isShortChord=(chord in knowledge.chordShort);chord=isShortChord?knowledge.chordShort[chord]:chord;return new Chord(this,chord);};Note.prototype.scale=function(scale){return new Scale(this,scale);};};var teoria_1=createCommonjsModule(function(module,exports){var teoria;// never thought I would write this, but: Legacy support
-function intervalConstructor(from,to){// Construct a Interval object from string representation
-if(typeof from==='string')return _interval.toCoord(from);if(typeof to==='string'&&from instanceof note)return _interval.from(from,_interval.toCoord(to));if(to instanceof _interval&&from instanceof note)return _interval.from(from,to);if(to instanceof note&&from instanceof note)return _interval.between(from,to);throw new Error('Invalid parameters');}intervalConstructor.toCoord=_interval.toCoord;intervalConstructor.from=_interval.from;intervalConstructor.between=_interval.between;intervalConstructor.invert=_interval.invert;function noteConstructor(name,duration){if(typeof name==='string')return note.fromString(name,duration);else return new note(name,duration);}noteConstructor.fromString=note.fromString;noteConstructor.fromKey=note.fromKey;noteConstructor.fromFrequency=note.fromFrequency;noteConstructor.fromMIDI=note.fromMIDI;function chordConstructor(name,symbol){if(typeof name==='string'){var root,octave;root=name.match(/^([a-h])(x|#|bb|b?)/i);if(root&&root[0]){octave=typeof symbol==='number'?symbol.toString(10):'4';return new chord(note.fromString(root[0].toLowerCase()+octave),name.substr(root[0].length));}}else if(name instanceof note)return new chord(name,symbol);throw new Error('Invalid Chord. Couldn\'t find note name');}function scaleConstructor(tonic,scale$1){tonic=tonic instanceof note?tonic:teoria.note(tonic);return new scale(tonic,scale$1);}teoria={note:noteConstructor,chord:chordConstructor,interval:intervalConstructor,scale:scaleConstructor,Note:note,Chord:chord,Scale:scale,Interval:_interval};sugar(teoria);module.exports=teoria;});var $schema$1="http://json-schema.org/draft-07/schema#";var definitions$1={headers:{type:"object",properties:{meter:{type:"array",items:{type:"number",minimum:1},minItems:2,maxItems:2},tempo:{type:"number",minimum:0}},required:["meter","tempo"],additionalProperties:true},unit:{type:"object",properties:{step:{type:"number",minimum:0},pulse:{type:"number",minimum:0}},required:["step","pulse"]},units:{type:"object",properties:{beat:{$ref:"#/definitions/unit"},bar:{$ref:"#/definitions/unit"},time:{allOf:[{$ref:"#/definitions/unit"},{type:"object",properties:{bar:{type:"number",minimum:0}}}]}},required:["beat","bar","time"],additionalProperties:false},metrics:{type:"object",properties:{min:{oneOf:[{type:"number",minimum:0},{type:"null"}]},max:{oneOf:[{type:"number",minimum:0},{type:"null"}]},total:{type:"number",minimum:0}},required:["min","max","total"],additionalProperties:false},elements:{type:"object",patternProperties:{".*":{type:"object",patternProperties:{".*":{type:"object",properties:{value:{type:"string"},props:{type:"array","default":[]}},required:["value","props"],additionalProperties:true}}}}},steps:{type:"array",items:{type:"array",items:[{type:"array",items:[{type:"number"}],additionalItems:{$ref:"#/definitions/id"},minItems:1},{type:"array",items:{$ref:"#/definitions/id"}},{type:"array",items:{$ref:"#/definitions/id"}}],minItems:0,additionalItems:false}},id:{type:"string",pattern:"[a-zA-Z0-9_-]+\\.[a-zA-Z0-9]{6,}"},uid:{type:"string",pattern:"[a-zA-Z0-9]{6,}"},item:{type:"object",properties:{duration:{type:"number",minimum:0},elements:{type:"array",items:{$ref:"#/definitions/id"}}},required:["duration","elements"]},beat:{type:"object",properties:{duration:{type:"number"},items:{type:"array",items:{$ref:"#/definitions/item"}}},required:["duration","items"]}};var type$2="object";var properties$3={headers:{$ref:"#/definitions/headers"},units:{$ref:"#/definitions/units"},metrics:{$ref:"#/definitions/metrics"},elements:{$ref:"#/definitions/elements"},steps:{$ref:"#/definitions/steps"},beats:{type:"array",items:{$ref:"#/definitions/beat"}}};var required$2=["headers","units","metrics","elements","steps","beats"];var require$$0$1={$schema:$schema$1,definitions:definitions$1,type:type$2,properties:properties$3,required:required$2};var bachJsonSchema=require$$0$1;var code$1=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.regexpCode=exports.getProperty=exports.safeStringify=exports.stringify=exports.strConcat=exports.addCodeArg=exports.str=exports._=exports.nil=exports._Code=exports.Name=exports.IDENTIFIER=exports._CodeOrName=void 0;var _CodeOrName=function _CodeOrName(){_classCallCheck3(this,_CodeOrName);};exports._CodeOrName=_CodeOrName;exports.IDENTIFIER=/^[a-z$_][a-z$_0-9]*$/i;var Name=/*#__PURE__*/function(_CodeOrName2){_inherits3(Name,_CodeOrName2);var _super2=_createSuper2(Name);function Name(s){var _this9;_classCallCheck3(this,Name);_this9=_super2.call(this);if(!exports.IDENTIFIER.test(s))throw new Error("CodeGen: name must be a valid identifier");_this9.str=s;return _this9;}_createClass3(Name,[{key:"toString",value:function toString(){return this.str;}},{key:"emptyStr",value:function emptyStr(){return false;}},{key:"names",get:function get(){return _defineProperty3({},this.str,1);}}]);return Name;}(_CodeOrName);exports.Name=Name;var _Code=/*#__PURE__*/function(_CodeOrName3){_inherits3(_Code,_CodeOrName3);var _super3=_createSuper2(_Code);function _Code(code){var _this10;_classCallCheck3(this,_Code);_this10=_super3.call(this);_this10._items=typeof code==="string"?[code]:code;return _this10;}_createClass3(_Code,[{key:"toString",value:function toString(){return this.str;}},{key:"emptyStr",value:function emptyStr(){if(this._items.length>1)return false;var item=this._items[0];return item===""||item==='""';}},{key:"str",get:function get(){var _a;return(_a=this._str)!==null&&_a!==void 0?_a:this._str=this._items.reduce(function(s,c){return"".concat(s).concat(c);},"");}},{key:"names",get:function get(){var _a;return(_a=this._names)!==null&&_a!==void 0?_a:this._names=this._items.reduce(function(names,c){if(c instanceof Name)names[c.str]=(names[c.str]||0)+1;return names;},{});}}]);return _Code;}(_CodeOrName);exports._Code=_Code;exports.nil=new _Code("");function _(strs){var code=[strs[0]];var i=0;for(var _len2=arguments.length,args=new Array(_len2>1?_len2-1:0),_key2=1;_key2<_len2;_key2++){args[_key2-1]=arguments[_key2];}while(i<args.length){addCodeArg(code,args[i]);code.push(strs[++i]);}return new _Code(code);}exports._=_;var plus=new _Code("+");function str(strs){var expr=[safeStringify(strs[0])];var i=0;for(var _len3=arguments.length,args=new Array(_len3>1?_len3-1:0),_key3=1;_key3<_len3;_key3++){args[_key3-1]=arguments[_key3];}while(i<args.length){expr.push(plus);addCodeArg(expr,args[i]);expr.push(plus,safeStringify(strs[++i]));}optimize(expr);return new _Code(expr);}exports.str=str;function addCodeArg(code,arg){if(arg instanceof _Code)code.push.apply(code,_toConsumableArray3(arg._items));else if(arg instanceof Name)code.push(arg);else code.push(interpolate(arg));}exports.addCodeArg=addCodeArg;function optimize(expr){var i=1;while(i<expr.length-1){if(expr[i]===plus){var res=mergeExprItems(expr[i-1],expr[i+1]);if(res!==undefined){expr.splice(i-1,3,res);continue;}expr[i++]="+";}i++;}}function mergeExprItems(a,b){if(b==='""')return a;if(a==='""')return b;if(typeof a=="string"){if(b instanceof Name||a[a.length-1]!=='"')return;if(typeof b!="string")return"".concat(a.slice(0,-1)).concat(b,"\"");if(b[0]==='"')return a.slice(0,-1)+b.slice(1);return;}if(typeof b=="string"&&b[0]==='"'&&!(a instanceof Name))return"\"".concat(a).concat(b.slice(1));return;}function strConcat(c1,c2){return c2.emptyStr()?c1:c1.emptyStr()?c2:str(_templateObject||(_templateObject=_taggedTemplateLiteral(["","",""])),c1,c2);}exports.strConcat=strConcat;// TODO do not allow arrays here
-function interpolate(x){return typeof x=="number"||typeof x=="boolean"||x===null?x:safeStringify(Array.isArray(x)?x.join(","):x);}function stringify(x){return new _Code(safeStringify(x));}exports.stringify=stringify;function safeStringify(x){return JSON.stringify(x).replace(/\u2028/g,"\\u2028").replace(/\u2029/g,"\\u2029");}exports.safeStringify=safeStringify;function getProperty(key){return typeof key=="string"&&exports.IDENTIFIER.test(key)?new _Code(".".concat(key)):_(_templateObject2||(_templateObject2=_taggedTemplateLiteral(["[","]"])),key);}exports.getProperty=getProperty;function regexpCode(rx){return new _Code(rx.toString());}exports.regexpCode=regexpCode;});var scope=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.ValueScope=exports.ValueScopeName=exports.Scope=exports.varKinds=exports.UsedValueState=void 0;var ValueError=/*#__PURE__*/function(_Error){_inherits3(ValueError,_Error);var _super4=_createSuper2(ValueError);function ValueError(name){var _this11;_classCallCheck3(this,ValueError);_this11=_super4.call(this,"CodeGen: \"code\" for ".concat(name," not defined"));_this11.value=name.value;return _this11;}return ValueError;}(/*#__PURE__*/_wrapNativeSuper(Error));var UsedValueState;(function(UsedValueState){UsedValueState[UsedValueState["Started"]=0]="Started";UsedValueState[UsedValueState["Completed"]=1]="Completed";})(UsedValueState=exports.UsedValueState||(exports.UsedValueState={}));exports.varKinds={"const":new code$1.Name("const"),"let":new code$1.Name("let"),"var":new code$1.Name("var")};var Scope=/*#__PURE__*/function(){function Scope(){var _ref23=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{},prefixes=_ref23.prefixes,parent=_ref23.parent;_classCallCheck3(this,Scope);this._names={};this._prefixes=prefixes;this._parent=parent;}_createClass3(Scope,[{key:"toName",value:function toName(nameOrPrefix){return nameOrPrefix instanceof code$1.Name?nameOrPrefix:this.name(nameOrPrefix);}},{key:"name",value:function name(prefix){return new code$1.Name(this._newName(prefix));}},{key:"_newName",value:function _newName(prefix){var ng=this._names[prefix]||this._nameGroup(prefix);return"".concat(prefix).concat(ng.index++);}},{key:"_nameGroup",value:function _nameGroup(prefix){var _a,_b;if(((_b=(_a=this._parent)===null||_a===void 0?void 0:_a._prefixes)===null||_b===void 0?void 0:_b.has(prefix))||this._prefixes&&!this._prefixes.has(prefix)){throw new Error("CodeGen: prefix \"".concat(prefix,"\" is not allowed in this scope"));}return this._names[prefix]={prefix:prefix,index:0};}}]);return Scope;}();exports.Scope=Scope;var ValueScopeName=/*#__PURE__*/function(_code$1$Name){_inherits3(ValueScopeName,_code$1$Name);var _super5=_createSuper2(ValueScopeName);function ValueScopeName(prefix,nameStr){var _this12;_classCallCheck3(this,ValueScopeName);_this12=_super5.call(this,nameStr);_this12.prefix=prefix;return _this12;}_createClass3(ValueScopeName,[{key:"setValue",value:function setValue(value,_ref24){var property=_ref24.property,itemIndex=_ref24.itemIndex;this.value=value;this.scopePath=code$1._(_templateObject3||(_templateObject3=_taggedTemplateLiteral([".","[","]"])),new code$1.Name(property),itemIndex);}}]);return ValueScopeName;}(code$1.Name);exports.ValueScopeName=ValueScopeName;var line=code$1._(_templateObject4||(_templateObject4=_taggedTemplateLiteral(["\n"],["\\n"])));var ValueScope=/*#__PURE__*/function(_Scope){_inherits3(ValueScope,_Scope);var _super6=_createSuper2(ValueScope);function ValueScope(opts){var _this13;_classCallCheck3(this,ValueScope);_this13=_super6.call(this,opts);_this13._values={};_this13._scope=opts.scope;_this13.opts=_objectSpread2(_objectSpread2({},opts),{},{_n:opts.lines?line:code$1.nil});return _this13;}_createClass3(ValueScope,[{key:"get",value:function get(){return this._scope;}},{key:"name",value:function name(prefix){return new ValueScopeName(prefix,this._newName(prefix));}},{key:"value",value:function value(nameOrPrefix,_value){var _a;if(_value.ref===undefined)throw new Error("CodeGen: ref must be passed in value");var name=this.toName(nameOrPrefix);var prefix=name.prefix;var valueKey=(_a=_value.key)!==null&&_a!==void 0?_a:_value.ref;var vs=this._values[prefix];if(vs){var _name=vs.get(valueKey);if(_name)return _name;}else{vs=this._values[prefix]=new Map();}vs.set(valueKey,name);var s=this._scope[prefix]||(this._scope[prefix]=[]);var itemIndex=s.length;s[itemIndex]=_value.ref;name.setValue(_value,{property:prefix,itemIndex:itemIndex});return name;}},{key:"getValue",value:function getValue(prefix,keyOrRef){var vs=this._values[prefix];if(!vs)return;return vs.get(keyOrRef);}},{key:"scopeRefs",value:function scopeRefs(scopeName){var values=arguments.length>1&&arguments[1]!==undefined?arguments[1]:this._values;return this._reduceValues(values,function(name){if(name.scopePath===undefined)throw new Error("CodeGen: name \"".concat(name,"\" has no value"));return code$1._(_templateObject5||(_templateObject5=_taggedTemplateLiteral(["","",""])),scopeName,name.scopePath);});}},{key:"scopeCode",value:function scopeCode(){var values=arguments.length>0&&arguments[0]!==undefined?arguments[0]:this._values;var usedValues=arguments.length>1?arguments[1]:undefined;var getCode=arguments.length>2?arguments[2]:undefined;return this._reduceValues(values,function(name){if(name.value===undefined)throw new Error("CodeGen: name \"".concat(name,"\" has no value"));return name.value.code;},usedValues,getCode);}},{key:"_reduceValues",value:function _reduceValues(values,valueCode){var _this14=this;var usedValues=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{};var getCode=arguments.length>3?arguments[3]:undefined;var code=code$1.nil;var _loop=function _loop(prefix){var vs=values[prefix];if(!vs)return"continue";var nameSet=usedValues[prefix]=usedValues[prefix]||new Map();vs.forEach(function(name){if(nameSet.has(name))return;nameSet.set(name,UsedValueState.Started);var c=valueCode(name);if(c){var _def=_this14.opts.es5?exports.varKinds["var"]:exports.varKinds["const"];code=code$1._(_templateObject6||(_templateObject6=_taggedTemplateLiteral(["",""," "," = ",";",""])),code,_def,name,c,_this14.opts._n);}else if(c=getCode===null||getCode===void 0?void 0:getCode(name)){code=code$1._(_templateObject7||(_templateObject7=_taggedTemplateLiteral(["","","",""])),code,c,_this14.opts._n);}else{throw new ValueError(name);}nameSet.set(name,UsedValueState.Completed);});};for(var prefix in values){var _ret=_loop(prefix);if(_ret==="continue")continue;}return code;}}]);return ValueScope;}(Scope);exports.ValueScope=ValueScope;});var codegen=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.or=exports.and=exports.not=exports.CodeGen=exports.operators=exports.varKinds=exports.ValueScopeName=exports.ValueScope=exports.Scope=exports.Name=exports.regexpCode=exports.stringify=exports.getProperty=exports.nil=exports.strConcat=exports.str=exports._=void 0;var code_2=code$1;Object.defineProperty(exports,"_",{enumerable:true,get:function get(){return code_2._;}});Object.defineProperty(exports,"str",{enumerable:true,get:function get(){return code_2.str;}});Object.defineProperty(exports,"strConcat",{enumerable:true,get:function get(){return code_2.strConcat;}});Object.defineProperty(exports,"nil",{enumerable:true,get:function get(){return code_2.nil;}});Object.defineProperty(exports,"getProperty",{enumerable:true,get:function get(){return code_2.getProperty;}});Object.defineProperty(exports,"stringify",{enumerable:true,get:function get(){return code_2.stringify;}});Object.defineProperty(exports,"regexpCode",{enumerable:true,get:function get(){return code_2.regexpCode;}});Object.defineProperty(exports,"Name",{enumerable:true,get:function get(){return code_2.Name;}});var scope_2=scope;Object.defineProperty(exports,"Scope",{enumerable:true,get:function get(){return scope_2.Scope;}});Object.defineProperty(exports,"ValueScope",{enumerable:true,get:function get(){return scope_2.ValueScope;}});Object.defineProperty(exports,"ValueScopeName",{enumerable:true,get:function get(){return scope_2.ValueScopeName;}});Object.defineProperty(exports,"varKinds",{enumerable:true,get:function get(){return scope_2.varKinds;}});exports.operators={GT:new code$1._Code(">"),GTE:new code$1._Code(">="),LT:new code$1._Code("<"),LTE:new code$1._Code("<="),EQ:new code$1._Code("==="),NEQ:new code$1._Code("!=="),NOT:new code$1._Code("!"),OR:new code$1._Code("||"),AND:new code$1._Code("&&"),ADD:new code$1._Code("+")};var Node=/*#__PURE__*/function(){function Node(){_classCallCheck3(this,Node);}_createClass3(Node,[{key:"optimizeNodes",value:function optimizeNodes(){return this;}},{key:"optimizeNames",value:function optimizeNames(_names,_constants){return this;}}]);return Node;}();var Def=/*#__PURE__*/function(_Node){_inherits3(Def,_Node);var _super7=_createSuper2(Def);function Def(varKind,name,rhs){var _this15;_classCallCheck3(this,Def);_this15=_super7.call(this);_this15.varKind=varKind;_this15.name=name;_this15.rhs=rhs;return _this15;}_createClass3(Def,[{key:"render",value:function render(_ref25){var es5=_ref25.es5,_n=_ref25._n;var varKind=es5?scope.varKinds["var"]:this.varKind;var rhs=this.rhs===undefined?"":" = ".concat(this.rhs);return"".concat(varKind," ").concat(this.name).concat(rhs,";")+_n;}},{key:"optimizeNames",value:function optimizeNames(names,constants){if(!names[this.name.str])return;if(this.rhs)this.rhs=optimizeExpr(this.rhs,names,constants);return this;}},{key:"names",get:function get(){return this.rhs instanceof code$1._CodeOrName?this.rhs.names:{};}}]);return Def;}(Node);var Assign=/*#__PURE__*/function(_Node2){_inherits3(Assign,_Node2);var _super8=_createSuper2(Assign);function Assign(lhs,rhs,sideEffects){var _this16;_classCallCheck3(this,Assign);_this16=_super8.call(this);_this16.lhs=lhs;_this16.rhs=rhs;_this16.sideEffects=sideEffects;return _this16;}_createClass3(Assign,[{key:"render",value:function render(_ref26){var _n=_ref26._n;return"".concat(this.lhs," = ").concat(this.rhs,";")+_n;}},{key:"optimizeNames",value:function optimizeNames(names,constants){if(this.lhs instanceof code$1.Name&&!names[this.lhs.str]&&!this.sideEffects)return;this.rhs=optimizeExpr(this.rhs,names,constants);return this;}},{key:"names",get:function get(){var names=this.lhs instanceof code$1.Name?{}:_objectSpread2({},this.lhs.names);return addExprNames(names,this.rhs);}}]);return Assign;}(Node);var AssignOp=/*#__PURE__*/function(_Assign){_inherits3(AssignOp,_Assign);var _super9=_createSuper2(AssignOp);function AssignOp(lhs,op,rhs,sideEffects){var _this17;_classCallCheck3(this,AssignOp);_this17=_super9.call(this,lhs,rhs,sideEffects);_this17.op=op;return _this17;}_createClass3(AssignOp,[{key:"render",value:function render(_ref27){var _n=_ref27._n;return"".concat(this.lhs," ").concat(this.op,"= ").concat(this.rhs,";")+_n;}}]);return AssignOp;}(Assign);var Label=/*#__PURE__*/function(_Node3){_inherits3(Label,_Node3);var _super10=_createSuper2(Label);function Label(label){var _this18;_classCallCheck3(this,Label);_this18=_super10.call(this);_this18.label=label;_this18.names={};return _this18;}_createClass3(Label,[{key:"render",value:function render(_ref28){var _n=_ref28._n;return"".concat(this.label,":")+_n;}}]);return Label;}(Node);var Break=/*#__PURE__*/function(_Node4){_inherits3(Break,_Node4);var _super11=_createSuper2(Break);function Break(label){var _this19;_classCallCheck3(this,Break);_this19=_super11.call(this);_this19.label=label;_this19.names={};return _this19;}_createClass3(Break,[{key:"render",value:function render(_ref29){var _n=_ref29._n;var label=this.label?" ".concat(this.label):"";return"break".concat(label,";")+_n;}}]);return Break;}(Node);var Throw=/*#__PURE__*/function(_Node5){_inherits3(Throw,_Node5);var _super12=_createSuper2(Throw);function Throw(error){var _this20;_classCallCheck3(this,Throw);_this20=_super12.call(this);_this20.error=error;return _this20;}_createClass3(Throw,[{key:"render",value:function render(_ref30){var _n=_ref30._n;return"throw ".concat(this.error,";")+_n;}},{key:"names",get:function get(){return this.error.names;}}]);return Throw;}(Node);var AnyCode=/*#__PURE__*/function(_Node6){_inherits3(AnyCode,_Node6);var _super13=_createSuper2(AnyCode);function AnyCode(code){var _this21;_classCallCheck3(this,AnyCode);_this21=_super13.call(this);_this21.code=code;return _this21;}_createClass3(AnyCode,[{key:"render",value:function render(_ref31){var _n=_ref31._n;return"".concat(this.code,";")+_n;}},{key:"optimizeNodes",value:function optimizeNodes(){return"".concat(this.code)?this:undefined;}},{key:"optimizeNames",value:function optimizeNames(names,constants){this.code=optimizeExpr(this.code,names,constants);return this;}},{key:"names",get:function get(){return this.code instanceof code$1._CodeOrName?this.code.names:{};}}]);return AnyCode;}(Node);var ParentNode=/*#__PURE__*/function(_Node7){_inherits3(ParentNode,_Node7);var _super14=_createSuper2(ParentNode);function ParentNode(){var _this22;var nodes=arguments.length>0&&arguments[0]!==undefined?arguments[0]:[];_classCallCheck3(this,ParentNode);_this22=_super14.call(this);_this22.nodes=nodes;return _this22;}_createClass3(ParentNode,[{key:"render",value:function render(opts){return this.nodes.reduce(function(code,n){return code+n.render(opts);},"");}},{key:"optimizeNodes",value:function optimizeNodes(){var nodes=this.nodes;var i=nodes.length;while(i--){var n=nodes[i].optimizeNodes();if(Array.isArray(n))nodes.splice.apply(nodes,[i,1].concat(_toConsumableArray3(n)));else if(n)nodes[i]=n;else nodes.splice(i,1);}return nodes.length>0?this:undefined;}},{key:"optimizeNames",value:function optimizeNames(names,constants){var nodes=this.nodes;var i=nodes.length;while(i--){// iterating backwards improves 1-pass optimization
-var n=nodes[i];if(n.optimizeNames(names,constants))continue;subtractNames(names,n.names);nodes.splice(i,1);}return nodes.length>0?this:undefined;}},{key:"names",get:function get(){return this.nodes.reduce(function(names,n){return addNames(names,n.names);},{});}}]);return ParentNode;}(Node);var BlockNode=/*#__PURE__*/function(_ParentNode){_inherits3(BlockNode,_ParentNode);var _super15=_createSuper2(BlockNode);function BlockNode(){_classCallCheck3(this,BlockNode);return _super15.apply(this,arguments);}_createClass3(BlockNode,[{key:"render",value:function render(opts){return"{"+opts._n+_get(_getPrototypeOf3(BlockNode.prototype),"render",this).call(this,opts)+"}"+opts._n;}}]);return BlockNode;}(ParentNode);var Root=/*#__PURE__*/function(_ParentNode2){_inherits3(Root,_ParentNode2);var _super16=_createSuper2(Root);function Root(){_classCallCheck3(this,Root);return _super16.apply(this,arguments);}return Root;}(ParentNode);var Else=/*#__PURE__*/function(_BlockNode){_inherits3(Else,_BlockNode);var _super17=_createSuper2(Else);function Else(){_classCallCheck3(this,Else);return _super17.apply(this,arguments);}return Else;}(BlockNode);Else.kind="else";var If=/*#__PURE__*/function(_BlockNode2){_inherits3(If,_BlockNode2);var _super18=_createSuper2(If);function If(condition,nodes){var _this23;_classCallCheck3(this,If);_this23=_super18.call(this,nodes);_this23.condition=condition;return _this23;}_createClass3(If,[{key:"render",value:function render(opts){var code="if(".concat(this.condition,")")+_get(_getPrototypeOf3(If.prototype),"render",this).call(this,opts);if(this["else"])code+="else "+this["else"].render(opts);return code;}},{key:"optimizeNodes",value:function optimizeNodes(){_get(_getPrototypeOf3(If.prototype),"optimizeNodes",this).call(this);var cond=this.condition;if(cond===true)return this.nodes;// else is ignored here
-var e=this["else"];if(e){var ns=e.optimizeNodes();e=this["else"]=Array.isArray(ns)?new Else(ns):ns;}if(e){if(cond===false)return e instanceof If?e:e.nodes;if(this.nodes.length)return this;return new If(not(cond),e instanceof If?[e]:e.nodes);}if(cond===false||!this.nodes.length)return undefined;return this;}},{key:"optimizeNames",value:function optimizeNames(names,constants){var _a;this["else"]=(_a=this["else"])===null||_a===void 0?void 0:_a.optimizeNames(names,constants);if(!(_get(_getPrototypeOf3(If.prototype),"optimizeNames",this).call(this,names,constants)||this["else"]))return;this.condition=optimizeExpr(this.condition,names,constants);return this;}},{key:"names",get:function get(){var names=_get(_getPrototypeOf3(If.prototype),"names",this);addExprNames(names,this.condition);if(this["else"])addNames(names,this["else"].names);return names;}}]);return If;}(BlockNode);If.kind="if";var For=/*#__PURE__*/function(_BlockNode3){_inherits3(For,_BlockNode3);var _super19=_createSuper2(For);function For(){_classCallCheck3(this,For);return _super19.apply(this,arguments);}return For;}(BlockNode);For.kind="for";var ForLoop=/*#__PURE__*/function(_For){_inherits3(ForLoop,_For);var _super20=_createSuper2(ForLoop);function ForLoop(iteration){var _this24;_classCallCheck3(this,ForLoop);_this24=_super20.call(this);_this24.iteration=iteration;return _this24;}_createClass3(ForLoop,[{key:"render",value:function render(opts){return"for(".concat(this.iteration,")")+_get(_getPrototypeOf3(ForLoop.prototype),"render",this).call(this,opts);}},{key:"optimizeNames",value:function optimizeNames(names,constants){if(!_get(_getPrototypeOf3(ForLoop.prototype),"optimizeNames",this).call(this,names,constants))return;this.iteration=optimizeExpr(this.iteration,names,constants);return this;}},{key:"names",get:function get(){return addNames(_get(_getPrototypeOf3(ForLoop.prototype),"names",this),this.iteration.names);}}]);return ForLoop;}(For);var ForRange=/*#__PURE__*/function(_For2){_inherits3(ForRange,_For2);var _super21=_createSuper2(ForRange);function ForRange(varKind,name,from,to){var _this25;_classCallCheck3(this,ForRange);_this25=_super21.call(this);_this25.varKind=varKind;_this25.name=name;_this25.from=from;_this25.to=to;return _this25;}_createClass3(ForRange,[{key:"render",value:function render(opts){var varKind=opts.es5?scope.varKinds["var"]:this.varKind;var name=this.name,from=this.from,to=this.to;return"for(".concat(varKind," ").concat(name,"=").concat(from,"; ").concat(name,"<").concat(to,"; ").concat(name,"++)")+_get(_getPrototypeOf3(ForRange.prototype),"render",this).call(this,opts);}},{key:"names",get:function get(){var names=addExprNames(_get(_getPrototypeOf3(ForRange.prototype),"names",this),this.from);return addExprNames(names,this.to);}}]);return ForRange;}(For);var ForIter=/*#__PURE__*/function(_For3){_inherits3(ForIter,_For3);var _super22=_createSuper2(ForIter);function ForIter(loop,varKind,name,iterable){var _this26;_classCallCheck3(this,ForIter);_this26=_super22.call(this);_this26.loop=loop;_this26.varKind=varKind;_this26.name=name;_this26.iterable=iterable;return _this26;}_createClass3(ForIter,[{key:"render",value:function render(opts){return"for(".concat(this.varKind," ").concat(this.name," ").concat(this.loop," ").concat(this.iterable,")")+_get(_getPrototypeOf3(ForIter.prototype),"render",this).call(this,opts);}},{key:"optimizeNames",value:function optimizeNames(names,constants){if(!_get(_getPrototypeOf3(ForIter.prototype),"optimizeNames",this).call(this,names,constants))return;this.iterable=optimizeExpr(this.iterable,names,constants);return this;}},{key:"names",get:function get(){return addNames(_get(_getPrototypeOf3(ForIter.prototype),"names",this),this.iterable.names);}}]);return ForIter;}(For);var Func=/*#__PURE__*/function(_BlockNode4){_inherits3(Func,_BlockNode4);var _super23=_createSuper2(Func);function Func(name,args,async){var _this27;_classCallCheck3(this,Func);_this27=_super23.call(this);_this27.name=name;_this27.args=args;_this27.async=async;return _this27;}_createClass3(Func,[{key:"render",value:function render(opts){var _async=this.async?"async ":"";return"".concat(_async,"function ").concat(this.name,"(").concat(this.args,")")+_get(_getPrototypeOf3(Func.prototype),"render",this).call(this,opts);}}]);return Func;}(BlockNode);Func.kind="func";var Return=/*#__PURE__*/function(_ParentNode3){_inherits3(Return,_ParentNode3);var _super24=_createSuper2(Return);function Return(){_classCallCheck3(this,Return);return _super24.apply(this,arguments);}_createClass3(Return,[{key:"render",value:function render(opts){return"return "+_get(_getPrototypeOf3(Return.prototype),"render",this).call(this,opts);}}]);return Return;}(ParentNode);Return.kind="return";var Try=/*#__PURE__*/function(_BlockNode5){_inherits3(Try,_BlockNode5);var _super25=_createSuper2(Try);function Try(){_classCallCheck3(this,Try);return _super25.apply(this,arguments);}_createClass3(Try,[{key:"render",value:function render(opts){var code="try"+_get(_getPrototypeOf3(Try.prototype),"render",this).call(this,opts);if(this["catch"])code+=this["catch"].render(opts);if(this["finally"])code+=this["finally"].render(opts);return code;}},{key:"optimizeNodes",value:function optimizeNodes(){var _a,_b;_get(_getPrototypeOf3(Try.prototype),"optimizeNodes",this).call(this);(_a=this["catch"])===null||_a===void 0?void 0:_a.optimizeNodes();(_b=this["finally"])===null||_b===void 0?void 0:_b.optimizeNodes();return this;}},{key:"optimizeNames",value:function optimizeNames(names,constants){var _a,_b;_get(_getPrototypeOf3(Try.prototype),"optimizeNames",this).call(this,names,constants);(_a=this["catch"])===null||_a===void 0?void 0:_a.optimizeNames(names,constants);(_b=this["finally"])===null||_b===void 0?void 0:_b.optimizeNames(names,constants);return this;}},{key:"names",get:function get(){var names=_get(_getPrototypeOf3(Try.prototype),"names",this);if(this["catch"])addNames(names,this["catch"].names);if(this["finally"])addNames(names,this["finally"].names);return names;}}]);return Try;}(BlockNode);var Catch=/*#__PURE__*/function(_BlockNode6){_inherits3(Catch,_BlockNode6);var _super26=_createSuper2(Catch);function Catch(error){var _this28;_classCallCheck3(this,Catch);_this28=_super26.call(this);_this28.error=error;return _this28;}_createClass3(Catch,[{key:"render",value:function render(opts){return"catch(".concat(this.error,")")+_get(_getPrototypeOf3(Catch.prototype),"render",this).call(this,opts);}}]);return Catch;}(BlockNode);Catch.kind="catch";var Finally=/*#__PURE__*/function(_BlockNode7){_inherits3(Finally,_BlockNode7);var _super27=_createSuper2(Finally);function Finally(){_classCallCheck3(this,Finally);return _super27.apply(this,arguments);}_createClass3(Finally,[{key:"render",value:function render(opts){return"finally"+_get(_getPrototypeOf3(Finally.prototype),"render",this).call(this,opts);}}]);return Finally;}(BlockNode);Finally.kind="finally";var CodeGen=/*#__PURE__*/function(){function CodeGen(extScope){var opts=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};_classCallCheck3(this,CodeGen);this._values={};this._blockStarts=[];this._constants={};this.opts=_objectSpread2(_objectSpread2({},opts),{},{_n:opts.lines?"\n":""});this._extScope=extScope;this._scope=new scope.Scope({parent:extScope});this._nodes=[new Root()];}_createClass3(CodeGen,[{key:"toString",value:function toString(){return this._root.render(this.opts);}// returns unique name in the internal scope
-},{key:"name",value:function name(prefix){return this._scope.name(prefix);}// reserves unique name in the external scope
-},{key:"scopeName",value:function scopeName(prefix){return this._extScope.name(prefix);}// reserves unique name in the external scope and assigns value to it
-},{key:"scopeValue",value:function scopeValue(prefixOrName,value){var name=this._extScope.value(prefixOrName,value);var vs=this._values[name.prefix]||(this._values[name.prefix]=new Set());vs.add(name);return name;}},{key:"getScopeValue",value:function getScopeValue(prefix,keyOrRef){return this._extScope.getValue(prefix,keyOrRef);}// return code that assigns values in the external scope to the names that are used internally
-// (same names that were returned by gen.scopeName or gen.scopeValue)
-},{key:"scopeRefs",value:function scopeRefs(scopeName){return this._extScope.scopeRefs(scopeName,this._values);}},{key:"scopeCode",value:function scopeCode(){return this._extScope.scopeCode(this._values);}},{key:"_def",value:function _def(varKind,nameOrPrefix,rhs,constant){var name=this._scope.toName(nameOrPrefix);if(rhs!==undefined&&constant)this._constants[name.str]=rhs;this._leafNode(new Def(varKind,name,rhs));return name;}// `const` declaration (`var` in es5 mode)
-},{key:"const",value:function _const(nameOrPrefix,rhs,_constant){return this._def(scope.varKinds["const"],nameOrPrefix,rhs,_constant);}// `let` declaration with optional assignment (`var` in es5 mode)
-},{key:"let",value:function _let(nameOrPrefix,rhs,_constant){return this._def(scope.varKinds["let"],nameOrPrefix,rhs,_constant);}// `var` declaration with optional assignment
-},{key:"var",value:function _var(nameOrPrefix,rhs,_constant){return this._def(scope.varKinds["var"],nameOrPrefix,rhs,_constant);}// assignment code
-},{key:"assign",value:function assign(lhs,rhs,sideEffects){return this._leafNode(new Assign(lhs,rhs,sideEffects));}// `+=` code
-},{key:"add",value:function add(lhs,rhs){return this._leafNode(new AssignOp(lhs,exports.operators.ADD,rhs));}// appends passed SafeExpr to code or executes Block
-},{key:"code",value:function code(c){if(typeof c=="function")c();else if(c!==code$1.nil)this._leafNode(new AnyCode(c));return this;}// returns code for object literal for the passed argument list of key-value pairs
-},{key:"object",value:function object(){var code=["{"];for(var _len4=arguments.length,keyValues=new Array(_len4),_key4=0;_key4<_len4;_key4++){keyValues[_key4]=arguments[_key4];}for(var _i2=0,_keyValues=keyValues;_i2<_keyValues.length;_i2++){var _keyValues$_i=_slicedToArray3(_keyValues[_i2],2),key=_keyValues$_i[0],value=_keyValues$_i[1];if(code.length>1)code.push(",");code.push(key);if(key!==value||this.opts.es5){code.push(":");code$1.addCodeArg(code,value);}}code.push("}");return new code$1._Code(code);}// `if` clause (or statement if `thenBody` and, optionally, `elseBody` are passed)
-},{key:"if",value:function _if(condition,thenBody,elseBody){this._blockNode(new If(condition));if(thenBody&&elseBody){this.code(thenBody)["else"]().code(elseBody).endIf();}else if(thenBody){this.code(thenBody).endIf();}else if(elseBody){throw new Error('CodeGen: "else" body without "then" body');}return this;}// `else if` clause - invalid without `if` or after `else` clauses
-},{key:"elseIf",value:function elseIf(condition){return this._elseNode(new If(condition));}// `else` clause - only valid after `if` or `else if` clauses
-},{key:"else",value:function _else(){return this._elseNode(new Else());}// end `if` statement (needed if gen.if was used only with condition)
-},{key:"endIf",value:function endIf(){return this._endBlockNode(If,Else);}},{key:"_for",value:function _for(node,forBody){this._blockNode(node);if(forBody)this.code(forBody).endFor();return this;}// a generic `for` clause (or statement if `forBody` is passed)
-},{key:"for",value:function _for(iteration,forBody){return this._for(new ForLoop(iteration),forBody);}// `for` statement for a range of values
-},{key:"forRange",value:function forRange(nameOrPrefix,from,to,forBody){var varKind=arguments.length>4&&arguments[4]!==undefined?arguments[4]:this.opts.es5?scope.varKinds["var"]:scope.varKinds["let"];var name=this._scope.toName(nameOrPrefix);return this._for(new ForRange(varKind,name,from,to),function(){return forBody(name);});}// `for-of` statement (in es5 mode replace with a normal for loop)
-},{key:"forOf",value:function forOf(nameOrPrefix,iterable,forBody){var _this29=this;var varKind=arguments.length>3&&arguments[3]!==undefined?arguments[3]:scope.varKinds["const"];var name=this._scope.toName(nameOrPrefix);if(this.opts.es5){var arr=iterable instanceof code$1.Name?iterable:this["var"]("_arr",iterable);return this.forRange("_i",0,code$1._(_templateObject8||(_templateObject8=_taggedTemplateLiteral(["",".length"])),arr),function(i){_this29["var"](name,code$1._(_templateObject9||(_templateObject9=_taggedTemplateLiteral(["","[","]"])),arr,i));forBody(name);});}return this._for(new ForIter("of",varKind,name,iterable),function(){return forBody(name);});}// `for-in` statement.
-// With option `ownProperties` replaced with a `for-of` loop for object keys
-},{key:"forIn",value:function forIn(nameOrPrefix,obj,forBody){var varKind=arguments.length>3&&arguments[3]!==undefined?arguments[3]:this.opts.es5?scope.varKinds["var"]:scope.varKinds["const"];if(this.opts.ownProperties){return this.forOf(nameOrPrefix,code$1._(_templateObject10||(_templateObject10=_taggedTemplateLiteral(["Object.keys(",")"])),obj),forBody);}var name=this._scope.toName(nameOrPrefix);return this._for(new ForIter("in",varKind,name,obj),function(){return forBody(name);});}// end `for` loop
-},{key:"endFor",value:function endFor(){return this._endBlockNode(For);}// `label` statement
-},{key:"label",value:function label(_label){return this._leafNode(new Label(_label));}// `break` statement
-},{key:"break",value:function _break(label){return this._leafNode(new Break(label));}// `return` statement
-},{key:"return",value:function _return(value){var node=new Return();this._blockNode(node);this.code(value);if(node.nodes.length!==1)throw new Error('CodeGen: "return" should have one node');return this._endBlockNode(Return);}// `try` statement
-},{key:"try",value:function _try(tryBody,catchCode,finallyCode){if(!catchCode&&!finallyCode)throw new Error('CodeGen: "try" without "catch" and "finally"');var node=new Try();this._blockNode(node);this.code(tryBody);if(catchCode){var _error=this.name("e");this._currNode=node["catch"]=new Catch(_error);catchCode(_error);}if(finallyCode){this._currNode=node["finally"]=new Finally();this.code(finallyCode);}return this._endBlockNode(Catch,Finally);}// `throw` statement
-},{key:"throw",value:function _throw(error){return this._leafNode(new Throw(error));}// start self-balancing block
-},{key:"block",value:function block(body,nodeCount){this._blockStarts.push(this._nodes.length);if(body)this.code(body).endBlock(nodeCount);return this;}// end the current self-balancing block
-},{key:"endBlock",value:function endBlock(nodeCount){var len=this._blockStarts.pop();if(len===undefined)throw new Error("CodeGen: not in self-balancing block");var toClose=this._nodes.length-len;if(toClose<0||nodeCount!==undefined&&toClose!==nodeCount){throw new Error("CodeGen: wrong number of nodes: ".concat(toClose," vs ").concat(nodeCount," expected"));}this._nodes.length=len;return this;}// `function` heading (or definition if funcBody is passed)
-},{key:"func",value:function func(name){var args=arguments.length>1&&arguments[1]!==undefined?arguments[1]:code$1.nil;var async=arguments.length>2?arguments[2]:undefined;var funcBody=arguments.length>3?arguments[3]:undefined;this._blockNode(new Func(name,args,async));if(funcBody)this.code(funcBody).endFunc();return this;}// end function definition
-},{key:"endFunc",value:function endFunc(){return this._endBlockNode(Func);}},{key:"optimize",value:function optimize(){var n=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;while(n-->0){this._root.optimizeNodes();this._root.optimizeNames(this._root.names,this._constants);}}},{key:"_leafNode",value:function _leafNode(node){this._currNode.nodes.push(node);return this;}},{key:"_blockNode",value:function _blockNode(node){this._currNode.nodes.push(node);this._nodes.push(node);}},{key:"_endBlockNode",value:function _endBlockNode(N1,N2){var n=this._currNode;if(n instanceof N1||N2&&n instanceof N2){this._nodes.pop();return this;}throw new Error("CodeGen: not in block \"".concat(N2?"".concat(N1.kind,"/").concat(N2.kind):N1.kind,"\""));}},{key:"_elseNode",value:function _elseNode(node){var n=this._currNode;if(!(n instanceof If)){throw new Error('CodeGen: "else" without "if"');}this._currNode=n["else"]=node;return this;}},{key:"_root",get:function get(){return this._nodes[0];}},{key:"_currNode",get:function get(){var ns=this._nodes;return ns[ns.length-1];},set:function set(node){var ns=this._nodes;ns[ns.length-1]=node;}}]);return CodeGen;}();exports.CodeGen=CodeGen;function addNames(names,from){for(var n in from){names[n]=(names[n]||0)+(from[n]||0);}return names;}function addExprNames(names,from){return from instanceof code$1._CodeOrName?addNames(names,from.names):names;}function optimizeExpr(expr,names,constants){if(expr instanceof code$1.Name)return replaceName(expr);if(!canOptimize(expr))return expr;return new code$1._Code(expr._items.reduce(function(items,c){if(c instanceof code$1.Name)c=replaceName(c);if(c instanceof code$1._Code)items.push.apply(items,_toConsumableArray3(c._items));else items.push(c);return items;},[]));function replaceName(n){var c=constants[n.str];if(c===undefined||names[n.str]!==1)return n;delete names[n.str];return c;}function canOptimize(e){return e instanceof code$1._Code&&e._items.some(function(c){return c instanceof code$1.Name&&names[c.str]===1&&constants[c.str]!==undefined;});}}function subtractNames(names,from){for(var n in from){names[n]=(names[n]||0)-(from[n]||0);}}function not(x){return typeof x=="boolean"||typeof x=="number"||x===null?!x:code$1._(_templateObject11||(_templateObject11=_taggedTemplateLiteral(["!",""])),par(x));}exports.not=not;var andCode=mappend(exports.operators.AND);// boolean AND (&&) expression with the passed arguments
-function and(){for(var _len5=arguments.length,args=new Array(_len5),_key5=0;_key5<_len5;_key5++){args[_key5]=arguments[_key5];}return args.reduce(andCode);}exports.and=and;var orCode=mappend(exports.operators.OR);// boolean OR (||) expression with the passed arguments
-function or(){for(var _len6=arguments.length,args=new Array(_len6),_key6=0;_key6<_len6;_key6++){args[_key6]=arguments[_key6];}return args.reduce(orCode);}exports.or=or;function mappend(op){return function(x,y){return x===code$1.nil?y:y===code$1.nil?x:code$1._(_templateObject12||(_templateObject12=_taggedTemplateLiteral([""," "," ",""])),par(x),op,par(y));};}function par(x){return x instanceof code$1.Name?x:code$1._(_templateObject13||(_templateObject13=_taggedTemplateLiteral(["(",")"])),x);}});var util=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.checkStrictMode=exports.getErrorPath=exports.Type=exports.useFunc=exports.setEvaluated=exports.evaluatedPropsToName=exports.mergeEvaluated=exports.eachItem=exports.unescapeJsonPointer=exports.escapeJsonPointer=exports.escapeFragment=exports.unescapeFragment=exports.schemaRefOrVal=exports.schemaHasRulesButRef=exports.schemaHasRules=exports.checkUnknownRules=exports.alwaysValidSchema=exports.toHash=void 0;// TODO refactor to use Set
-function toHash(arr){var hash={};var _iterator4=_createForOfIteratorHelper(arr),_step4;try{for(_iterator4.s();!(_step4=_iterator4.n()).done;){var item=_step4.value;hash[item]=true;}}catch(err){_iterator4.e(err);}finally{_iterator4.f();}return hash;}exports.toHash=toHash;function alwaysValidSchema(it,schema){if(typeof schema=="boolean")return schema;if(Object.keys(schema).length===0)return true;checkUnknownRules(it,schema);return!schemaHasRules(schema,it.self.RULES.all);}exports.alwaysValidSchema=alwaysValidSchema;function checkUnknownRules(it){var schema=arguments.length>1&&arguments[1]!==undefined?arguments[1]:it.schema;var opts=it.opts,self=it.self;if(!opts.strictSchema)return;if(typeof schema==="boolean")return;var rules=self.RULES.keywords;for(var key in schema){if(!rules[key])checkStrictMode(it,"unknown keyword: \"".concat(key,"\""));}}exports.checkUnknownRules=checkUnknownRules;function schemaHasRules(schema,rules){if(typeof schema=="boolean")return!schema;for(var key in schema){if(rules[key])return true;}return false;}exports.schemaHasRules=schemaHasRules;function schemaHasRulesButRef(schema,RULES){if(typeof schema=="boolean")return!schema;for(var key in schema){if(key!=="$ref"&&RULES.all[key])return true;}return false;}exports.schemaHasRulesButRef=schemaHasRulesButRef;function schemaRefOrVal(_ref32,schema,keyword,$data){var topSchemaRef=_ref32.topSchemaRef,schemaPath=_ref32.schemaPath;if(!$data){if(typeof schema=="number"||typeof schema=="boolean")return schema;if(typeof schema=="string")return codegen._(_templateObject14||(_templateObject14=_taggedTemplateLiteral(["",""])),schema);}return codegen._(_templateObject15||(_templateObject15=_taggedTemplateLiteral(["","","",""])),topSchemaRef,schemaPath,codegen.getProperty(keyword));}exports.schemaRefOrVal=schemaRefOrVal;function unescapeFragment(str){return unescapeJsonPointer(decodeURIComponent(str));}exports.unescapeFragment=unescapeFragment;function escapeFragment(str){return encodeURIComponent(escapeJsonPointer(str));}exports.escapeFragment=escapeFragment;function escapeJsonPointer(str){if(typeof str=="number")return"".concat(str);return str.replace(/~/g,"~0").replace(/\//g,"~1");}exports.escapeJsonPointer=escapeJsonPointer;function unescapeJsonPointer(str){return str.replace(/~1/g,"/").replace(/~0/g,"~");}exports.unescapeJsonPointer=unescapeJsonPointer;function eachItem(xs,f){if(Array.isArray(xs)){var _iterator5=_createForOfIteratorHelper(xs),_step5;try{for(_iterator5.s();!(_step5=_iterator5.n()).done;){var x=_step5.value;f(x);}}catch(err){_iterator5.e(err);}finally{_iterator5.f();}}else{f(xs);}}exports.eachItem=eachItem;function makeMergeEvaluated(_ref33){var mergeNames=_ref33.mergeNames,mergeToName=_ref33.mergeToName,mergeValues=_ref33.mergeValues,resultToName=_ref33.resultToName;return function(gen,from,to,toName){var res=to===undefined?from:to instanceof codegen.Name?(from instanceof codegen.Name?mergeNames(gen,from,to):mergeToName(gen,from,to),to):from instanceof codegen.Name?(mergeToName(gen,to,from),from):mergeValues(from,to);return toName===codegen.Name&&!(res instanceof codegen.Name)?resultToName(gen,res):res;};}exports.mergeEvaluated={props:makeMergeEvaluated({mergeNames:function mergeNames(gen,from,to){return gen["if"](codegen._(_templateObject16||(_templateObject16=_taggedTemplateLiteral([""," !== true && "," !== undefined"])),to,from),function(){gen["if"](codegen._(_templateObject17||(_templateObject17=_taggedTemplateLiteral([""," === true"])),from),function(){return gen.assign(to,true);},function(){return gen.assign(to,codegen._(_templateObject18||(_templateObject18=_taggedTemplateLiteral([""," || {}"])),to)).code(codegen._(_templateObject19||(_templateObject19=_taggedTemplateLiteral(["Object.assign(",", ",")"])),to,from));});});},mergeToName:function mergeToName(gen,from,to){return gen["if"](codegen._(_templateObject20||(_templateObject20=_taggedTemplateLiteral([""," !== true"])),to),function(){if(from===true){gen.assign(to,true);}else{gen.assign(to,codegen._(_templateObject21||(_templateObject21=_taggedTemplateLiteral([""," || {}"])),to));setEvaluated(gen,to,from);}});},mergeValues:function mergeValues(from,to){return from===true?true:_objectSpread2(_objectSpread2({},from),to);},resultToName:evaluatedPropsToName}),items:makeMergeEvaluated({mergeNames:function mergeNames(gen,from,to){return gen["if"](codegen._(_templateObject22||(_templateObject22=_taggedTemplateLiteral([""," !== true && "," !== undefined"])),to,from),function(){return gen.assign(to,codegen._(_templateObject23||(_templateObject23=_taggedTemplateLiteral([""," === true ? true : "," > "," ? "," : ",""])),from,to,from,to,from));});},mergeToName:function mergeToName(gen,from,to){return gen["if"](codegen._(_templateObject24||(_templateObject24=_taggedTemplateLiteral([""," !== true"])),to),function(){return gen.assign(to,from===true?true:codegen._(_templateObject25||(_templateObject25=_taggedTemplateLiteral([""," > "," ? "," : ",""])),to,from,to,from));});},mergeValues:function mergeValues(from,to){return from===true?true:Math.max(from,to);},resultToName:function resultToName(gen,items){return gen["var"]("items",items);}})};function evaluatedPropsToName(gen,ps){if(ps===true)return gen["var"]("props",true);var props=gen["var"]("props",codegen._(_templateObject26||(_templateObject26=_taggedTemplateLiteral(["{}"]))));if(ps!==undefined)setEvaluated(gen,props,ps);return props;}exports.evaluatedPropsToName=evaluatedPropsToName;function setEvaluated(gen,props,ps){Object.keys(ps).forEach(function(p){return gen.assign(codegen._(_templateObject27||(_templateObject27=_taggedTemplateLiteral(["","",""])),props,codegen.getProperty(p)),true);});}exports.setEvaluated=setEvaluated;var snippets={};function useFunc(gen,f){return gen.scopeValue("func",{ref:f,code:snippets[f.code]||(snippets[f.code]=new code$1._Code(f.code))});}exports.useFunc=useFunc;var Type;(function(Type){Type[Type["Num"]=0]="Num";Type[Type["Str"]=1]="Str";})(Type=exports.Type||(exports.Type={}));function getErrorPath(dataProp,dataPropType,jsPropertySyntax){// let path
-if(dataProp instanceof codegen.Name){var isNumber=dataPropType===Type.Num;return jsPropertySyntax?isNumber?codegen._(_templateObject28||(_templateObject28=_taggedTemplateLiteral(["\"[\" + "," + \"]\""])),dataProp):codegen._(_templateObject29||(_templateObject29=_taggedTemplateLiteral(["\"['\" + "," + \"']\""])),dataProp):isNumber?codegen._(_templateObject30||(_templateObject30=_taggedTemplateLiteral(["\"/\" + ",""])),dataProp):codegen._(_templateObject31||(_templateObject31=_taggedTemplateLiteral(["\"/\" + ",".replace(/~/g, \"~0\").replace(/\\//g, \"~1\")"],["\"/\" + ",".replace(/~/g, \"~0\").replace(/\\\\//g, \"~1\")"])),dataProp);// TODO maybe use global escapePointer
-}return jsPropertySyntax?codegen.getProperty(dataProp).toString():"/"+escapeJsonPointer(dataProp);}exports.getErrorPath=getErrorPath;function checkStrictMode(it,msg){var mode=arguments.length>2&&arguments[2]!==undefined?arguments[2]:it.opts.strictSchema;if(!mode)return;msg="strict mode: ".concat(msg);if(mode===true)throw new Error(msg);it.self.logger.warn(msg);}exports.checkStrictMode=checkStrictMode;});var names={// validation function arguments
-data:new codegen.Name("data"),// args passed from referencing schema
-valCxt:new codegen.Name("valCxt"),instancePath:new codegen.Name("instancePath"),parentData:new codegen.Name("parentData"),parentDataProperty:new codegen.Name("parentDataProperty"),rootData:new codegen.Name("rootData"),dynamicAnchors:new codegen.Name("dynamicAnchors"),// function scoped variables
-vErrors:new codegen.Name("vErrors"),errors:new codegen.Name("errors"),"this":new codegen.Name("this"),// "globals"
-self:new codegen.Name("self"),scope:new codegen.Name("scope"),// JTD serialize/parse name for JSON string and position
-json:new codegen.Name("json"),jsonPos:new codegen.Name("jsonPos"),jsonLen:new codegen.Name("jsonLen"),jsonPart:new codegen.Name("jsonPart")};var _default$z=names;var names_1=/*#__PURE__*/Object.defineProperty({"default":_default$z},'__esModule',{value:true});var errors=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.extendErrors=exports.resetErrorsCount=exports.reportExtraError=exports.reportError=exports.keyword$DataError=exports.keywordError=void 0;exports.keywordError={message:function message(_ref34){var keyword=_ref34.keyword;return codegen.str(_templateObject32||(_templateObject32=_taggedTemplateLiteral(["must pass \"","\" keyword validation"])),keyword);}};exports.keyword$DataError={message:function message(_ref35){var keyword=_ref35.keyword,schemaType=_ref35.schemaType;return schemaType?codegen.str(_templateObject33||(_templateObject33=_taggedTemplateLiteral(["\"","\" keyword must be "," ($data)"])),keyword,schemaType):codegen.str(_templateObject34||(_templateObject34=_taggedTemplateLiteral(["\"","\" keyword is invalid ($data)"])),keyword);}};function reportError(cxt){var error=arguments.length>1&&arguments[1]!==undefined?arguments[1]:exports.keywordError;var errorPaths=arguments.length>2?arguments[2]:undefined;var overrideAllErrors=arguments.length>3?arguments[3]:undefined;var it=cxt.it;var gen=it.gen,compositeRule=it.compositeRule,allErrors=it.allErrors;var errObj=errorObjectCode(cxt,error,errorPaths);if(overrideAllErrors!==null&&overrideAllErrors!==void 0?overrideAllErrors:compositeRule||allErrors){addError(gen,errObj);}else{returnErrors(it,codegen._(_templateObject35||(_templateObject35=_taggedTemplateLiteral(["[","]"])),errObj));}}exports.reportError=reportError;function reportExtraError(cxt){var error=arguments.length>1&&arguments[1]!==undefined?arguments[1]:exports.keywordError;var errorPaths=arguments.length>2?arguments[2]:undefined;var it=cxt.it;var gen=it.gen,compositeRule=it.compositeRule,allErrors=it.allErrors;var errObj=errorObjectCode(cxt,error,errorPaths);addError(gen,errObj);if(!(compositeRule||allErrors)){returnErrors(it,names_1["default"].vErrors);}}exports.reportExtraError=reportExtraError;function resetErrorsCount(gen,errsCount){gen.assign(names_1["default"].errors,errsCount);gen["if"](codegen._(_templateObject36||(_templateObject36=_taggedTemplateLiteral([""," !== null"])),names_1["default"].vErrors),function(){return gen["if"](errsCount,function(){return gen.assign(codegen._(_templateObject37||(_templateObject37=_taggedTemplateLiteral(["",".length"])),names_1["default"].vErrors),errsCount);},function(){return gen.assign(names_1["default"].vErrors,null);});});}exports.resetErrorsCount=resetErrorsCount;function extendErrors(_ref36){var gen=_ref36.gen,keyword=_ref36.keyword,schemaValue=_ref36.schemaValue,data=_ref36.data,errsCount=_ref36.errsCount,it=_ref36.it;/* istanbul ignore if */if(errsCount===undefined)throw new Error("ajv implementation error");var err=gen.name("err");gen.forRange("i",errsCount,names_1["default"].errors,function(i){gen["const"](err,codegen._(_templateObject38||(_templateObject38=_taggedTemplateLiteral(["","[","]"])),names_1["default"].vErrors,i));gen["if"](codegen._(_templateObject39||(_templateObject39=_taggedTemplateLiteral(["",".instancePath === undefined"])),err),function(){return gen.assign(codegen._(_templateObject40||(_templateObject40=_taggedTemplateLiteral(["",".instancePath"])),err),codegen.strConcat(names_1["default"].instancePath,it.errorPath));});gen.assign(codegen._(_templateObject41||(_templateObject41=_taggedTemplateLiteral(["",".schemaPath"])),err),codegen.str(_templateObject42||(_templateObject42=_taggedTemplateLiteral(["","/",""])),it.errSchemaPath,keyword));if(it.opts.verbose){gen.assign(codegen._(_templateObject43||(_templateObject43=_taggedTemplateLiteral(["",".schema"])),err),schemaValue);gen.assign(codegen._(_templateObject44||(_templateObject44=_taggedTemplateLiteral(["",".data"])),err),data);}});}exports.extendErrors=extendErrors;function addError(gen,errObj){var err=gen["const"]("err",errObj);gen["if"](codegen._(_templateObject45||(_templateObject45=_taggedTemplateLiteral([""," === null"])),names_1["default"].vErrors),function(){return gen.assign(names_1["default"].vErrors,codegen._(_templateObject46||(_templateObject46=_taggedTemplateLiteral(["[","]"])),err));},codegen._(_templateObject47||(_templateObject47=_taggedTemplateLiteral(["",".push(",")"])),names_1["default"].vErrors,err));gen.code(codegen._(_templateObject48||(_templateObject48=_taggedTemplateLiteral(["","++"])),names_1["default"].errors));}function returnErrors(it,errs){var gen=it.gen,validateName=it.validateName,schemaEnv=it.schemaEnv;if(schemaEnv.$async){gen["throw"](codegen._(_templateObject49||(_templateObject49=_taggedTemplateLiteral(["new ","(",")"])),it.ValidationError,errs));}else{gen.assign(codegen._(_templateObject50||(_templateObject50=_taggedTemplateLiteral(["",".errors"])),validateName),errs);gen["return"](false);}}var E={keyword:new codegen.Name("keyword"),schemaPath:new codegen.Name("schemaPath"),params:new codegen.Name("params"),propertyName:new codegen.Name("propertyName"),message:new codegen.Name("message"),schema:new codegen.Name("schema"),parentSchema:new codegen.Name("parentSchema")};function errorObjectCode(cxt,error,errorPaths){var createErrors=cxt.it.createErrors;if(createErrors===false)return codegen._(_templateObject51||(_templateObject51=_taggedTemplateLiteral(["{}"])));return errorObject(cxt,error,errorPaths);}function errorObject(cxt,error){var errorPaths=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{};var gen=cxt.gen,it=cxt.it;var keyValues=[errorInstancePath(it,errorPaths),errorSchemaPath(cxt,errorPaths)];extraErrorProps(cxt,error,keyValues);return gen.object.apply(gen,keyValues);}function errorInstancePath(_ref37,_ref38){var errorPath=_ref37.errorPath;var instancePath=_ref38.instancePath;var instPath=instancePath?codegen.str(_templateObject52||(_templateObject52=_taggedTemplateLiteral(["","",""])),errorPath,util.getErrorPath(instancePath,util.Type.Str)):errorPath;return[names_1["default"].instancePath,codegen.strConcat(names_1["default"].instancePath,instPath)];}function errorSchemaPath(_ref39,_ref40){var keyword=_ref39.keyword,errSchemaPath=_ref39.it.errSchemaPath;var schemaPath=_ref40.schemaPath,parentSchema=_ref40.parentSchema;var schPath=parentSchema?errSchemaPath:codegen.str(_templateObject53||(_templateObject53=_taggedTemplateLiteral(["","/",""])),errSchemaPath,keyword);if(schemaPath){schPath=codegen.str(_templateObject54||(_templateObject54=_taggedTemplateLiteral(["","",""])),schPath,util.getErrorPath(schemaPath,util.Type.Str));}return[E.schemaPath,schPath];}function extraErrorProps(cxt,_ref41,keyValues){var params=_ref41.params,message=_ref41.message;var keyword=cxt.keyword,data=cxt.data,schemaValue=cxt.schemaValue,it=cxt.it;var opts=it.opts,propertyName=it.propertyName,topSchemaRef=it.topSchemaRef,schemaPath=it.schemaPath;keyValues.push([E.keyword,keyword],[E.params,typeof params=="function"?params(cxt):params||codegen._(_templateObject55||(_templateObject55=_taggedTemplateLiteral(["{}"])))]);if(opts.messages){keyValues.push([E.message,typeof message=="function"?message(cxt):message]);}if(opts.verbose){keyValues.push([E.schema,schemaValue],[E.parentSchema,codegen._(_templateObject56||(_templateObject56=_taggedTemplateLiteral(["","",""])),topSchemaRef,schemaPath)],[names_1["default"].data,data]);}if(propertyName)keyValues.push([E.propertyName,propertyName]);}});var boolSchema=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.boolOrEmptySchema=exports.topBoolOrEmptySchema=void 0;var boolError={message:"boolean schema is false"};function topBoolOrEmptySchema(it){var gen=it.gen,schema=it.schema,validateName=it.validateName;if(schema===false){falseSchemaError(it,false);}else if(_typeof3(schema)=="object"&&schema.$async===true){gen["return"](names_1["default"].data);}else{gen.assign(codegen._(_templateObject57||(_templateObject57=_taggedTemplateLiteral(["",".errors"])),validateName),null);gen["return"](true);}}exports.topBoolOrEmptySchema=topBoolOrEmptySchema;function boolOrEmptySchema(it,valid){var gen=it.gen,schema=it.schema;if(schema===false){gen["var"](valid,false);// TODO var
-falseSchemaError(it);}else{gen["var"](valid,true);// TODO var
-}}exports.boolOrEmptySchema=boolOrEmptySchema;function falseSchemaError(it,overrideAllErrors){var gen=it.gen,data=it.data;// TODO maybe some other interface should be used for non-keyword validation errors...
-var cxt={gen:gen,keyword:"false schema",data:data,schema:false,schemaCode:false,schemaValue:false,params:{},it:it};errors.reportError(cxt,boolError,undefined,overrideAllErrors);}});var rules=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.getRules=exports.isJSONType=void 0;var _jsonTypes=["string","number","integer","boolean","null","object","array"];var jsonTypes=new Set(_jsonTypes);function isJSONType(x){return typeof x=="string"&&jsonTypes.has(x);}exports.isJSONType=isJSONType;function getRules(){var groups={number:{type:"number",rules:[]},string:{type:"string",rules:[]},array:{type:"array",rules:[]},object:{type:"object",rules:[]}};return{types:_objectSpread2(_objectSpread2({},groups),{},{integer:true,"boolean":true,"null":true}),rules:[{rules:[]},groups.number,groups.string,groups.array,groups.object],post:{rules:[]},all:{},keywords:{}};}exports.getRules=getRules;});var applicability=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.shouldUseRule=exports.shouldUseGroup=exports.schemaHasRulesForType=void 0;function schemaHasRulesForType(_ref42,type){var schema=_ref42.schema,self=_ref42.self;var group=self.RULES.types[type];return group&&group!==true&&shouldUseGroup(schema,group);}exports.schemaHasRulesForType=schemaHasRulesForType;function shouldUseGroup(schema,group){return group.rules.some(function(rule){return shouldUseRule(schema,rule);});}exports.shouldUseGroup=shouldUseGroup;function shouldUseRule(schema,rule){var _a;return schema[rule.keyword]!==undefined||((_a=rule.definition["implements"])===null||_a===void 0?void 0:_a.some(function(kwd){return schema[kwd]!==undefined;}));}exports.shouldUseRule=shouldUseRule;});var dataType=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.reportTypeError=exports.checkDataTypes=exports.checkDataType=exports.coerceAndCheckDataType=exports.getJSONTypes=exports.getSchemaTypes=exports.DataType=void 0;var DataType;(function(DataType){DataType[DataType["Correct"]=0]="Correct";DataType[DataType["Wrong"]=1]="Wrong";})(DataType=exports.DataType||(exports.DataType={}));function getSchemaTypes(schema){var types=getJSONTypes(schema.type);var hasNull=types.includes("null");if(hasNull){if(schema.nullable===false)throw new Error("type: null contradicts nullable: false");}else{if(!types.length&&schema.nullable!==undefined){throw new Error('"nullable" cannot be used without "type"');}if(schema.nullable===true)types.push("null");}return types;}exports.getSchemaTypes=getSchemaTypes;function getJSONTypes(ts){var types=Array.isArray(ts)?ts:ts?[ts]:[];if(types.every(rules.isJSONType))return types;throw new Error("type must be JSONType or JSONType[]: "+types.join(","));}exports.getJSONTypes=getJSONTypes;function coerceAndCheckDataType(it,types){var gen=it.gen,data=it.data,opts=it.opts;var coerceTo=coerceToTypes(types,opts.coerceTypes);var checkTypes=types.length>0&&!(coerceTo.length===0&&types.length===1&&applicability.schemaHasRulesForType(it,types[0]));if(checkTypes){var wrongType=checkDataTypes(types,data,opts.strictNumbers,DataType.Wrong);gen["if"](wrongType,function(){if(coerceTo.length)coerceData(it,types,coerceTo);else reportTypeError(it);});}return checkTypes;}exports.coerceAndCheckDataType=coerceAndCheckDataType;var COERCIBLE=new Set(["string","number","integer","boolean","null"]);function coerceToTypes(types,coerceTypes){return coerceTypes?types.filter(function(t){return COERCIBLE.has(t)||coerceTypes==="array"&&t==="array";}):[];}function coerceData(it,types,coerceTo){var gen=it.gen,data=it.data,opts=it.opts;var dataType=gen["let"]("dataType",codegen._(_templateObject58||(_templateObject58=_taggedTemplateLiteral(["typeof ",""])),data));var coerced=gen["let"]("coerced",codegen._(_templateObject59||(_templateObject59=_taggedTemplateLiteral(["undefined"]))));if(opts.coerceTypes==="array"){gen["if"](codegen._(_templateObject60||(_templateObject60=_taggedTemplateLiteral([""," == 'object' && Array.isArray(",") && ",".length == 1"])),dataType,data,data),function(){return gen.assign(data,codegen._(_templateObject61||(_templateObject61=_taggedTemplateLiteral(["","[0]"])),data)).assign(dataType,codegen._(_templateObject62||(_templateObject62=_taggedTemplateLiteral(["typeof ",""])),data))["if"](checkDataTypes(types,data,opts.strictNumbers),function(){return gen.assign(coerced,data);});});}gen["if"](codegen._(_templateObject63||(_templateObject63=_taggedTemplateLiteral([""," !== undefined"])),coerced));var _iterator6=_createForOfIteratorHelper(coerceTo),_step6;try{for(_iterator6.s();!(_step6=_iterator6.n()).done;){var t=_step6.value;if(COERCIBLE.has(t)||t==="array"&&opts.coerceTypes==="array"){coerceSpecificType(t);}}}catch(err){_iterator6.e(err);}finally{_iterator6.f();}gen["else"]();reportTypeError(it);gen.endIf();gen["if"](codegen._(_templateObject64||(_templateObject64=_taggedTemplateLiteral([""," !== undefined"])),coerced),function(){gen.assign(data,coerced);assignParentData(it,coerced);});function coerceSpecificType(t){switch(t){case"string":gen.elseIf(codegen._(_templateObject65||(_templateObject65=_taggedTemplateLiteral([""," == \"number\" || "," == \"boolean\""])),dataType,dataType)).assign(coerced,codegen._(_templateObject66||(_templateObject66=_taggedTemplateLiteral(["\"\" + ",""])),data)).elseIf(codegen._(_templateObject67||(_templateObject67=_taggedTemplateLiteral([""," === null"])),data)).assign(coerced,codegen._(_templateObject68||(_templateObject68=_taggedTemplateLiteral(["\"\""]))));return;case"number":gen.elseIf(codegen._(_templateObject69||(_templateObject69=_taggedTemplateLiteral([""," == \"boolean\" || "," === null\n              || ("," == \"string\" && "," && "," == +",")"])),dataType,data,dataType,data,data,data)).assign(coerced,codegen._(_templateObject70||(_templateObject70=_taggedTemplateLiteral(["+",""])),data));return;case"integer":gen.elseIf(codegen._(_templateObject71||(_templateObject71=_taggedTemplateLiteral([""," === \"boolean\" || "," === null\n              || ("," === \"string\" && "," && "," == +"," && !("," % 1))"])),dataType,data,dataType,data,data,data,data)).assign(coerced,codegen._(_templateObject72||(_templateObject72=_taggedTemplateLiteral(["+",""])),data));return;case"boolean":gen.elseIf(codegen._(_templateObject73||(_templateObject73=_taggedTemplateLiteral([""," === \"false\" || "," === 0 || "," === null"])),data,data,data)).assign(coerced,false).elseIf(codegen._(_templateObject74||(_templateObject74=_taggedTemplateLiteral([""," === \"true\" || "," === 1"])),data,data)).assign(coerced,true);return;case"null":gen.elseIf(codegen._(_templateObject75||(_templateObject75=_taggedTemplateLiteral([""," === \"\" || "," === 0 || "," === false"])),data,data,data));gen.assign(coerced,null);return;case"array":gen.elseIf(codegen._(_templateObject76||(_templateObject76=_taggedTemplateLiteral([""," === \"string\" || "," === \"number\"\n              || "," === \"boolean\" || "," === null"])),dataType,dataType,dataType,data)).assign(coerced,codegen._(_templateObject77||(_templateObject77=_taggedTemplateLiteral(["[","]"])),data));}}}function assignParentData(_ref43,expr){var gen=_ref43.gen,parentData=_ref43.parentData,parentDataProperty=_ref43.parentDataProperty;// TODO use gen.property
-gen["if"](codegen._(_templateObject78||(_templateObject78=_taggedTemplateLiteral([""," !== undefined"])),parentData),function(){return gen.assign(codegen._(_templateObject79||(_templateObject79=_taggedTemplateLiteral(["","[","]"])),parentData,parentDataProperty),expr);});}function checkDataType(dataType,data,strictNums){var correct=arguments.length>3&&arguments[3]!==undefined?arguments[3]:DataType.Correct;var EQ=correct===DataType.Correct?codegen.operators.EQ:codegen.operators.NEQ;var cond;switch(dataType){case"null":return codegen._(_templateObject80||(_templateObject80=_taggedTemplateLiteral([""," "," null"])),data,EQ);case"array":cond=codegen._(_templateObject81||(_templateObject81=_taggedTemplateLiteral(["Array.isArray(",")"])),data);break;case"object":cond=codegen._(_templateObject82||(_templateObject82=_taggedTemplateLiteral([""," && typeof "," == \"object\" && !Array.isArray(",")"])),data,data,data);break;case"integer":cond=numCond(codegen._(_templateObject83||(_templateObject83=_taggedTemplateLiteral(["!("," % 1) && !isNaN(",")"])),data,data));break;case"number":cond=numCond();break;default:return codegen._(_templateObject84||(_templateObject84=_taggedTemplateLiteral(["typeof "," "," ",""])),data,EQ,dataType);}return correct===DataType.Correct?cond:codegen.not(cond);function numCond(){var _cond=arguments.length>0&&arguments[0]!==undefined?arguments[0]:codegen.nil;return codegen.and(codegen._(_templateObject85||(_templateObject85=_taggedTemplateLiteral(["typeof "," == \"number\""])),data),_cond,strictNums?codegen._(_templateObject86||(_templateObject86=_taggedTemplateLiteral(["isFinite(",")"])),data):codegen.nil);}}exports.checkDataType=checkDataType;function checkDataTypes(dataTypes,data,strictNums,correct){if(dataTypes.length===1){return checkDataType(dataTypes[0],data,strictNums,correct);}var cond;var types=util.toHash(dataTypes);if(types.array&&types.object){var notObj=codegen._(_templateObject87||(_templateObject87=_taggedTemplateLiteral(["typeof "," != \"object\""])),data);cond=types["null"]?notObj:codegen._(_templateObject88||(_templateObject88=_taggedTemplateLiteral(["!"," || ",""])),data,notObj);delete types["null"];delete types.array;delete types.object;}else{cond=codegen.nil;}if(types.number)delete types.integer;for(var t in types){cond=codegen.and(cond,checkDataType(t,data,strictNums,correct));}return cond;}exports.checkDataTypes=checkDataTypes;var typeError={message:function message(_ref44){var schema=_ref44.schema;return"must be ".concat(schema);},params:function params(_ref45){var schema=_ref45.schema,schemaValue=_ref45.schemaValue;return typeof schema=="string"?codegen._(_templateObject89||(_templateObject89=_taggedTemplateLiteral(["{type: ","}"])),schema):codegen._(_templateObject90||(_templateObject90=_taggedTemplateLiteral(["{type: ","}"])),schemaValue);}};function reportTypeError(it){var cxt=getTypeErrorContext(it);errors.reportError(cxt,typeError);}exports.reportTypeError=reportTypeError;function getTypeErrorContext(it){var gen=it.gen,data=it.data,schema=it.schema;var schemaCode=util.schemaRefOrVal(it,schema,"type");return{gen:gen,keyword:"type",data:data,schema:schema.type,schemaCode:schemaCode,schemaValue:schemaCode,parentSchema:schema,params:{},it:it};}});var defaults=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.assignDefaults=void 0;function assignDefaults(it,ty){var _it$schema=it.schema,properties=_it$schema.properties,items=_it$schema.items;if(ty==="object"&&properties){for(var key in properties){assignDefault(it,key,properties[key]["default"]);}}else if(ty==="array"&&Array.isArray(items)){items.forEach(function(sch,i){return assignDefault(it,i,sch["default"]);});}}exports.assignDefaults=assignDefaults;function assignDefault(it,prop,defaultValue){var gen=it.gen,compositeRule=it.compositeRule,data=it.data,opts=it.opts;if(defaultValue===undefined)return;var childData=codegen._(_templateObject91||(_templateObject91=_taggedTemplateLiteral(["","",""])),data,codegen.getProperty(prop));if(compositeRule){util.checkStrictMode(it,"default is ignored for: ".concat(childData));return;}var condition=codegen._(_templateObject92||(_templateObject92=_taggedTemplateLiteral([""," === undefined"])),childData);if(opts.useDefaults==="empty"){condition=codegen._(_templateObject93||(_templateObject93=_taggedTemplateLiteral([""," || "," === null || "," === \"\""])),condition,childData,childData);}// `${childData} === undefined` +
-// (opts.useDefaults === "empty" ? ` || ${childData} === null || ${childData} === ""` : "")
-gen["if"](condition,codegen._(_templateObject94||(_templateObject94=_taggedTemplateLiteral([""," = ",""])),childData,codegen.stringify(defaultValue)));}});var _code=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.validateUnion=exports.validateArray=exports.usePattern=exports.callValidateCode=exports.schemaProperties=exports.allSchemaProperties=exports.noPropertyInData=exports.propertyInData=exports.isOwnProperty=exports.hasPropFunc=exports.reportMissingProp=exports.checkMissingProp=exports.checkReportMissingProp=void 0;function checkReportMissingProp(cxt,prop){var gen=cxt.gen,data=cxt.data,it=cxt.it;gen["if"](noPropertyInData(gen,data,prop,it.opts.ownProperties),function(){cxt.setParams({missingProperty:codegen._(_templateObject95||(_templateObject95=_taggedTemplateLiteral(["",""])),prop)},true);cxt.error();});}exports.checkReportMissingProp=checkReportMissingProp;function checkMissingProp(_ref46,properties,missing){var gen=_ref46.gen,data=_ref46.data,opts=_ref46.it.opts;return codegen.or.apply(codegen,_toConsumableArray3(properties.map(function(prop){return codegen.and(noPropertyInData(gen,data,prop,opts.ownProperties),codegen._(_templateObject96||(_templateObject96=_taggedTemplateLiteral([""," = ",""])),missing,prop));})));}exports.checkMissingProp=checkMissingProp;function reportMissingProp(cxt,missing){cxt.setParams({missingProperty:missing},true);cxt.error();}exports.reportMissingProp=reportMissingProp;function hasPropFunc(gen){return gen.scopeValue("func",{// eslint-disable-next-line @typescript-eslint/unbound-method
-ref:Object.prototype.hasOwnProperty,code:codegen._(_templateObject97||(_templateObject97=_taggedTemplateLiteral(["Object.prototype.hasOwnProperty"])))});}exports.hasPropFunc=hasPropFunc;function isOwnProperty(gen,data,property){return codegen._(_templateObject98||(_templateObject98=_taggedTemplateLiteral(["",".call(",", ",")"])),hasPropFunc(gen),data,property);}exports.isOwnProperty=isOwnProperty;function propertyInData(gen,data,property,ownProperties){var cond=codegen._(_templateObject99||(_templateObject99=_taggedTemplateLiteral(["",""," !== undefined"])),data,codegen.getProperty(property));return ownProperties?codegen._(_templateObject100||(_templateObject100=_taggedTemplateLiteral([""," && ",""])),cond,isOwnProperty(gen,data,property)):cond;}exports.propertyInData=propertyInData;function noPropertyInData(gen,data,property,ownProperties){var cond=codegen._(_templateObject101||(_templateObject101=_taggedTemplateLiteral(["",""," === undefined"])),data,codegen.getProperty(property));return ownProperties?codegen.or(cond,codegen.not(isOwnProperty(gen,data,property))):cond;}exports.noPropertyInData=noPropertyInData;function allSchemaProperties(schemaMap){return schemaMap?Object.keys(schemaMap).filter(function(p){return p!=="__proto__";}):[];}exports.allSchemaProperties=allSchemaProperties;function schemaProperties(it,schemaMap){return allSchemaProperties(schemaMap).filter(function(p){return!util.alwaysValidSchema(it,schemaMap[p]);});}exports.schemaProperties=schemaProperties;function callValidateCode(_ref47,func,context,passSchema){var schemaCode=_ref47.schemaCode,data=_ref47.data,_ref47$it=_ref47.it,gen=_ref47$it.gen,topSchemaRef=_ref47$it.topSchemaRef,schemaPath=_ref47$it.schemaPath,errorPath=_ref47$it.errorPath,it=_ref47.it;var dataAndSchema=passSchema?codegen._(_templateObject102||(_templateObject102=_taggedTemplateLiteral(["",", ",", ","",""])),schemaCode,data,topSchemaRef,schemaPath):data;var valCxt=[[names_1["default"].instancePath,codegen.strConcat(names_1["default"].instancePath,errorPath)],[names_1["default"].parentData,it.parentData],[names_1["default"].parentDataProperty,it.parentDataProperty],[names_1["default"].rootData,names_1["default"].rootData]];if(it.opts.dynamicRef)valCxt.push([names_1["default"].dynamicAnchors,names_1["default"].dynamicAnchors]);var args=codegen._(_templateObject103||(_templateObject103=_taggedTemplateLiteral(["",", ",""])),dataAndSchema,gen.object.apply(gen,valCxt));return context!==codegen.nil?codegen._(_templateObject104||(_templateObject104=_taggedTemplateLiteral(["",".call(",", ",")"])),func,context,args):codegen._(_templateObject105||(_templateObject105=_taggedTemplateLiteral(["","(",")"])),func,args);}exports.callValidateCode=callValidateCode;function usePattern(_ref48,pattern){var gen=_ref48.gen,opts=_ref48.it.opts;var u=opts.unicodeRegExp?"u":"";return gen.scopeValue("pattern",{key:pattern,ref:new RegExp(pattern,u),code:codegen._(_templateObject106||(_templateObject106=_taggedTemplateLiteral(["new RegExp(",", ",")"])),pattern,u)});}exports.usePattern=usePattern;function validateArray(cxt){var gen=cxt.gen,data=cxt.data,keyword=cxt.keyword,it=cxt.it;var valid=gen.name("valid");if(it.allErrors){var validArr=gen["let"]("valid",true);validateItems(function(){return gen.assign(validArr,false);});return validArr;}gen["var"](valid,true);validateItems(function(){return gen["break"]();});return valid;function validateItems(notValid){var len=gen["const"]("len",codegen._(_templateObject107||(_templateObject107=_taggedTemplateLiteral(["",".length"])),data));gen.forRange("i",0,len,function(i){cxt.subschema({keyword:keyword,dataProp:i,dataPropType:util.Type.Num},valid);gen["if"](codegen.not(valid),notValid);});}}exports.validateArray=validateArray;function validateUnion(cxt){var gen=cxt.gen,schema=cxt.schema,keyword=cxt.keyword,it=cxt.it;/* istanbul ignore if */if(!Array.isArray(schema))throw new Error("ajv implementation error");var alwaysValid=schema.some(function(sch){return util.alwaysValidSchema(it,sch);});if(alwaysValid&&!it.opts.unevaluated)return;var valid=gen["let"]("valid",false);var schValid=gen.name("_valid");gen.block(function(){return schema.forEach(function(_sch,i){var schCxt=cxt.subschema({keyword:keyword,schemaProp:i,compositeRule:true},schValid);gen.assign(valid,codegen._(_templateObject108||(_templateObject108=_taggedTemplateLiteral([""," || ",""])),valid,schValid));var merged=cxt.mergeValidEvaluated(schCxt,schValid);// can short-circuit if `unevaluatedProperties/Items` not supported (opts.unevaluated !== true)
-// or if all properties and items were evaluated (it.props === true && it.items === true)
-if(!merged)gen["if"](codegen.not(valid));});});cxt.result(valid,function(){return cxt.reset();},function(){return cxt.error(true);});}exports.validateUnion=validateUnion;});var keyword=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.validateKeywordUsage=exports.validSchemaType=exports.funcKeywordCode=exports.macroKeywordCode=void 0;function macroKeywordCode(cxt,def){var gen=cxt.gen,keyword=cxt.keyword,schema=cxt.schema,parentSchema=cxt.parentSchema,it=cxt.it;var macroSchema=def.macro.call(it.self,schema,parentSchema,it);var schemaRef=useKeyword(gen,keyword,macroSchema);if(it.opts.validateSchema!==false)it.self.validateSchema(macroSchema,true);var valid=gen.name("valid");cxt.subschema({schema:macroSchema,schemaPath:codegen.nil,errSchemaPath:"".concat(it.errSchemaPath,"/").concat(keyword),topSchemaRef:schemaRef,compositeRule:true},valid);cxt.pass(valid,function(){return cxt.error(true);});}exports.macroKeywordCode=macroKeywordCode;function funcKeywordCode(cxt,def){var _a;var gen=cxt.gen,keyword=cxt.keyword,schema=cxt.schema,parentSchema=cxt.parentSchema,$data=cxt.$data,it=cxt.it;checkAsyncKeyword(it,def);var validate=!$data&&def.compile?def.compile.call(it.self,schema,parentSchema,it):def.validate;var validateRef=useKeyword(gen,keyword,validate);var valid=gen["let"]("valid");cxt.block$data(valid,validateKeyword);cxt.ok((_a=def.valid)!==null&&_a!==void 0?_a:valid);function validateKeyword(){if(def.errors===false){assignValid();if(def.modifying)modifyData(cxt);reportErrs(function(){return cxt.error();});}else{var ruleErrs=def.async?validateAsync():validateSync();if(def.modifying)modifyData(cxt);reportErrs(function(){return addErrs(cxt,ruleErrs);});}}function validateAsync(){var ruleErrs=gen["let"]("ruleErrs",null);gen["try"](function(){return assignValid(codegen._(_templateObject109||(_templateObject109=_taggedTemplateLiteral(["await "]))));},function(e){return gen.assign(valid,false)["if"](codegen._(_templateObject110||(_templateObject110=_taggedTemplateLiteral([""," instanceof ",""])),e,it.ValidationError),function(){return gen.assign(ruleErrs,codegen._(_templateObject111||(_templateObject111=_taggedTemplateLiteral(["",".errors"])),e));},function(){return gen["throw"](e);});});return ruleErrs;}function validateSync(){var validateErrs=codegen._(_templateObject112||(_templateObject112=_taggedTemplateLiteral(["",".errors"])),validateRef);gen.assign(validateErrs,null);assignValid(codegen.nil);return validateErrs;}function assignValid(){var _await=arguments.length>0&&arguments[0]!==undefined?arguments[0]:def.async?codegen._(_templateObject113||(_templateObject113=_taggedTemplateLiteral(["await "]))):codegen.nil;var passCxt=it.opts.passContext?names_1["default"]["this"]:names_1["default"].self;var passSchema=!("compile"in def&&!$data||def.schema===false);gen.assign(valid,codegen._(_templateObject114||(_templateObject114=_taggedTemplateLiteral(["","",""])),_await,_code.callValidateCode(cxt,validateRef,passCxt,passSchema)),def.modifying);}function reportErrs(errors){var _a;gen["if"](codegen.not((_a=def.valid)!==null&&_a!==void 0?_a:valid),errors);}}exports.funcKeywordCode=funcKeywordCode;function modifyData(cxt){var gen=cxt.gen,data=cxt.data,it=cxt.it;gen["if"](it.parentData,function(){return gen.assign(data,codegen._(_templateObject115||(_templateObject115=_taggedTemplateLiteral(["","[","]"])),it.parentData,it.parentDataProperty));});}function addErrs(cxt,errs){var gen=cxt.gen;gen["if"](codegen._(_templateObject116||(_templateObject116=_taggedTemplateLiteral(["Array.isArray(",")"])),errs),function(){gen.assign(names_1["default"].vErrors,codegen._(_templateObject117||(_templateObject117=_taggedTemplateLiteral([""," === null ? "," : ",".concat(",")"])),names_1["default"].vErrors,errs,names_1["default"].vErrors,errs)).assign(names_1["default"].errors,codegen._(_templateObject118||(_templateObject118=_taggedTemplateLiteral(["",".length"])),names_1["default"].vErrors));errors.extendErrors(cxt);},function(){return cxt.error();});}function checkAsyncKeyword(_ref49,def){var schemaEnv=_ref49.schemaEnv;if(def.async&&!schemaEnv.$async)throw new Error("async keyword in sync schema");}function useKeyword(gen,keyword,result){if(result===undefined)throw new Error("keyword \"".concat(keyword,"\" failed to compile"));return gen.scopeValue("keyword",typeof result=="function"?{ref:result}:{ref:result,code:codegen.stringify(result)});}function validSchemaType(schema,schemaType){var allowUndefined=arguments.length>2&&arguments[2]!==undefined?arguments[2]:false;// TODO add tests
-return!schemaType.length||schemaType.some(function(st){return st==="array"?Array.isArray(schema):st==="object"?schema&&_typeof3(schema)=="object"&&!Array.isArray(schema):_typeof3(schema)==st||allowUndefined&&typeof schema=="undefined";});}exports.validSchemaType=validSchemaType;function validateKeywordUsage(_ref50,def,keyword){var schema=_ref50.schema,opts=_ref50.opts,self=_ref50.self,errSchemaPath=_ref50.errSchemaPath;/* istanbul ignore if */if(Array.isArray(def.keyword)?!def.keyword.includes(keyword):def.keyword!==keyword){throw new Error("ajv implementation error");}var deps=def.dependencies;if(deps===null||deps===void 0?void 0:deps.some(function(kwd){return!Object.prototype.hasOwnProperty.call(schema,kwd);})){throw new Error("parent schema must have dependencies of ".concat(keyword,": ").concat(deps.join(",")));}if(def.validateSchema){var valid=def.validateSchema(schema[keyword]);if(!valid){var msg="keyword \"".concat(keyword,"\" value is invalid at path \"").concat(errSchemaPath,"\": ")+self.errorsText(def.validateSchema.errors);if(opts.validateSchema==="log")self.logger.error(msg);else throw new Error(msg);}}}exports.validateKeywordUsage=validateKeywordUsage;});var _subschema=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.extendSubschemaMode=exports.extendSubschemaData=exports.getSubschema=void 0;function getSubschema(it,_ref51){var keyword=_ref51.keyword,schemaProp=_ref51.schemaProp,schema=_ref51.schema,schemaPath=_ref51.schemaPath,errSchemaPath=_ref51.errSchemaPath,topSchemaRef=_ref51.topSchemaRef;if(keyword!==undefined&&schema!==undefined){throw new Error('both "keyword" and "schema" passed, only one allowed');}if(keyword!==undefined){var sch=it.schema[keyword];return schemaProp===undefined?{schema:sch,schemaPath:codegen._(_templateObject119||(_templateObject119=_taggedTemplateLiteral(["","",""])),it.schemaPath,codegen.getProperty(keyword)),errSchemaPath:"".concat(it.errSchemaPath,"/").concat(keyword)}:{schema:sch[schemaProp],schemaPath:codegen._(_templateObject120||(_templateObject120=_taggedTemplateLiteral(["","","",""])),it.schemaPath,codegen.getProperty(keyword),codegen.getProperty(schemaProp)),errSchemaPath:"".concat(it.errSchemaPath,"/").concat(keyword,"/").concat(util.escapeFragment(schemaProp))};}if(schema!==undefined){if(schemaPath===undefined||errSchemaPath===undefined||topSchemaRef===undefined){throw new Error('"schemaPath", "errSchemaPath" and "topSchemaRef" are required with "schema"');}return{schema:schema,schemaPath:schemaPath,topSchemaRef:topSchemaRef,errSchemaPath:errSchemaPath};}throw new Error('either "keyword" or "schema" must be passed');}exports.getSubschema=getSubschema;function extendSubschemaData(subschema,it,_ref52){var dataProp=_ref52.dataProp,dpType=_ref52.dataPropType,data=_ref52.data,dataTypes=_ref52.dataTypes,propertyName=_ref52.propertyName;if(data!==undefined&&dataProp!==undefined){throw new Error('both "data" and "dataProp" passed, only one allowed');}var gen=it.gen;if(dataProp!==undefined){var errorPath=it.errorPath,dataPathArr=it.dataPathArr,opts=it.opts;var nextData=gen["let"]("data",codegen._(_templateObject121||(_templateObject121=_taggedTemplateLiteral(["","",""])),it.data,codegen.getProperty(dataProp)),true);dataContextProps(nextData);subschema.errorPath=codegen.str(_templateObject122||(_templateObject122=_taggedTemplateLiteral(["","",""])),errorPath,util.getErrorPath(dataProp,dpType,opts.jsPropertySyntax));subschema.parentDataProperty=codegen._(_templateObject123||(_templateObject123=_taggedTemplateLiteral(["",""])),dataProp);subschema.dataPathArr=[].concat(_toConsumableArray3(dataPathArr),[subschema.parentDataProperty]);}if(data!==undefined){var _nextData2=data instanceof codegen.Name?data:gen["let"]("data",data,true);// replaceable if used once?
-dataContextProps(_nextData2);if(propertyName!==undefined)subschema.propertyName=propertyName;// TODO something is possibly wrong here with not changing parentDataProperty and not appending dataPathArr
-}if(dataTypes)subschema.dataTypes=dataTypes;function dataContextProps(_nextData){subschema.data=_nextData;subschema.dataLevel=it.dataLevel+1;subschema.dataTypes=[];it.definedProperties=new Set();subschema.parentData=it.data;subschema.dataNames=[].concat(_toConsumableArray3(it.dataNames),[_nextData]);}}exports.extendSubschemaData=extendSubschemaData;function extendSubschemaMode(subschema,_ref53){var jtdDiscriminator=_ref53.jtdDiscriminator,jtdMetadata=_ref53.jtdMetadata,compositeRule=_ref53.compositeRule,createErrors=_ref53.createErrors,allErrors=_ref53.allErrors;if(compositeRule!==undefined)subschema.compositeRule=compositeRule;if(createErrors!==undefined)subschema.createErrors=createErrors;if(allErrors!==undefined)subschema.allErrors=allErrors;subschema.jtdDiscriminator=jtdDiscriminator;// not inherited
-subschema.jtdMetadata=jtdMetadata;// not inherited
-}exports.extendSubschemaMode=extendSubschemaMode;});// do not edit .js files directly - edit src/index.jst
-var fastDeepEqual=function equal(a,b){if(a===b)return true;if(a&&b&&_typeof3(a)=='object'&&_typeof3(b)=='object'){if(a.constructor!==b.constructor)return false;var length,i,keys;if(Array.isArray(a)){length=a.length;if(length!=b.length)return false;for(i=length;i--!==0;){if(!equal(a[i],b[i]))return false;}return true;}if(a.constructor===RegExp)return a.source===b.source&&a.flags===b.flags;if(a.valueOf!==Object.prototype.valueOf)return a.valueOf()===b.valueOf();if(a.toString!==Object.prototype.toString)return a.toString()===b.toString();keys=Object.keys(a);length=keys.length;if(length!==Object.keys(b).length)return false;for(i=length;i--!==0;){if(!Object.prototype.hasOwnProperty.call(b,keys[i]))return false;}for(i=length;i--!==0;){var key=keys[i];if(!equal(a[key],b[key]))return false;}return true;}// true if both NaN, false otherwise
-return a!==a&&b!==b;};var jsonSchemaTraverse=createCommonjsModule(function(module){var traverse=module.exports=function(schema,opts,cb){// Legacy support for v0.3.1 and earlier.
-if(typeof opts=='function'){cb=opts;opts={};}cb=opts.cb||cb;var pre=typeof cb=='function'?cb:cb.pre||function(){};var post=cb.post||function(){};_traverse(opts,pre,post,schema,'',schema);};traverse.keywords={additionalItems:true,items:true,contains:true,additionalProperties:true,propertyNames:true,not:true,"if":true,then:true,"else":true};traverse.arrayKeywords={items:true,allOf:true,anyOf:true,oneOf:true};traverse.propsKeywords={$defs:true,definitions:true,properties:true,patternProperties:true,dependencies:true};traverse.skipKeywords={"default":true,"enum":true,"const":true,required:true,maximum:true,minimum:true,exclusiveMaximum:true,exclusiveMinimum:true,multipleOf:true,maxLength:true,minLength:true,pattern:true,format:true,maxItems:true,minItems:true,uniqueItems:true,maxProperties:true,minProperties:true};function _traverse(opts,pre,post,schema,jsonPtr,rootSchema,parentJsonPtr,parentKeyword,parentSchema,keyIndex){if(schema&&_typeof3(schema)=='object'&&!Array.isArray(schema)){pre(schema,jsonPtr,rootSchema,parentJsonPtr,parentKeyword,parentSchema,keyIndex);for(var key in schema){var sch=schema[key];if(Array.isArray(sch)){if(key in traverse.arrayKeywords){for(var i=0;i<sch.length;i++){_traverse(opts,pre,post,sch[i],jsonPtr+'/'+key+'/'+i,rootSchema,jsonPtr,key,schema,i);}}}else if(key in traverse.propsKeywords){if(sch&&_typeof3(sch)=='object'){for(var prop in sch){_traverse(opts,pre,post,sch[prop],jsonPtr+'/'+key+'/'+escapeJsonPtr(prop),rootSchema,jsonPtr,key,schema,prop);}}}else if(key in traverse.keywords||opts.allKeys&&!(key in traverse.skipKeywords)){_traverse(opts,pre,post,sch,jsonPtr+'/'+key,rootSchema,jsonPtr,key,schema);}}post(schema,jsonPtr,rootSchema,parentJsonPtr,parentKeyword,parentSchema,keyIndex);}}function escapeJsonPtr(str){return str.replace(/~/g,'~0').replace(/\//g,'~1');}});/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */var uri_all=createCommonjsModule(function(module,exports){(function(global,factory){factory(exports);})(commonjsGlobal,function(exports){function merge(){for(var _len=arguments.length,sets=Array(_len),_key=0;_key<_len;_key++){sets[_key]=arguments[_key];}if(sets.length>1){sets[0]=sets[0].slice(0,-1);var xl=sets.length-1;for(var x=1;x<xl;++x){sets[x]=sets[x].slice(1,-1);}sets[xl]=sets[xl].slice(1);return sets.join('');}else{return sets[0];}}function subexp(str){return"(?:"+str+")";}function typeOf(o){return o===undefined?"undefined":o===null?"null":Object.prototype.toString.call(o).split(" ").pop().split("]").shift().toLowerCase();}function toUpperCase(str){return str.toUpperCase();}function toArray(obj){return obj!==undefined&&obj!==null?obj instanceof Array?obj:typeof obj.length!=="number"||obj.split||obj.setInterval||obj.call?[obj]:Array.prototype.slice.call(obj):[];}function assign(target,source){var obj=target;if(source){for(var key in source){obj[key]=source[key];}}return obj;}function buildExps(isIRI){var ALPHA$$="[A-Za-z]",DIGIT$$="[0-9]",HEXDIG$$=merge(DIGIT$$,"[A-Fa-f]"),PCT_ENCODED$=subexp(subexp("%[EFef]"+HEXDIG$$+"%"+HEXDIG$$+HEXDIG$$+"%"+HEXDIG$$+HEXDIG$$)+"|"+subexp("%[89A-Fa-f]"+HEXDIG$$+"%"+HEXDIG$$+HEXDIG$$)+"|"+subexp("%"+HEXDIG$$+HEXDIG$$)),//expanded
-GEN_DELIMS$$="[\\:\\/\\?\\#\\[\\]\\@]",SUB_DELIMS$$="[\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\=]",RESERVED$$=merge(GEN_DELIMS$$,SUB_DELIMS$$),UCSCHAR$$=isIRI?"[\\xA0-\\u200D\\u2010-\\u2029\\u202F-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF]":"[]",//subset, excludes bidi control characters
-IPRIVATE$$=isIRI?"[\\uE000-\\uF8FF]":"[]",//subset
-UNRESERVED$$=merge(ALPHA$$,DIGIT$$,"[\\-\\.\\_\\~]",UCSCHAR$$);subexp(ALPHA$$+merge(ALPHA$$,DIGIT$$,"[\\+\\-\\.]")+"*");subexp(subexp(PCT_ENCODED$+"|"+merge(UNRESERVED$$,SUB_DELIMS$$,"[\\:]"))+"*");var DEC_OCTET_RELAXED$=subexp(subexp("25[0-5]")+"|"+subexp("2[0-4]"+DIGIT$$)+"|"+subexp("1"+DIGIT$$+DIGIT$$)+"|"+subexp("0?[1-9]"+DIGIT$$)+"|0?0?"+DIGIT$$),//relaxed parsing rules
-IPV4ADDRESS$=subexp(DEC_OCTET_RELAXED$+"\\."+DEC_OCTET_RELAXED$+"\\."+DEC_OCTET_RELAXED$+"\\."+DEC_OCTET_RELAXED$),H16$=subexp(HEXDIG$$+"{1,4}"),LS32$=subexp(subexp(H16$+"\\:"+H16$)+"|"+IPV4ADDRESS$),IPV6ADDRESS1$=subexp(subexp(H16$+"\\:")+"{6}"+LS32$),//                           6( h16 ":" ) ls32
-IPV6ADDRESS2$=subexp("\\:\\:"+subexp(H16$+"\\:")+"{5}"+LS32$),//                      "::" 5( h16 ":" ) ls32
-IPV6ADDRESS3$=subexp(subexp(H16$)+"?\\:\\:"+subexp(H16$+"\\:")+"{4}"+LS32$),//[               h16 ] "::" 4( h16 ":" ) ls32
-IPV6ADDRESS4$=subexp(subexp(subexp(H16$+"\\:")+"{0,1}"+H16$)+"?\\:\\:"+subexp(H16$+"\\:")+"{3}"+LS32$),//[ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
-IPV6ADDRESS5$=subexp(subexp(subexp(H16$+"\\:")+"{0,2}"+H16$)+"?\\:\\:"+subexp(H16$+"\\:")+"{2}"+LS32$),//[ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
-IPV6ADDRESS6$=subexp(subexp(subexp(H16$+"\\:")+"{0,3}"+H16$)+"?\\:\\:"+H16$+"\\:"+LS32$),//[ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
-IPV6ADDRESS7$=subexp(subexp(subexp(H16$+"\\:")+"{0,4}"+H16$)+"?\\:\\:"+LS32$),//[ *4( h16 ":" ) h16 ] "::"              ls32
-IPV6ADDRESS8$=subexp(subexp(subexp(H16$+"\\:")+"{0,5}"+H16$)+"?\\:\\:"+H16$),//[ *5( h16 ":" ) h16 ] "::"              h16
-IPV6ADDRESS9$=subexp(subexp(subexp(H16$+"\\:")+"{0,6}"+H16$)+"?\\:\\:"),//[ *6( h16 ":" ) h16 ] "::"
-IPV6ADDRESS$=subexp([IPV6ADDRESS1$,IPV6ADDRESS2$,IPV6ADDRESS3$,IPV6ADDRESS4$,IPV6ADDRESS5$,IPV6ADDRESS6$,IPV6ADDRESS7$,IPV6ADDRESS8$,IPV6ADDRESS9$].join("|")),ZONEID$=subexp(subexp(UNRESERVED$$+"|"+PCT_ENCODED$)+"+");//RFC 6874, with relaxed parsing rules
-subexp("[vV]"+HEXDIG$$+"+\\."+merge(UNRESERVED$$,SUB_DELIMS$$,"[\\:]")+"+");//RFC 6874
-subexp(subexp(PCT_ENCODED$+"|"+merge(UNRESERVED$$,SUB_DELIMS$$))+"*");var PCHAR$=subexp(PCT_ENCODED$+"|"+merge(UNRESERVED$$,SUB_DELIMS$$,"[\\:\\@]"));subexp(subexp(PCT_ENCODED$+"|"+merge(UNRESERVED$$,SUB_DELIMS$$,"[\\@]"))+"+");subexp(subexp(PCHAR$+"|"+merge("[\\/\\?]",IPRIVATE$$))+"*");return{NOT_SCHEME:new RegExp(merge("[^]",ALPHA$$,DIGIT$$,"[\\+\\-\\.]"),"g"),NOT_USERINFO:new RegExp(merge("[^\\%\\:]",UNRESERVED$$,SUB_DELIMS$$),"g"),NOT_HOST:new RegExp(merge("[^\\%\\[\\]\\:]",UNRESERVED$$,SUB_DELIMS$$),"g"),NOT_PATH:new RegExp(merge("[^\\%\\/\\:\\@]",UNRESERVED$$,SUB_DELIMS$$),"g"),NOT_PATH_NOSCHEME:new RegExp(merge("[^\\%\\/\\@]",UNRESERVED$$,SUB_DELIMS$$),"g"),NOT_QUERY:new RegExp(merge("[^\\%]",UNRESERVED$$,SUB_DELIMS$$,"[\\:\\@\\/\\?]",IPRIVATE$$),"g"),NOT_FRAGMENT:new RegExp(merge("[^\\%]",UNRESERVED$$,SUB_DELIMS$$,"[\\:\\@\\/\\?]"),"g"),ESCAPE:new RegExp(merge("[^]",UNRESERVED$$,SUB_DELIMS$$),"g"),UNRESERVED:new RegExp(UNRESERVED$$,"g"),OTHER_CHARS:new RegExp(merge("[^\\%]",UNRESERVED$$,RESERVED$$),"g"),PCT_ENCODED:new RegExp(PCT_ENCODED$,"g"),IPV4ADDRESS:new RegExp("^("+IPV4ADDRESS$+")$"),IPV6ADDRESS:new RegExp("^\\[?("+IPV6ADDRESS$+")"+subexp(subexp("\\%25|\\%(?!"+HEXDIG$$+"{2})")+"("+ZONEID$+")")+"?\\]?$")//RFC 6874, with relaxed parsing rules
-};}var URI_PROTOCOL=buildExps(false);var IRI_PROTOCOL=buildExps(true);var slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[Symbol.iterator](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"])_i["return"]();}finally{if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if(Symbol.iterator in Object(arr)){return sliceIterator(arr,i);}else{throw new TypeError("Invalid attempt to destructure non-iterable instance");}};}();var toConsumableArray=function toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(arr.length);i<arr.length;i++){arr2[i]=arr[i];}return arr2;}else{return Array.from(arr);}};/** Highest positive signed 32-bit float value */var maxInt=2147483647;// aka. 0x7FFFFFFF or 2^31-1
-/** Bootstring parameters */var base=36;var tMin=1;var tMax=26;var skew=38;var damp=700;var initialBias=72;var initialN=128;// 0x80
-var delimiter='-';// '\x2D'
-/** Regular expressions */var regexPunycode=/^xn--/;var regexNonASCII=/[^\0-\x7E]/;// non-ASCII chars
-var regexSeparators=/[\x2E\u3002\uFF0E\uFF61]/g;// RFC 3490 separators
-/** Error messages */var errors={'overflow':'Overflow: input needs wider integers to process','not-basic':'Illegal input >= 0x80 (not a basic code point)','invalid-input':'Invalid input'};/** Convenience shortcuts */var baseMinusTMin=base-tMin;var floor=Math.floor;var stringFromCharCode=String.fromCharCode;/*--------------------------------------------------------------------------*/ /**
- * A generic error utility function.
- * @private
- * @param {String} type The error type.
- * @returns {Error} Throws a `RangeError` with the applicable error message.
- */function error$1(type){throw new RangeError(errors[type]);}/**
- * A generic `Array#map` utility function.
- * @private
- * @param {Array} array The array to iterate over.
- * @param {Function} callback The function that gets called for every array
- * item.
- * @returns {Array} A new array of values returned by the callback function.
- */function map(array,fn){var result=[];var length=array.length;while(length--){result[length]=fn(array[length]);}return result;}/**
- * A simple `Array#map`-like wrapper to work with domain name strings or email
- * addresses.
- * @private
- * @param {String} domain The domain name or email address.
- * @param {Function} callback The function that gets called for every
- * character.
- * @returns {Array} A new string of characters returned by the callback
- * function.
- */function mapDomain(string,fn){var parts=string.split('@');var result='';if(parts.length>1){// In email addresses, only the domain name should be punycoded. Leave
-// the local part (i.e. everything up to `@`) intact.
-result=parts[0]+'@';string=parts[1];}// Avoid `split(regex)` for IE8 compatibility. See #17.
-string=string.replace(regexSeparators,'\x2E');var labels=string.split('.');var encoded=map(labels,fn).join('.');return result+encoded;}/**
- * Creates an array containing the numeric code points of each Unicode
- * character in the string. While JavaScript uses UCS-2 internally,
- * this function will convert a pair of surrogate halves (each of which
- * UCS-2 exposes as separate characters) into a single code point,
- * matching UTF-16.
- * @see `punycode.ucs2.encode`
- * @see <https://mathiasbynens.be/notes/javascript-encoding>
- * @memberOf punycode.ucs2
- * @name decode
- * @param {String} string The Unicode input string (UCS-2).
- * @returns {Array} The new array of code points.
- */function ucs2decode(string){var output=[];var counter=0;var length=string.length;while(counter<length){var value=string.charCodeAt(counter++);if(value>=0xD800&&value<=0xDBFF&&counter<length){// It's a high surrogate, and there is a next character.
-var extra=string.charCodeAt(counter++);if((extra&0xFC00)==0xDC00){// Low surrogate.
-output.push(((value&0x3FF)<<10)+(extra&0x3FF)+0x10000);}else{// It's an unmatched surrogate; only append this code unit, in case the
-// next code unit is the high surrogate of a surrogate pair.
-output.push(value);counter--;}}else{output.push(value);}}return output;}/**
- * Creates a string based on an array of numeric code points.
- * @see `punycode.ucs2.decode`
- * @memberOf punycode.ucs2
- * @name encode
- * @param {Array} codePoints The array of numeric code points.
- * @returns {String} The new Unicode string (UCS-2).
- */var ucs2encode=function ucs2encode(array){return String.fromCodePoint.apply(String,toConsumableArray(array));};/**
- * Converts a basic code point into a digit/integer.
- * @see `digitToBasic()`
- * @private
- * @param {Number} codePoint The basic numeric code point value.
- * @returns {Number} The numeric value of a basic code point (for use in
- * representing integers) in the range `0` to `base - 1`, or `base` if
- * the code point does not represent a value.
- */var basicToDigit=function basicToDigit(codePoint){if(codePoint-0x30<0x0A){return codePoint-0x16;}if(codePoint-0x41<0x1A){return codePoint-0x41;}if(codePoint-0x61<0x1A){return codePoint-0x61;}return base;};/**
- * Converts a digit/integer into a basic code point.
- * @see `basicToDigit()`
- * @private
- * @param {Number} digit The numeric value of a basic code point.
- * @returns {Number} The basic code point whose value (when used for
- * representing integers) is `digit`, which needs to be in the range
- * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
- * used; else, the lowercase form is used. The behavior is undefined
- * if `flag` is non-zero and `digit` has no uppercase form.
- */var digitToBasic=function digitToBasic(digit,flag){//  0..25 map to ASCII a..z or A..Z
-// 26..35 map to ASCII 0..9
-return digit+22+75*(digit<26)-((flag!=0)<<5);};/**
- * Bias adaptation function as per section 3.4 of RFC 3492.
- * https://tools.ietf.org/html/rfc3492#section-3.4
- * @private
- */var adapt=function adapt(delta,numPoints,firstTime){var k=0;delta=firstTime?floor(delta/damp):delta>>1;delta+=floor(delta/numPoints);for(;/* no initialization */delta>baseMinusTMin*tMax>>1;k+=base){delta=floor(delta/baseMinusTMin);}return floor(k+(baseMinusTMin+1)*delta/(delta+skew));};/**
- * Converts a Punycode string of ASCII-only symbols to a string of Unicode
- * symbols.
- * @memberOf punycode
- * @param {String} input The Punycode string of ASCII-only symbols.
- * @returns {String} The resulting string of Unicode symbols.
- */var decode=function decode(input){// Don't use UCS-2.
-var output=[];var inputLength=input.length;var i=0;var n=initialN;var bias=initialBias;// Handle the basic code points: let `basic` be the number of input code
-// points before the last delimiter, or `0` if there is none, then copy
-// the first basic code points to the output.
-var basic=input.lastIndexOf(delimiter);if(basic<0){basic=0;}for(var j=0;j<basic;++j){// if it's not a basic code point
-if(input.charCodeAt(j)>=0x80){error$1('not-basic');}output.push(input.charCodeAt(j));}// Main decoding loop: start just after the last delimiter if any basic code
-// points were copied; start at the beginning otherwise.
-for(var index=basic>0?basic+1:0;index<inputLength;)/* no final expression */{// `index` is the index of the next character to be consumed.
-// Decode a generalized variable-length integer into `delta`,
-// which gets added to `i`. The overflow checking is easier
-// if we increase `i` as we go, then subtract off its starting
-// value at the end to obtain `delta`.
-var oldi=i;for(var w=1,k=base;;/* no condition */k+=base){if(index>=inputLength){error$1('invalid-input');}var digit=basicToDigit(input.charCodeAt(index++));if(digit>=base||digit>floor((maxInt-i)/w)){error$1('overflow');}i+=digit*w;var t=k<=bias?tMin:k>=bias+tMax?tMax:k-bias;if(digit<t){break;}var baseMinusT=base-t;if(w>floor(maxInt/baseMinusT)){error$1('overflow');}w*=baseMinusT;}var out=output.length+1;bias=adapt(i-oldi,out,oldi==0);// `i` was supposed to wrap around from `out` to `0`,
-// incrementing `n` each time, so we'll fix that now:
-if(floor(i/out)>maxInt-n){error$1('overflow');}n+=floor(i/out);i%=out;// Insert `n` at position `i` of the output.
-output.splice(i++,0,n);}return String.fromCodePoint.apply(String,output);};/**
- * Converts a string of Unicode symbols (e.g. a domain name label) to a
- * Punycode string of ASCII-only symbols.
- * @memberOf punycode
- * @param {String} input The string of Unicode symbols.
- * @returns {String} The resulting Punycode string of ASCII-only symbols.
- */var encode=function encode(input){var output=[];// Convert the input in UCS-2 to an array of Unicode code points.
-input=ucs2decode(input);// Cache the length.
-var inputLength=input.length;// Initialize the state.
-var n=initialN;var delta=0;var bias=initialBias;// Handle the basic code points.
-var _iteratorNormalCompletion=true;var _didIteratorError=false;var _iteratorError=undefined;try{for(var _iterator=input[Symbol.iterator](),_step;!(_iteratorNormalCompletion=(_step=_iterator.next()).done);_iteratorNormalCompletion=true){var _currentValue2=_step.value;if(_currentValue2<0x80){output.push(stringFromCharCode(_currentValue2));}}}catch(err){_didIteratorError=true;_iteratorError=err;}finally{try{if(!_iteratorNormalCompletion&&_iterator["return"]){_iterator["return"]();}}finally{if(_didIteratorError){throw _iteratorError;}}}var basicLength=output.length;var handledCPCount=basicLength;// `handledCPCount` is the number of code points that have been handled;
-// `basicLength` is the number of basic code points.
-// Finish the basic string with a delimiter unless it's empty.
-if(basicLength){output.push(delimiter);}// Main encoding loop:
-while(handledCPCount<inputLength){// All non-basic code points < n have been handled already. Find the next
-// larger one:
-var m=maxInt;var _iteratorNormalCompletion2=true;var _didIteratorError2=false;var _iteratorError2=undefined;try{for(var _iterator2=input[Symbol.iterator](),_step2;!(_iteratorNormalCompletion2=(_step2=_iterator2.next()).done);_iteratorNormalCompletion2=true){var currentValue=_step2.value;if(currentValue>=n&&currentValue<m){m=currentValue;}}// Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
-// but guard against overflow.
-}catch(err){_didIteratorError2=true;_iteratorError2=err;}finally{try{if(!_iteratorNormalCompletion2&&_iterator2["return"]){_iterator2["return"]();}}finally{if(_didIteratorError2){throw _iteratorError2;}}}var handledCPCountPlusOne=handledCPCount+1;if(m-n>floor((maxInt-delta)/handledCPCountPlusOne)){error$1('overflow');}delta+=(m-n)*handledCPCountPlusOne;n=m;var _iteratorNormalCompletion3=true;var _didIteratorError3=false;var _iteratorError3=undefined;try{for(var _iterator3=input[Symbol.iterator](),_step3;!(_iteratorNormalCompletion3=(_step3=_iterator3.next()).done);_iteratorNormalCompletion3=true){var _currentValue=_step3.value;if(_currentValue<n&&++delta>maxInt){error$1('overflow');}if(_currentValue==n){// Represent delta as a generalized variable-length integer.
-var q=delta;for(var k=base;;/* no condition */k+=base){var t=k<=bias?tMin:k>=bias+tMax?tMax:k-bias;if(q<t){break;}var qMinusT=q-t;var baseMinusT=base-t;output.push(stringFromCharCode(digitToBasic(t+qMinusT%baseMinusT,0)));q=floor(qMinusT/baseMinusT);}output.push(stringFromCharCode(digitToBasic(q,0)));bias=adapt(delta,handledCPCountPlusOne,handledCPCount==basicLength);delta=0;++handledCPCount;}}}catch(err){_didIteratorError3=true;_iteratorError3=err;}finally{try{if(!_iteratorNormalCompletion3&&_iterator3["return"]){_iterator3["return"]();}}finally{if(_didIteratorError3){throw _iteratorError3;}}}++delta;++n;}return output.join('');};/**
- * Converts a Punycode string representing a domain name or an email address
- * to Unicode. Only the Punycoded parts of the input will be converted, i.e.
- * it doesn't matter if you call it on a string that has already been
- * converted to Unicode.
- * @memberOf punycode
- * @param {String} input The Punycoded domain name or email address to
- * convert to Unicode.
- * @returns {String} The Unicode representation of the given Punycode
- * string.
- */var toUnicode=function toUnicode(input){return mapDomain(input,function(string){return regexPunycode.test(string)?decode(string.slice(4).toLowerCase()):string;});};/**
- * Converts a Unicode string representing a domain name or an email address to
- * Punycode. Only the non-ASCII parts of the domain name will be converted,
- * i.e. it doesn't matter if you call it with a domain that's already in
- * ASCII.
- * @memberOf punycode
- * @param {String} input The domain name or email address to convert, as a
- * Unicode string.
- * @returns {String} The Punycode representation of the given domain name or
- * email address.
- */var toASCII=function toASCII(input){return mapDomain(input,function(string){return regexNonASCII.test(string)?'xn--'+encode(string):string;});};/*--------------------------------------------------------------------------*/ /** Define the public API */var punycode={/**
-  * A string representing the current Punycode.js version number.
-  * @memberOf punycode
-  * @type String
-  */'version':'2.1.0',/**
-  * An object of methods to convert from JavaScript's internal character
-  * representation (UCS-2) to Unicode code points, and back.
-  * @see <https://mathiasbynens.be/notes/javascript-encoding>
-  * @memberOf punycode
-  * @type Object
-  */'ucs2':{'decode':ucs2decode,'encode':ucs2encode},'decode':decode,'encode':encode,'toASCII':toASCII,'toUnicode':toUnicode};/**
- * URI.js
- *
- * @fileoverview An RFC 3986 compliant, scheme extendable URI parsing/validating/resolving library for JavaScript.
- * @author <a href="mailto:gary.court@gmail.com">Gary Court</a>
- * @see http://github.com/garycourt/uri-js
- */ /**
- * Copyright 2011 Gary Court. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are
- * permitted provided that the following conditions are met:
- *
- *    1. Redistributions of source code must retain the above copyright notice, this list of
- *       conditions and the following disclaimer.
- *
- *    2. Redistributions in binary form must reproduce the above copyright notice, this list
- *       of conditions and the following disclaimer in the documentation and/or other materials
- *       provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY GARY COURT ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GARY COURT OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are those of the
- * authors and should not be interpreted as representing official policies, either expressed
- * or implied, of Gary Court.
- */var SCHEMES={};function pctEncChar(chr){var c=chr.charCodeAt(0);var e=void 0;if(c<16)e="%0"+c.toString(16).toUpperCase();else if(c<128)e="%"+c.toString(16).toUpperCase();else if(c<2048)e="%"+(c>>6|192).toString(16).toUpperCase()+"%"+(c&63|128).toString(16).toUpperCase();else e="%"+(c>>12|224).toString(16).toUpperCase()+"%"+(c>>6&63|128).toString(16).toUpperCase()+"%"+(c&63|128).toString(16).toUpperCase();return e;}function pctDecChars(str){var newStr="";var i=0;var il=str.length;while(i<il){var c=parseInt(str.substr(i+1,2),16);if(c<128){newStr+=String.fromCharCode(c);i+=3;}else if(c>=194&&c<224){if(il-i>=6){var c2=parseInt(str.substr(i+4,2),16);newStr+=String.fromCharCode((c&31)<<6|c2&63);}else{newStr+=str.substr(i,6);}i+=6;}else if(c>=224){if(il-i>=9){var _c=parseInt(str.substr(i+4,2),16);var c3=parseInt(str.substr(i+7,2),16);newStr+=String.fromCharCode((c&15)<<12|(_c&63)<<6|c3&63);}else{newStr+=str.substr(i,9);}i+=9;}else{newStr+=str.substr(i,3);i+=3;}}return newStr;}function _normalizeComponentEncoding(components,protocol){function decodeUnreserved(str){var decStr=pctDecChars(str);return!decStr.match(protocol.UNRESERVED)?str:decStr;}if(components.scheme)components.scheme=String(components.scheme).replace(protocol.PCT_ENCODED,decodeUnreserved).toLowerCase().replace(protocol.NOT_SCHEME,"");if(components.userinfo!==undefined)components.userinfo=String(components.userinfo).replace(protocol.PCT_ENCODED,decodeUnreserved).replace(protocol.NOT_USERINFO,pctEncChar).replace(protocol.PCT_ENCODED,toUpperCase);if(components.host!==undefined)components.host=String(components.host).replace(protocol.PCT_ENCODED,decodeUnreserved).toLowerCase().replace(protocol.NOT_HOST,pctEncChar).replace(protocol.PCT_ENCODED,toUpperCase);if(components.path!==undefined)components.path=String(components.path).replace(protocol.PCT_ENCODED,decodeUnreserved).replace(components.scheme?protocol.NOT_PATH:protocol.NOT_PATH_NOSCHEME,pctEncChar).replace(protocol.PCT_ENCODED,toUpperCase);if(components.query!==undefined)components.query=String(components.query).replace(protocol.PCT_ENCODED,decodeUnreserved).replace(protocol.NOT_QUERY,pctEncChar).replace(protocol.PCT_ENCODED,toUpperCase);if(components.fragment!==undefined)components.fragment=String(components.fragment).replace(protocol.PCT_ENCODED,decodeUnreserved).replace(protocol.NOT_FRAGMENT,pctEncChar).replace(protocol.PCT_ENCODED,toUpperCase);return components;}function _stripLeadingZeros(str){return str.replace(/^0*(.*)/,"$1")||"0";}function _normalizeIPv4(host,protocol){var matches=host.match(protocol.IPV4ADDRESS)||[];var _matches=slicedToArray(matches,2),address=_matches[1];if(address){return address.split(".").map(_stripLeadingZeros).join(".");}else{return host;}}function _normalizeIPv6(host,protocol){var matches=host.match(protocol.IPV6ADDRESS)||[];var _matches2=slicedToArray(matches,3),address=_matches2[1],zone=_matches2[2];if(address){var _address$toLowerCase$=address.toLowerCase().split('::').reverse(),_address$toLowerCase$2=slicedToArray(_address$toLowerCase$,2),last=_address$toLowerCase$2[0],first=_address$toLowerCase$2[1];var firstFields=first?first.split(":").map(_stripLeadingZeros):[];var lastFields=last.split(":").map(_stripLeadingZeros);var isLastFieldIPv4Address=protocol.IPV4ADDRESS.test(lastFields[lastFields.length-1]);var fieldCount=isLastFieldIPv4Address?7:8;var lastFieldsStart=lastFields.length-fieldCount;var fields=Array(fieldCount);for(var x=0;x<fieldCount;++x){fields[x]=firstFields[x]||lastFields[lastFieldsStart+x]||'';}if(isLastFieldIPv4Address){fields[fieldCount-1]=_normalizeIPv4(fields[fieldCount-1],protocol);}var allZeroFields=fields.reduce(function(acc,field,index){if(!field||field==="0"){var lastLongest=acc[acc.length-1];if(lastLongest&&lastLongest.index+lastLongest.length===index){lastLongest.length++;}else{acc.push({index:index,length:1});}}return acc;},[]);var longestZeroFields=allZeroFields.sort(function(a,b){return b.length-a.length;})[0];var newHost=void 0;if(longestZeroFields&&longestZeroFields.length>1){var newFirst=fields.slice(0,longestZeroFields.index);var newLast=fields.slice(longestZeroFields.index+longestZeroFields.length);newHost=newFirst.join(":")+"::"+newLast.join(":");}else{newHost=fields.join(":");}if(zone){newHost+="%"+zone;}return newHost;}else{return host;}}var URI_PARSE=/^(?:([^:\/?#]+):)?(?:\/\/((?:([^\/?#@]*)@)?(\[[^\/?#\]]+\]|[^\/?#:]*)(?:\:(\d*))?))?([^?#]*)(?:\?([^#]*))?(?:#((?:.|\n|\r)*))?/i;var NO_MATCH_IS_UNDEFINED="".match(/(){0}/)[1]===undefined;function parse(uriString){var options=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};var components={};var protocol=options.iri!==false?IRI_PROTOCOL:URI_PROTOCOL;if(options.reference==="suffix")uriString=(options.scheme?options.scheme+":":"")+"//"+uriString;var matches=uriString.match(URI_PARSE);if(matches){if(NO_MATCH_IS_UNDEFINED){//store each component
-components.scheme=matches[1];components.userinfo=matches[3];components.host=matches[4];components.port=parseInt(matches[5],10);components.path=matches[6]||"";components.query=matches[7];components.fragment=matches[8];//fix port number
-if(isNaN(components.port)){components.port=matches[5];}}else{//IE FIX for improper RegExp matching
-//store each component
-components.scheme=matches[1]||undefined;components.userinfo=uriString.indexOf("@")!==-1?matches[3]:undefined;components.host=uriString.indexOf("//")!==-1?matches[4]:undefined;components.port=parseInt(matches[5],10);components.path=matches[6]||"";components.query=uriString.indexOf("?")!==-1?matches[7]:undefined;components.fragment=uriString.indexOf("#")!==-1?matches[8]:undefined;//fix port number
-if(isNaN(components.port)){components.port=uriString.match(/\/\/(?:.|\n)*\:(?:\/|\?|\#|$)/)?matches[4]:undefined;}}if(components.host){//normalize IP hosts
-components.host=_normalizeIPv6(_normalizeIPv4(components.host,protocol),protocol);}//determine reference type
-if(components.scheme===undefined&&components.userinfo===undefined&&components.host===undefined&&components.port===undefined&&!components.path&&components.query===undefined){components.reference="same-document";}else if(components.scheme===undefined){components.reference="relative";}else if(components.fragment===undefined){components.reference="absolute";}else{components.reference="uri";}//check for reference errors
-if(options.reference&&options.reference!=="suffix"&&options.reference!==components.reference){components.error=components.error||"URI is not a "+options.reference+" reference.";}//find scheme handler
-var schemeHandler=SCHEMES[(options.scheme||components.scheme||"").toLowerCase()];//check if scheme can't handle IRIs
-if(!options.unicodeSupport&&(!schemeHandler||!schemeHandler.unicodeSupport)){//if host component is a domain name
-if(components.host&&(options.domainHost||schemeHandler&&schemeHandler.domainHost)){//convert Unicode IDN -> ASCII IDN
-try{components.host=punycode.toASCII(components.host.replace(protocol.PCT_ENCODED,pctDecChars).toLowerCase());}catch(e){components.error=components.error||"Host's domain name can not be converted to ASCII via punycode: "+e;}}//convert IRI -> URI
-_normalizeComponentEncoding(components,URI_PROTOCOL);}else{//normalize encodings
-_normalizeComponentEncoding(components,protocol);}//perform scheme specific parsing
-if(schemeHandler&&schemeHandler.parse){schemeHandler.parse(components,options);}}else{components.error=components.error||"URI can not be parsed.";}return components;}function _recomposeAuthority(components,options){var protocol=options.iri!==false?IRI_PROTOCOL:URI_PROTOCOL;var uriTokens=[];if(components.userinfo!==undefined){uriTokens.push(components.userinfo);uriTokens.push("@");}if(components.host!==undefined){//normalize IP hosts, add brackets and escape zone separator for IPv6
-uriTokens.push(_normalizeIPv6(_normalizeIPv4(String(components.host),protocol),protocol).replace(protocol.IPV6ADDRESS,function(_,$1,$2){return"["+$1+($2?"%25"+$2:"")+"]";}));}if(typeof components.port==="number"||typeof components.port==="string"){uriTokens.push(":");uriTokens.push(String(components.port));}return uriTokens.length?uriTokens.join(""):undefined;}var RDS1=/^\.\.?\//;var RDS2=/^\/\.(\/|$)/;var RDS3=/^\/\.\.(\/|$)/;var RDS5=/^\/?(?:.|\n)*?(?=\/|$)/;function removeDotSegments(input){var output=[];while(input.length){if(input.match(RDS1)){input=input.replace(RDS1,"");}else if(input.match(RDS2)){input=input.replace(RDS2,"/");}else if(input.match(RDS3)){input=input.replace(RDS3,"/");output.pop();}else if(input==="."||input===".."){input="";}else{var im=input.match(RDS5);if(im){var s=im[0];input=input.slice(s.length);output.push(s);}else{throw new Error("Unexpected dot segment condition");}}}return output.join("");}function serialize(components){var options=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};var protocol=options.iri?IRI_PROTOCOL:URI_PROTOCOL;var uriTokens=[];//find scheme handler
-var schemeHandler=SCHEMES[(options.scheme||components.scheme||"").toLowerCase()];//perform scheme specific serialization
-if(schemeHandler&&schemeHandler.serialize)schemeHandler.serialize(components,options);if(components.host){//if host component is an IPv6 address
-if(protocol.IPV6ADDRESS.test(components.host));//TODO: normalize IPv6 address as per RFC 5952
-//if host component is a domain name
-else if(options.domainHost||schemeHandler&&schemeHandler.domainHost){//convert IDN via punycode
-try{components.host=!options.iri?punycode.toASCII(components.host.replace(protocol.PCT_ENCODED,pctDecChars).toLowerCase()):punycode.toUnicode(components.host);}catch(e){components.error=components.error||"Host's domain name can not be converted to "+(!options.iri?"ASCII":"Unicode")+" via punycode: "+e;}}}//normalize encoding
-_normalizeComponentEncoding(components,protocol);if(options.reference!=="suffix"&&components.scheme){uriTokens.push(components.scheme);uriTokens.push(":");}var authority=_recomposeAuthority(components,options);if(authority!==undefined){if(options.reference!=="suffix"){uriTokens.push("//");}uriTokens.push(authority);if(components.path&&components.path.charAt(0)!=="/"){uriTokens.push("/");}}if(components.path!==undefined){var s=components.path;if(!options.absolutePath&&(!schemeHandler||!schemeHandler.absolutePath)){s=removeDotSegments(s);}if(authority===undefined){s=s.replace(/^\/\//,"/%2F");//don't allow the path to start with "//"
-}uriTokens.push(s);}if(components.query!==undefined){uriTokens.push("?");uriTokens.push(components.query);}if(components.fragment!==undefined){uriTokens.push("#");uriTokens.push(components.fragment);}return uriTokens.join("");//merge tokens into a string
-}function resolveComponents(base,relative){var options=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{};var skipNormalization=arguments[3];var target={};if(!skipNormalization){base=parse(serialize(base,options),options);//normalize base components
-relative=parse(serialize(relative,options),options);//normalize relative components
-}options=options||{};if(!options.tolerant&&relative.scheme){target.scheme=relative.scheme;//target.authority = relative.authority;
-target.userinfo=relative.userinfo;target.host=relative.host;target.port=relative.port;target.path=removeDotSegments(relative.path||"");target.query=relative.query;}else{if(relative.userinfo!==undefined||relative.host!==undefined||relative.port!==undefined){//target.authority = relative.authority;
-target.userinfo=relative.userinfo;target.host=relative.host;target.port=relative.port;target.path=removeDotSegments(relative.path||"");target.query=relative.query;}else{if(!relative.path){target.path=base.path;if(relative.query!==undefined){target.query=relative.query;}else{target.query=base.query;}}else{if(relative.path.charAt(0)==="/"){target.path=removeDotSegments(relative.path);}else{if((base.userinfo!==undefined||base.host!==undefined||base.port!==undefined)&&!base.path){target.path="/"+relative.path;}else if(!base.path){target.path=relative.path;}else{target.path=base.path.slice(0,base.path.lastIndexOf("/")+1)+relative.path;}target.path=removeDotSegments(target.path);}target.query=relative.query;}//target.authority = base.authority;
-target.userinfo=base.userinfo;target.host=base.host;target.port=base.port;}target.scheme=base.scheme;}target.fragment=relative.fragment;return target;}function resolve(baseURI,relativeURI,options){var schemelessOptions=assign({scheme:'null'},options);return serialize(resolveComponents(parse(baseURI,schemelessOptions),parse(relativeURI,schemelessOptions),schemelessOptions,true),schemelessOptions);}function normalize(uri,options){if(typeof uri==="string"){uri=serialize(parse(uri,options),options);}else if(typeOf(uri)==="object"){uri=parse(serialize(uri,options),options);}return uri;}function equal(uriA,uriB,options){if(typeof uriA==="string"){uriA=serialize(parse(uriA,options),options);}else if(typeOf(uriA)==="object"){uriA=serialize(uriA,options);}if(typeof uriB==="string"){uriB=serialize(parse(uriB,options),options);}else if(typeOf(uriB)==="object"){uriB=serialize(uriB,options);}return uriA===uriB;}function escapeComponent(str,options){return str&&str.toString().replace(!options||!options.iri?URI_PROTOCOL.ESCAPE:IRI_PROTOCOL.ESCAPE,pctEncChar);}function unescapeComponent(str,options){return str&&str.toString().replace(!options||!options.iri?URI_PROTOCOL.PCT_ENCODED:IRI_PROTOCOL.PCT_ENCODED,pctDecChars);}var handler={scheme:"http",domainHost:true,parse:function parse(components,options){//report missing host
-if(!components.host){components.error=components.error||"HTTP URIs must have a host.";}return components;},serialize:function serialize(components,options){var secure=String(components.scheme).toLowerCase()==="https";//normalize the default port
-if(components.port===(secure?443:80)||components.port===""){components.port=undefined;}//normalize the empty path
-if(!components.path){components.path="/";}//NOTE: We do not parse query strings for HTTP URIs
-//as WWW Form Url Encoded query strings are part of the HTML4+ spec,
-//and not the HTTP spec.
-return components;}};var handler$1={scheme:"https",domainHost:handler.domainHost,parse:handler.parse,serialize:handler.serialize};function isSecure(wsComponents){return typeof wsComponents.secure==='boolean'?wsComponents.secure:String(wsComponents.scheme).toLowerCase()==="wss";}//RFC 6455
-var handler$2={scheme:"ws",domainHost:true,parse:function parse(components,options){var wsComponents=components;//indicate if the secure flag is set
-wsComponents.secure=isSecure(wsComponents);//construct resouce name
-wsComponents.resourceName=(wsComponents.path||'/')+(wsComponents.query?'?'+wsComponents.query:'');wsComponents.path=undefined;wsComponents.query=undefined;return wsComponents;},serialize:function serialize(wsComponents,options){//normalize the default port
-if(wsComponents.port===(isSecure(wsComponents)?443:80)||wsComponents.port===""){wsComponents.port=undefined;}//ensure scheme matches secure flag
-if(typeof wsComponents.secure==='boolean'){wsComponents.scheme=wsComponents.secure?'wss':'ws';wsComponents.secure=undefined;}//reconstruct path from resource name
-if(wsComponents.resourceName){var _wsComponents$resourc=wsComponents.resourceName.split('?'),_wsComponents$resourc2=slicedToArray(_wsComponents$resourc,2),path=_wsComponents$resourc2[0],query=_wsComponents$resourc2[1];wsComponents.path=path&&path!=='/'?path:undefined;wsComponents.query=query;wsComponents.resourceName=undefined;}//forbid fragment component
-wsComponents.fragment=undefined;return wsComponents;}};var handler$3={scheme:"wss",domainHost:handler$2.domainHost,parse:handler$2.parse,serialize:handler$2.serialize};var O={};//RFC 3986
-var UNRESERVED$$="[A-Za-z0-9\\-\\.\\_\\~"+"\\xA0-\\u200D\\u2010-\\u2029\\u202F-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF"+"]";var HEXDIG$$="[0-9A-Fa-f]";//case-insensitive
-var PCT_ENCODED$=subexp(subexp("%[EFef]"+HEXDIG$$+"%"+HEXDIG$$+HEXDIG$$+"%"+HEXDIG$$+HEXDIG$$)+"|"+subexp("%[89A-Fa-f]"+HEXDIG$$+"%"+HEXDIG$$+HEXDIG$$)+"|"+subexp("%"+HEXDIG$$+HEXDIG$$));//expanded
-//RFC 5322, except these symbols as per RFC 6068: @ : / ? # [ ] & ; =
-//const ATEXT$$ = "[A-Za-z0-9\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\_\\`\\{\\|\\}\\~]";
-//const WSP$$ = "[\\x20\\x09]";
-//const OBS_QTEXT$$ = "[\\x01-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F]";  //(%d1-8 / %d11-12 / %d14-31 / %d127)
-//const QTEXT$$ = merge("[\\x21\\x23-\\x5B\\x5D-\\x7E]", OBS_QTEXT$$);  //%d33 / %d35-91 / %d93-126 / obs-qtext
-//const VCHAR$$ = "[\\x21-\\x7E]";
-//const WSP$$ = "[\\x20\\x09]";
-//const OBS_QP$ = subexp("\\\\" + merge("[\\x00\\x0D\\x0A]", OBS_QTEXT$$));  //%d0 / CR / LF / obs-qtext
-//const FWS$ = subexp(subexp(WSP$$ + "*" + "\\x0D\\x0A") + "?" + WSP$$ + "+");
-//const QUOTED_PAIR$ = subexp(subexp("\\\\" + subexp(VCHAR$$ + "|" + WSP$$)) + "|" + OBS_QP$);
-//const QUOTED_STRING$ = subexp('\\"' + subexp(FWS$ + "?" + QCONTENT$) + "*" + FWS$ + "?" + '\\"');
-var ATEXT$$="[A-Za-z0-9\\!\\$\\%\\'\\*\\+\\-\\^\\_\\`\\{\\|\\}\\~]";var QTEXT$$="[\\!\\$\\%\\'\\(\\)\\*\\+\\,\\-\\.0-9\\<\\>A-Z\\x5E-\\x7E]";var VCHAR$$=merge(QTEXT$$,"[\\\"\\\\]");var SOME_DELIMS$$="[\\!\\$\\'\\(\\)\\*\\+\\,\\;\\:\\@]";var UNRESERVED=new RegExp(UNRESERVED$$,"g");var PCT_ENCODED=new RegExp(PCT_ENCODED$,"g");var NOT_LOCAL_PART=new RegExp(merge("[^]",ATEXT$$,"[\\.]",'[\\"]',VCHAR$$),"g");var NOT_HFNAME=new RegExp(merge("[^]",UNRESERVED$$,SOME_DELIMS$$),"g");var NOT_HFVALUE=NOT_HFNAME;function decodeUnreserved(str){var decStr=pctDecChars(str);return!decStr.match(UNRESERVED)?str:decStr;}var handler$4={scheme:"mailto",parse:function parse$$1(components,options){var mailtoComponents=components;var to=mailtoComponents.to=mailtoComponents.path?mailtoComponents.path.split(","):[];mailtoComponents.path=undefined;if(mailtoComponents.query){var unknownHeaders=false;var headers={};var hfields=mailtoComponents.query.split("&");for(var x=0,xl=hfields.length;x<xl;++x){var hfield=hfields[x].split("=");switch(hfield[0]){case"to":var toAddrs=hfield[1].split(",");for(var _x=0,_xl=toAddrs.length;_x<_xl;++_x){to.push(toAddrs[_x]);}break;case"subject":mailtoComponents.subject=unescapeComponent(hfield[1],options);break;case"body":mailtoComponents.body=unescapeComponent(hfield[1],options);break;default:unknownHeaders=true;headers[unescapeComponent(hfield[0],options)]=unescapeComponent(hfield[1],options);break;}}if(unknownHeaders)mailtoComponents.headers=headers;}mailtoComponents.query=undefined;for(var _x2=0,_xl2=to.length;_x2<_xl2;++_x2){var addr=to[_x2].split("@");addr[0]=unescapeComponent(addr[0]);if(!options.unicodeSupport){//convert Unicode IDN -> ASCII IDN
-try{addr[1]=punycode.toASCII(unescapeComponent(addr[1],options).toLowerCase());}catch(e){mailtoComponents.error=mailtoComponents.error||"Email address's domain name can not be converted to ASCII via punycode: "+e;}}else{addr[1]=unescapeComponent(addr[1],options).toLowerCase();}to[_x2]=addr.join("@");}return mailtoComponents;},serialize:function serialize$$1(mailtoComponents,options){var components=mailtoComponents;var to=toArray(mailtoComponents.to);if(to){for(var x=0,xl=to.length;x<xl;++x){var toAddr=String(to[x]);var atIdx=toAddr.lastIndexOf("@");var localPart=toAddr.slice(0,atIdx).replace(PCT_ENCODED,decodeUnreserved).replace(PCT_ENCODED,toUpperCase).replace(NOT_LOCAL_PART,pctEncChar);var domain=toAddr.slice(atIdx+1);//convert IDN via punycode
-try{domain=!options.iri?punycode.toASCII(unescapeComponent(domain,options).toLowerCase()):punycode.toUnicode(domain);}catch(e){components.error=components.error||"Email address's domain name can not be converted to "+(!options.iri?"ASCII":"Unicode")+" via punycode: "+e;}to[x]=localPart+"@"+domain;}components.path=to.join(",");}var headers=mailtoComponents.headers=mailtoComponents.headers||{};if(mailtoComponents.subject)headers["subject"]=mailtoComponents.subject;if(mailtoComponents.body)headers["body"]=mailtoComponents.body;var fields=[];for(var name in headers){if(headers[name]!==O[name]){fields.push(name.replace(PCT_ENCODED,decodeUnreserved).replace(PCT_ENCODED,toUpperCase).replace(NOT_HFNAME,pctEncChar)+"="+headers[name].replace(PCT_ENCODED,decodeUnreserved).replace(PCT_ENCODED,toUpperCase).replace(NOT_HFVALUE,pctEncChar));}}if(fields.length){components.query=fields.join("&");}return components;}};var URN_PARSE=/^([^\:]+)\:(.*)/;//RFC 2141
-var handler$5={scheme:"urn",parse:function parse$$1(components,options){var matches=components.path&&components.path.match(URN_PARSE);var urnComponents=components;if(matches){var scheme=options.scheme||urnComponents.scheme||"urn";var nid=matches[1].toLowerCase();var nss=matches[2];var urnScheme=scheme+":"+(options.nid||nid);var schemeHandler=SCHEMES[urnScheme];urnComponents.nid=nid;urnComponents.nss=nss;urnComponents.path=undefined;if(schemeHandler){urnComponents=schemeHandler.parse(urnComponents,options);}}else{urnComponents.error=urnComponents.error||"URN can not be parsed.";}return urnComponents;},serialize:function serialize$$1(urnComponents,options){var scheme=options.scheme||urnComponents.scheme||"urn";var nid=urnComponents.nid;var urnScheme=scheme+":"+(options.nid||nid);var schemeHandler=SCHEMES[urnScheme];if(schemeHandler){urnComponents=schemeHandler.serialize(urnComponents,options);}var uriComponents=urnComponents;var nss=urnComponents.nss;uriComponents.path=(nid||options.nid)+":"+nss;return uriComponents;}};var UUID=/^[0-9A-Fa-f]{8}(?:\-[0-9A-Fa-f]{4}){3}\-[0-9A-Fa-f]{12}$/;//RFC 4122
-var handler$6={scheme:"urn:uuid",parse:function parse(urnComponents,options){var uuidComponents=urnComponents;uuidComponents.uuid=uuidComponents.nss;uuidComponents.nss=undefined;if(!options.tolerant&&(!uuidComponents.uuid||!uuidComponents.uuid.match(UUID))){uuidComponents.error=uuidComponents.error||"UUID is not valid.";}return uuidComponents;},serialize:function serialize(uuidComponents,options){var urnComponents=uuidComponents;//normalize UUID
-urnComponents.nss=(uuidComponents.uuid||"").toLowerCase();return urnComponents;}};SCHEMES[handler.scheme]=handler;SCHEMES[handler$1.scheme]=handler$1;SCHEMES[handler$2.scheme]=handler$2;SCHEMES[handler$3.scheme]=handler$3;SCHEMES[handler$4.scheme]=handler$4;SCHEMES[handler$5.scheme]=handler$5;SCHEMES[handler$6.scheme]=handler$6;exports.SCHEMES=SCHEMES;exports.pctEncChar=pctEncChar;exports.pctDecChars=pctDecChars;exports.parse=parse;exports.removeDotSegments=removeDotSegments;exports.serialize=serialize;exports.resolveComponents=resolveComponents;exports.resolve=resolve;exports.normalize=normalize;exports.equal=equal;exports.escapeComponent=escapeComponent;exports.unescapeComponent=unescapeComponent;Object.defineProperty(exports,'__esModule',{value:true});});});var resolve=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.getSchemaRefs=exports.resolveUrl=exports.normalizeId=exports._getFullPath=exports.getFullPath=exports.inlineRef=void 0;// TODO refactor to use keyword definitions
-var SIMPLE_INLINED=new Set(["type","format","pattern","maxLength","minLength","maxProperties","minProperties","maxItems","minItems","maximum","minimum","uniqueItems","multipleOf","required","enum","const"]);function inlineRef(schema){var limit=arguments.length>1&&arguments[1]!==undefined?arguments[1]:true;if(typeof schema=="boolean")return true;if(limit===true)return!hasRef(schema);if(!limit)return false;return countKeys(schema)<=limit;}exports.inlineRef=inlineRef;var REF_KEYWORDS=new Set(["$ref","$recursiveRef","$recursiveAnchor","$dynamicRef","$dynamicAnchor"]);function hasRef(schema){for(var key in schema){if(REF_KEYWORDS.has(key))return true;var sch=schema[key];if(Array.isArray(sch)&&sch.some(hasRef))return true;if(_typeof3(sch)=="object"&&hasRef(sch))return true;}return false;}function countKeys(schema){var count=0;for(var key in schema){if(key==="$ref")return Infinity;count++;if(SIMPLE_INLINED.has(key))continue;if(_typeof3(schema[key])=="object"){util.eachItem(schema[key],function(sch){return count+=countKeys(sch);});}if(count===Infinity)return Infinity;}return count;}function getFullPath(){var id=arguments.length>0&&arguments[0]!==undefined?arguments[0]:"";var normalize=arguments.length>1?arguments[1]:undefined;if(normalize!==false)id=normalizeId(id);var p=uri_all.parse(id);return _getFullPath(p);}exports.getFullPath=getFullPath;function _getFullPath(p){return uri_all.serialize(p).split("#")[0]+"#";}exports._getFullPath=_getFullPath;var TRAILING_SLASH_HASH=/#\/?$/;function normalizeId(id){return id?id.replace(TRAILING_SLASH_HASH,""):"";}exports.normalizeId=normalizeId;function resolveUrl(baseId,id){id=normalizeId(id);return uri_all.resolve(baseId,id);}exports.resolveUrl=resolveUrl;var ANCHOR=/^[a-z_][-a-z0-9._]*$/i;function getSchemaRefs(schema){var _this30=this;if(typeof schema=="boolean")return{};var schemaId=this.opts.schemaId;var schId=normalizeId(schema[schemaId]);var baseIds={"":schId};var pathPrefix=getFullPath(schId,false);var localRefs={};var schemaRefs=new Set();jsonSchemaTraverse(schema,{allKeys:true},function(sch,jsonPtr,_,parentJsonPtr){if(parentJsonPtr===undefined)return;var fullPath=pathPrefix+jsonPtr;var baseId=baseIds[parentJsonPtr];if(typeof sch[schemaId]=="string")baseId=addRef.call(_this30,sch[schemaId]);addAnchor.call(_this30,sch.$anchor);addAnchor.call(_this30,sch.$dynamicAnchor);baseIds[jsonPtr]=baseId;function addRef(ref){ref=normalizeId(baseId?uri_all.resolve(baseId,ref):ref);if(schemaRefs.has(ref))throw ambiguos(ref);schemaRefs.add(ref);var schOrRef=this.refs[ref];if(typeof schOrRef=="string")schOrRef=this.refs[schOrRef];if(_typeof3(schOrRef)=="object"){checkAmbiguosRef(sch,schOrRef.schema,ref);}else if(ref!==normalizeId(fullPath)){if(ref[0]==="#"){checkAmbiguosRef(sch,localRefs[ref],ref);localRefs[ref]=sch;}else{this.refs[ref]=fullPath;}}return ref;}function addAnchor(anchor){if(typeof anchor=="string"){if(!ANCHOR.test(anchor))throw new Error("invalid anchor \"".concat(anchor,"\""));addRef.call(this,"#".concat(anchor));}}});return localRefs;function checkAmbiguosRef(sch1,sch2,ref){if(sch2!==undefined&&!fastDeepEqual(sch1,sch2))throw ambiguos(ref);}function ambiguos(ref){return new Error("reference \"".concat(ref,"\" resolves to more than one schema"));}}exports.getSchemaRefs=getSchemaRefs;});var validate=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.getData=exports.KeywordCxt=exports.validateFunctionCode=void 0;var dataType_2=dataType;// schema compilation - generates validation function, subschemaCode (below) is used for subschemas
-function validateFunctionCode(it){if(isSchemaObj(it)){checkKeywords(it);if(schemaCxtHasRules(it)){topSchemaObjCode(it);return;}}validateFunction(it,function(){return boolSchema.topBoolOrEmptySchema(it);});}exports.validateFunctionCode=validateFunctionCode;function validateFunction(_ref54,body){var gen=_ref54.gen,validateName=_ref54.validateName,schema=_ref54.schema,schemaEnv=_ref54.schemaEnv,opts=_ref54.opts;if(opts.code.es5){gen.func(validateName,codegen._(_templateObject124||(_templateObject124=_taggedTemplateLiteral(["",", ",""])),names_1["default"].data,names_1["default"].valCxt),schemaEnv.$async,function(){gen.code(codegen._(_templateObject125||(_templateObject125=_taggedTemplateLiteral(["\"use strict\"; ",""])),funcSourceUrl(schema,opts)));destructureValCxtES5(gen,opts);gen.code(body);});}else{gen.func(validateName,codegen._(_templateObject126||(_templateObject126=_taggedTemplateLiteral(["",", ",""])),names_1["default"].data,destructureValCxt(opts)),schemaEnv.$async,function(){return gen.code(funcSourceUrl(schema,opts)).code(body);});}}function destructureValCxt(opts){return codegen._(_templateObject127||(_templateObject127=_taggedTemplateLiteral(["{","=\"\", ",", ",", ","=","","}={}"])),names_1["default"].instancePath,names_1["default"].parentData,names_1["default"].parentDataProperty,names_1["default"].rootData,names_1["default"].data,opts.dynamicRef?codegen._(_templateObject128||(_templateObject128=_taggedTemplateLiteral([", ","={}"])),names_1["default"].dynamicAnchors):codegen.nil);}function destructureValCxtES5(gen,opts){gen["if"](names_1["default"].valCxt,function(){gen["var"](names_1["default"].instancePath,codegen._(_templateObject129||(_templateObject129=_taggedTemplateLiteral(["",".",""])),names_1["default"].valCxt,names_1["default"].instancePath));gen["var"](names_1["default"].parentData,codegen._(_templateObject130||(_templateObject130=_taggedTemplateLiteral(["",".",""])),names_1["default"].valCxt,names_1["default"].parentData));gen["var"](names_1["default"].parentDataProperty,codegen._(_templateObject131||(_templateObject131=_taggedTemplateLiteral(["",".",""])),names_1["default"].valCxt,names_1["default"].parentDataProperty));gen["var"](names_1["default"].rootData,codegen._(_templateObject132||(_templateObject132=_taggedTemplateLiteral(["",".",""])),names_1["default"].valCxt,names_1["default"].rootData));if(opts.dynamicRef)gen["var"](names_1["default"].dynamicAnchors,codegen._(_templateObject133||(_templateObject133=_taggedTemplateLiteral(["",".",""])),names_1["default"].valCxt,names_1["default"].dynamicAnchors));},function(){gen["var"](names_1["default"].instancePath,codegen._(_templateObject134||(_templateObject134=_taggedTemplateLiteral(["\"\""]))));gen["var"](names_1["default"].parentData,codegen._(_templateObject135||(_templateObject135=_taggedTemplateLiteral(["undefined"]))));gen["var"](names_1["default"].parentDataProperty,codegen._(_templateObject136||(_templateObject136=_taggedTemplateLiteral(["undefined"]))));gen["var"](names_1["default"].rootData,names_1["default"].data);if(opts.dynamicRef)gen["var"](names_1["default"].dynamicAnchors,codegen._(_templateObject137||(_templateObject137=_taggedTemplateLiteral(["{}"]))));});}function topSchemaObjCode(it){var schema=it.schema,opts=it.opts,gen=it.gen;validateFunction(it,function(){if(opts.$comment&&schema.$comment)commentKeyword(it);checkNoDefault(it);gen["let"](names_1["default"].vErrors,null);gen["let"](names_1["default"].errors,0);if(opts.unevaluated)resetEvaluated(it);typeAndKeywords(it);returnResults(it);});return;}function resetEvaluated(it){// TODO maybe some hook to execute it in the end to check whether props/items are Name, as in assignEvaluated
-var gen=it.gen,validateName=it.validateName;it.evaluated=gen["const"]("evaluated",codegen._(_templateObject138||(_templateObject138=_taggedTemplateLiteral(["",".evaluated"])),validateName));gen["if"](codegen._(_templateObject139||(_templateObject139=_taggedTemplateLiteral(["",".dynamicProps"])),it.evaluated),function(){return gen.assign(codegen._(_templateObject140||(_templateObject140=_taggedTemplateLiteral(["",".props"])),it.evaluated),codegen._(_templateObject141||(_templateObject141=_taggedTemplateLiteral(["undefined"]))));});gen["if"](codegen._(_templateObject142||(_templateObject142=_taggedTemplateLiteral(["",".dynamicItems"])),it.evaluated),function(){return gen.assign(codegen._(_templateObject143||(_templateObject143=_taggedTemplateLiteral(["",".items"])),it.evaluated),codegen._(_templateObject144||(_templateObject144=_taggedTemplateLiteral(["undefined"]))));});}function funcSourceUrl(schema,opts){var schId=_typeof3(schema)=="object"&&schema[opts.schemaId];return schId&&(opts.code.source||opts.code.process)?codegen._(_templateObject145||(_templateObject145=_taggedTemplateLiteral(["/*# sourceURL="," */"])),schId):codegen.nil;}// schema compilation - this function is used recursively to generate code for sub-schemas
-function subschemaCode(it,valid){if(isSchemaObj(it)){checkKeywords(it);if(schemaCxtHasRules(it)){subSchemaObjCode(it,valid);return;}}boolSchema.boolOrEmptySchema(it,valid);}function schemaCxtHasRules(_ref55){var schema=_ref55.schema,self=_ref55.self;if(typeof schema=="boolean")return!schema;for(var key in schema){if(self.RULES.all[key])return true;}return false;}function isSchemaObj(it){return typeof it.schema!="boolean";}function subSchemaObjCode(it,valid){var schema=it.schema,gen=it.gen,opts=it.opts;if(opts.$comment&&schema.$comment)commentKeyword(it);updateContext(it);checkAsyncSchema(it);var errsCount=gen["const"]("_errs",names_1["default"].errors);typeAndKeywords(it,errsCount);// TODO var
-gen["var"](valid,codegen._(_templateObject146||(_templateObject146=_taggedTemplateLiteral([""," === ",""])),errsCount,names_1["default"].errors));}function checkKeywords(it){util.checkUnknownRules(it);checkRefsAndKeywords(it);}function typeAndKeywords(it,errsCount){if(it.opts.jtd)return schemaKeywords(it,[],false,errsCount);var types=dataType.getSchemaTypes(it.schema);var checkedTypes=dataType.coerceAndCheckDataType(it,types);schemaKeywords(it,types,!checkedTypes,errsCount);}function checkRefsAndKeywords(it){var schema=it.schema,errSchemaPath=it.errSchemaPath,opts=it.opts,self=it.self;if(schema.$ref&&opts.ignoreKeywordsWithRef&&util.schemaHasRulesButRef(schema,self.RULES)){self.logger.warn("$ref: keywords ignored in schema at path \"".concat(errSchemaPath,"\""));}}function checkNoDefault(it){var schema=it.schema,opts=it.opts;if(schema["default"]!==undefined&&opts.useDefaults&&opts.strictSchema){util.checkStrictMode(it,"default is ignored in the schema root");}}function updateContext(it){var schId=it.schema[it.opts.schemaId];if(schId)it.baseId=resolve.resolveUrl(it.baseId,schId);}function checkAsyncSchema(it){if(it.schema.$async&&!it.schemaEnv.$async)throw new Error("async schema in sync schema");}function commentKeyword(_ref56){var gen=_ref56.gen,schemaEnv=_ref56.schemaEnv,schema=_ref56.schema,errSchemaPath=_ref56.errSchemaPath,opts=_ref56.opts;var msg=schema.$comment;if(opts.$comment===true){gen.code(codegen._(_templateObject147||(_templateObject147=_taggedTemplateLiteral(["",".logger.log(",")"])),names_1["default"].self,msg));}else if(typeof opts.$comment=="function"){var schemaPath=codegen.str(_templateObject148||(_templateObject148=_taggedTemplateLiteral(["","/$comment"])),errSchemaPath);var rootName=gen.scopeValue("root",{ref:schemaEnv.root});gen.code(codegen._(_templateObject149||(_templateObject149=_taggedTemplateLiteral(["",".opts.$comment(",", ",", ",".schema)"])),names_1["default"].self,msg,schemaPath,rootName));}}function returnResults(it){var gen=it.gen,schemaEnv=it.schemaEnv,validateName=it.validateName,ValidationError=it.ValidationError,opts=it.opts;if(schemaEnv.$async){// TODO assign unevaluated
-gen["if"](codegen._(_templateObject150||(_templateObject150=_taggedTemplateLiteral([""," === 0"])),names_1["default"].errors),function(){return gen["return"](names_1["default"].data);},function(){return gen["throw"](codegen._(_templateObject151||(_templateObject151=_taggedTemplateLiteral(["new ","(",")"])),ValidationError,names_1["default"].vErrors));});}else{gen.assign(codegen._(_templateObject152||(_templateObject152=_taggedTemplateLiteral(["",".errors"])),validateName),names_1["default"].vErrors);if(opts.unevaluated)assignEvaluated(it);gen["return"](codegen._(_templateObject153||(_templateObject153=_taggedTemplateLiteral([""," === 0"])),names_1["default"].errors));}}function assignEvaluated(_ref57){var gen=_ref57.gen,evaluated=_ref57.evaluated,props=_ref57.props,items=_ref57.items;if(props instanceof codegen.Name)gen.assign(codegen._(_templateObject154||(_templateObject154=_taggedTemplateLiteral(["",".props"])),evaluated),props);if(items instanceof codegen.Name)gen.assign(codegen._(_templateObject155||(_templateObject155=_taggedTemplateLiteral(["",".items"])),evaluated),items);}function schemaKeywords(it,types,typeErrors,errsCount){var gen=it.gen,schema=it.schema,data=it.data,allErrors=it.allErrors,opts=it.opts,self=it.self;var RULES=self.RULES;if(schema.$ref&&(opts.ignoreKeywordsWithRef||!util.schemaHasRulesButRef(schema,RULES))){gen.block(function(){return keywordCode(it,"$ref",RULES.all.$ref.definition);});// TODO typecast
-return;}if(!opts.jtd)checkStrictTypes(it,types);gen.block(function(){var _iterator7=_createForOfIteratorHelper(RULES.rules),_step7;try{for(_iterator7.s();!(_step7=_iterator7.n()).done;){var group=_step7.value;groupKeywords(group);}}catch(err){_iterator7.e(err);}finally{_iterator7.f();}groupKeywords(RULES.post);});function groupKeywords(group){if(!applicability.shouldUseGroup(schema,group))return;if(group.type){gen["if"](dataType_2.checkDataType(group.type,data,opts.strictNumbers));iterateKeywords(it,group);if(types.length===1&&types[0]===group.type&&typeErrors){gen["else"]();dataType_2.reportTypeError(it);}gen.endIf();}else{iterateKeywords(it,group);}// TODO make it "ok" call?
-if(!allErrors)gen["if"](codegen._(_templateObject156||(_templateObject156=_taggedTemplateLiteral([""," === ",""])),names_1["default"].errors,errsCount||0));}}function iterateKeywords(it,group){var gen=it.gen,schema=it.schema,useDefaults=it.opts.useDefaults;if(useDefaults)defaults.assignDefaults(it,group.type);gen.block(function(){var _iterator8=_createForOfIteratorHelper(group.rules),_step8;try{for(_iterator8.s();!(_step8=_iterator8.n()).done;){var rule=_step8.value;if(applicability.shouldUseRule(schema,rule)){keywordCode(it,rule.keyword,rule.definition,group.type);}}}catch(err){_iterator8.e(err);}finally{_iterator8.f();}});}function checkStrictTypes(it,types){if(it.schemaEnv.meta||!it.opts.strictTypes)return;checkContextTypes(it,types);if(!it.opts.allowUnionTypes)checkMultipleTypes(it,types);checkKeywordTypes(it,it.dataTypes);}function checkContextTypes(it,types){if(!types.length)return;if(!it.dataTypes.length){it.dataTypes=types;return;}types.forEach(function(t){if(!includesType(it.dataTypes,t)){strictTypesError(it,"type \"".concat(t,"\" not allowed by context \"").concat(it.dataTypes.join(","),"\""));}});it.dataTypes=it.dataTypes.filter(function(t){return includesType(types,t);});}function checkMultipleTypes(it,ts){if(ts.length>1&&!(ts.length===2&&ts.includes("null"))){strictTypesError(it,"use allowUnionTypes to allow union type keyword");}}function checkKeywordTypes(it,ts){var rules=it.self.RULES.all;for(var _keyword in rules){var rule=rules[_keyword];if(_typeof3(rule)=="object"&&applicability.shouldUseRule(it.schema,rule)){var _type=rule.definition.type;if(_type.length&&!_type.some(function(t){return hasApplicableType(ts,t);})){strictTypesError(it,"missing type \"".concat(_type.join(","),"\" for keyword \"").concat(_keyword,"\""));}}}}function hasApplicableType(schTs,kwdT){return schTs.includes(kwdT)||kwdT==="number"&&schTs.includes("integer");}function includesType(ts,t){return ts.includes(t)||t==="integer"&&ts.includes("number");}function strictTypesError(it,msg){var schemaPath=it.schemaEnv.baseId+it.errSchemaPath;msg+=" at \"".concat(schemaPath,"\" (strictTypes)");util.checkStrictMode(it,msg,it.opts.strictTypes);}var KeywordCxt=/*#__PURE__*/function(){function KeywordCxt(it,def,keyword$1){_classCallCheck3(this,KeywordCxt);keyword.validateKeywordUsage(it,def,keyword$1);this.gen=it.gen;this.allErrors=it.allErrors;this.keyword=keyword$1;this.data=it.data;this.schema=it.schema[keyword$1];this.$data=def.$data&&it.opts.$data&&this.schema&&this.schema.$data;this.schemaValue=util.schemaRefOrVal(it,this.schema,keyword$1,this.$data);this.schemaType=def.schemaType;this.parentSchema=it.schema;this.params={};this.it=it;this.def=def;if(this.$data){this.schemaCode=it.gen["const"]("vSchema",getData(this.$data,it));}else{this.schemaCode=this.schemaValue;if(!keyword.validSchemaType(this.schema,def.schemaType,def.allowUndefined)){throw new Error("".concat(keyword$1," value must be ").concat(JSON.stringify(def.schemaType)));}}if("code"in def?def.trackErrors:def.errors!==false){this.errsCount=it.gen["const"]("_errs",names_1["default"].errors);}}_createClass3(KeywordCxt,[{key:"result",value:function result(condition,successAction,failAction){this.failResult(codegen.not(condition),successAction,failAction);}},{key:"failResult",value:function failResult(condition,successAction,failAction){this.gen["if"](condition);if(failAction)failAction();else this.error();if(successAction){this.gen["else"]();successAction();if(this.allErrors)this.gen.endIf();}else{if(this.allErrors)this.gen.endIf();else this.gen["else"]();}}},{key:"pass",value:function pass(condition,failAction){this.failResult(codegen.not(condition),undefined,failAction);}},{key:"fail",value:function fail(condition){if(condition===undefined){this.error();if(!this.allErrors)this.gen["if"](false);// this branch will be removed by gen.optimize
-return;}this.gen["if"](condition);this.error();if(this.allErrors)this.gen.endIf();else this.gen["else"]();}},{key:"fail$data",value:function fail$data(condition){if(!this.$data)return this.fail(condition);var schemaCode=this.schemaCode;this.fail(codegen._(_templateObject157||(_templateObject157=_taggedTemplateLiteral([""," !== undefined && (",")"])),schemaCode,codegen.or(this.invalid$data(),condition)));}},{key:"error",value:function error(append,errorParams,errorPaths){if(errorParams){this.setParams(errorParams);this._error(append,errorPaths);this.setParams({});return;}this._error(append,errorPaths);}},{key:"_error",value:function _error(append,errorPaths){(append?errors.reportExtraError:errors.reportError)(this,this.def.error,errorPaths);}},{key:"$dataError",value:function $dataError(){errors.reportError(this,this.def.$dataError||errors.keyword$DataError);}},{key:"reset",value:function reset(){if(this.errsCount===undefined)throw new Error('add "trackErrors" to keyword definition');errors.resetErrorsCount(this.gen,this.errsCount);}},{key:"ok",value:function ok(cond){if(!this.allErrors)this.gen["if"](cond);}},{key:"setParams",value:function setParams(obj,assign){if(assign)Object.assign(this.params,obj);else this.params=obj;}},{key:"block$data",value:function block$data(valid,codeBlock){var _this31=this;var $dataValid=arguments.length>2&&arguments[2]!==undefined?arguments[2]:codegen.nil;this.gen.block(function(){_this31.check$data(valid,$dataValid);codeBlock();});}},{key:"check$data",value:function check$data(){var valid=arguments.length>0&&arguments[0]!==undefined?arguments[0]:codegen.nil;var $dataValid=arguments.length>1&&arguments[1]!==undefined?arguments[1]:codegen.nil;if(!this.$data)return;var gen=this.gen,schemaCode=this.schemaCode,schemaType=this.schemaType,def=this.def;gen["if"](codegen.or(codegen._(_templateObject158||(_templateObject158=_taggedTemplateLiteral([""," === undefined"])),schemaCode),$dataValid));if(valid!==codegen.nil)gen.assign(valid,true);if(schemaType.length||def.validateSchema){gen.elseIf(this.invalid$data());this.$dataError();if(valid!==codegen.nil)gen.assign(valid,false);}gen["else"]();}},{key:"invalid$data",value:function invalid$data(){var gen=this.gen,schemaCode=this.schemaCode,schemaType=this.schemaType,def=this.def,it=this.it;return codegen.or(wrong$DataType(),invalid$DataSchema());function wrong$DataType(){if(schemaType.length){/* istanbul ignore if */if(!(schemaCode instanceof codegen.Name))throw new Error("ajv implementation error");var st=Array.isArray(schemaType)?schemaType:[schemaType];return codegen._(_templateObject159||(_templateObject159=_taggedTemplateLiteral(["",""])),dataType_2.checkDataTypes(st,schemaCode,it.opts.strictNumbers,dataType_2.DataType.Wrong));}return codegen.nil;}function invalid$DataSchema(){if(def.validateSchema){var validateSchemaRef=gen.scopeValue("validate$data",{ref:def.validateSchema});// TODO value.code for standalone
-return codegen._(_templateObject160||(_templateObject160=_taggedTemplateLiteral(["!","(",")"])),validateSchemaRef,schemaCode);}return codegen.nil;}}},{key:"subschema",value:function subschema(appl,valid){var subschema$1=_subschema.getSubschema(this.it,appl);_subschema.extendSubschemaData(subschema$1,this.it,appl);_subschema.extendSubschemaMode(subschema$1,appl);var nextContext=_objectSpread2(_objectSpread2(_objectSpread2({},this.it),subschema$1),{},{items:undefined,props:undefined});subschemaCode(nextContext,valid);return nextContext;}},{key:"mergeEvaluated",value:function mergeEvaluated(schemaCxt,toName){var it=this.it,gen=this.gen;if(!it.opts.unevaluated)return;if(it.props!==true&&schemaCxt.props!==undefined){it.props=util.mergeEvaluated.props(gen,schemaCxt.props,it.props,toName);}if(it.items!==true&&schemaCxt.items!==undefined){it.items=util.mergeEvaluated.items(gen,schemaCxt.items,it.items,toName);}}},{key:"mergeValidEvaluated",value:function mergeValidEvaluated(schemaCxt,valid){var _this32=this;var it=this.it,gen=this.gen;if(it.opts.unevaluated&&(it.props!==true||it.items!==true)){gen["if"](valid,function(){return _this32.mergeEvaluated(schemaCxt,codegen.Name);});return true;}}}]);return KeywordCxt;}();exports.KeywordCxt=KeywordCxt;function keywordCode(it,keyword$1,def,ruleType){var cxt=new KeywordCxt(it,def,keyword$1);if("code"in def){def.code(cxt,ruleType);}else if(cxt.$data&&def.validate){keyword.funcKeywordCode(cxt,def);}else if("macro"in def){keyword.macroKeywordCode(cxt,def);}else if(def.compile||def.validate){keyword.funcKeywordCode(cxt,def);}}var JSON_POINTER=/^\/(?:[^~]|~0|~1)*$/;var RELATIVE_JSON_POINTER=/^([0-9]+)(#|\/(?:[^~]|~0|~1)*)?$/;function getData($data,_ref58){var dataLevel=_ref58.dataLevel,dataNames=_ref58.dataNames,dataPathArr=_ref58.dataPathArr;var jsonPointer;var data;if($data==="")return names_1["default"].rootData;if($data[0]==="/"){if(!JSON_POINTER.test($data))throw new Error("Invalid JSON-pointer: ".concat($data));jsonPointer=$data;data=names_1["default"].rootData;}else{var matches=RELATIVE_JSON_POINTER.exec($data);if(!matches)throw new Error("Invalid JSON-pointer: ".concat($data));var up=+matches[1];jsonPointer=matches[2];if(jsonPointer==="#"){if(up>=dataLevel)throw new Error(errorMsg("property/index",up));return dataPathArr[dataLevel-up];}if(up>dataLevel)throw new Error(errorMsg("data",up));data=dataNames[dataLevel-up];if(!jsonPointer)return data;}var expr=data;var segments=jsonPointer.split("/");var _iterator9=_createForOfIteratorHelper(segments),_step9;try{for(_iterator9.s();!(_step9=_iterator9.n()).done;){var segment=_step9.value;if(segment){data=codegen._(_templateObject161||(_templateObject161=_taggedTemplateLiteral(["","",""])),data,codegen.getProperty(util.unescapeJsonPointer(segment)));expr=codegen._(_templateObject162||(_templateObject162=_taggedTemplateLiteral([""," && ",""])),expr,data);}}}catch(err){_iterator9.e(err);}finally{_iterator9.f();}return expr;function errorMsg(pointerType,up){return"Cannot access ".concat(pointerType," ").concat(up," levels up, current level is ").concat(dataLevel);}}exports.getData=getData;});var ValidationError=/*#__PURE__*/function(_Error2){_inherits3(ValidationError,_Error2);var _super28=_createSuper2(ValidationError);function ValidationError(errors){var _this33;_classCallCheck3(this,ValidationError);_this33=_super28.call(this,"validation failed");_this33.errors=errors;_this33.ajv=_this33.validation=true;return _this33;}return ValidationError;}(/*#__PURE__*/_wrapNativeSuper(Error));var _default$y=ValidationError;var validation_error=/*#__PURE__*/Object.defineProperty({"default":_default$y},'__esModule',{value:true});var MissingRefError=/*#__PURE__*/function(_Error3){_inherits3(MissingRefError,_Error3);var _super29=_createSuper2(MissingRefError);function MissingRefError(baseId,ref,msg){var _this34;_classCallCheck3(this,MissingRefError);_this34=_super29.call(this,msg||"can't resolve reference ".concat(ref," from id ").concat(baseId));_this34.missingRef=resolve.resolveUrl(baseId,ref);_this34.missingSchema=resolve.normalizeId(resolve.getFullPath(_this34.missingRef));return _this34;}return MissingRefError;}(/*#__PURE__*/_wrapNativeSuper(Error));var _default$x=MissingRefError;var ref_error=/*#__PURE__*/Object.defineProperty({"default":_default$x},'__esModule',{value:true});var compile=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.resolveSchema=exports.getCompilingSchema=exports.resolveRef=exports.compileSchema=exports.SchemaEnv=void 0;var SchemaEnv=function SchemaEnv(env){_classCallCheck3(this,SchemaEnv);var _a;this.refs={};this.dynamicAnchors={};var schema;if(_typeof3(env.schema)=="object")schema=env.schema;this.schema=env.schema;this.schemaId=env.schemaId;this.root=env.root||this;this.baseId=(_a=env.baseId)!==null&&_a!==void 0?_a:resolve.normalizeId(schema===null||schema===void 0?void 0:schema[env.schemaId||"$id"]);this.schemaPath=env.schemaPath;this.localRefs=env.localRefs;this.meta=env.meta;this.$async=schema===null||schema===void 0?void 0:schema.$async;this.refs={};};exports.SchemaEnv=SchemaEnv;// let codeSize = 0
-// let nodeCount = 0
-// Compiles schema in SchemaEnv
-function compileSchema(sch){// TODO refactor - remove compilations
-var _sch=getCompilingSchema.call(this,sch);if(_sch)return _sch;var rootId=resolve.getFullPath(sch.root.baseId);// TODO if getFullPath removed 1 tests fails
-var _this$opts$code=this.opts.code,es5=_this$opts$code.es5,lines=_this$opts$code.lines;var ownProperties=this.opts.ownProperties;var gen=new codegen.CodeGen(this.scope,{es5:es5,lines:lines,ownProperties:ownProperties});var _ValidationError;if(sch.$async){_ValidationError=gen.scopeValue("Error",{ref:validation_error["default"],code:codegen._(_templateObject163||(_templateObject163=_taggedTemplateLiteral(["require(\"ajv/dist/runtime/validation_error\").default"])))});}var validateName=gen.scopeName("validate");sch.validateName=validateName;var schemaCxt={gen:gen,allErrors:this.opts.allErrors,data:names_1["default"].data,parentData:names_1["default"].parentData,parentDataProperty:names_1["default"].parentDataProperty,dataNames:[names_1["default"].data],dataPathArr:[codegen.nil],dataLevel:0,dataTypes:[],definedProperties:new Set(),topSchemaRef:gen.scopeValue("schema",this.opts.code.source===true?{ref:sch.schema,code:codegen.stringify(sch.schema)}:{ref:sch.schema}),validateName:validateName,ValidationError:_ValidationError,schema:sch.schema,schemaEnv:sch,rootId:rootId,baseId:sch.baseId||rootId,schemaPath:codegen.nil,errSchemaPath:sch.schemaPath||(this.opts.jtd?"":"#"),errorPath:codegen._(_templateObject164||(_templateObject164=_taggedTemplateLiteral(["\"\""]))),opts:this.opts,self:this};var sourceCode;try{this._compilations.add(sch);validate.validateFunctionCode(schemaCxt);gen.optimize(this.opts.code.optimize);// gen.optimize(1)
-var validateCode=gen.toString();sourceCode="".concat(gen.scopeRefs(names_1["default"].scope),"return ").concat(validateCode);// console.log((codeSize += sourceCode.length), (nodeCount += gen.nodeCount))
-if(this.opts.code.process)sourceCode=this.opts.code.process(sourceCode,sch);// console.log("\n\n\n *** \n", sourceCode)
-var makeValidate=new Function("".concat(names_1["default"].self),"".concat(names_1["default"].scope),sourceCode);var validate$1=makeValidate(this,this.scope.get());this.scope.value(validateName,{ref:validate$1});validate$1.errors=null;validate$1.schema=sch.schema;validate$1.schemaEnv=sch;if(sch.$async)validate$1.$async=true;if(this.opts.code.source===true){validate$1.source={validateName:validateName,validateCode:validateCode,scopeValues:gen._values};}if(this.opts.unevaluated){var props=schemaCxt.props,_items=schemaCxt.items;validate$1.evaluated={props:props instanceof codegen.Name?undefined:props,items:_items instanceof codegen.Name?undefined:_items,dynamicProps:props instanceof codegen.Name,dynamicItems:_items instanceof codegen.Name};if(validate$1.source)validate$1.source.evaluated=codegen.stringify(validate$1.evaluated);}sch.validate=validate$1;return sch;}catch(e){delete sch.validate;delete sch.validateName;if(sourceCode)this.logger.error("Error compiling schema, function code:",sourceCode);// console.log("\n\n\n *** \n", sourceCode, this.opts)
-throw e;}finally{this._compilations["delete"](sch);}}exports.compileSchema=compileSchema;function resolveRef(root,baseId,ref){var _a;ref=resolve.resolveUrl(baseId,ref);var schOrFunc=root.refs[ref];if(schOrFunc)return schOrFunc;var _sch=resolve$1.call(this,root,ref);if(_sch===undefined){var schema=(_a=root.localRefs)===null||_a===void 0?void 0:_a[ref];// TODO maybe localRefs should hold SchemaEnv
-var schemaId=this.opts.schemaId;if(schema)_sch=new SchemaEnv({schema:schema,schemaId:schemaId,root:root,baseId:baseId});}if(_sch===undefined)return;return root.refs[ref]=inlineOrCompile.call(this,_sch);}exports.resolveRef=resolveRef;function inlineOrCompile(sch){if(resolve.inlineRef(sch.schema,this.opts.inlineRefs))return sch.schema;return sch.validate?sch:compileSchema.call(this,sch);}// Index of schema compilation in the currently compiled list
-function getCompilingSchema(schEnv){var _iterator10=_createForOfIteratorHelper(this._compilations),_step10;try{for(_iterator10.s();!(_step10=_iterator10.n()).done;){var sch=_step10.value;if(sameSchemaEnv(sch,schEnv))return sch;}}catch(err){_iterator10.e(err);}finally{_iterator10.f();}}exports.getCompilingSchema=getCompilingSchema;function sameSchemaEnv(s1,s2){return s1.schema===s2.schema&&s1.root===s2.root&&s1.baseId===s2.baseId;}// resolve and compile the references ($ref)
-// TODO returns AnySchemaObject (if the schema can be inlined) or validation function
-function resolve$1(root,// information about the root schema for the current schema
-ref// reference to resolve
-){var sch;while(typeof(sch=this.refs[ref])=="string"){ref=sch;}return sch||this.schemas[ref]||resolveSchema.call(this,root,ref);}// Resolve schema, its root and baseId
-function resolveSchema(root,// root object with properties schema, refs TODO below SchemaEnv is assigned to it
-ref// reference to resolve
-){var p=uri_all.parse(ref);var refPath=resolve._getFullPath(p);var baseId=resolve.getFullPath(root.baseId);// TODO `Object.keys(root.schema).length > 0` should not be needed - but removing breaks 2 tests
-if(Object.keys(root.schema).length>0&&refPath===baseId){return getJsonPointer.call(this,p,root);}var id=resolve.normalizeId(refPath);var schOrRef=this.refs[id]||this.schemas[id];if(typeof schOrRef=="string"){var sch=resolveSchema.call(this,root,schOrRef);if(_typeof3(sch===null||sch===void 0?void 0:sch.schema)!=="object")return;return getJsonPointer.call(this,p,sch);}if(_typeof3(schOrRef===null||schOrRef===void 0?void 0:schOrRef.schema)!=="object")return;if(!schOrRef.validate)compileSchema.call(this,schOrRef);if(id===resolve.normalizeId(ref)){var schema=schOrRef.schema;var schemaId=this.opts.schemaId;var schId=schema[schemaId];if(schId)baseId=resolve.resolveUrl(baseId,schId);return new SchemaEnv({schema:schema,schemaId:schemaId,root:root,baseId:baseId});}return getJsonPointer.call(this,p,schOrRef);}exports.resolveSchema=resolveSchema;var PREVENT_SCOPE_CHANGE=new Set(["properties","patternProperties","enum","dependencies","definitions"]);function getJsonPointer(parsedRef,_ref59){var baseId=_ref59.baseId,schema=_ref59.schema,root=_ref59.root;var _a;if(((_a=parsedRef.fragment)===null||_a===void 0?void 0:_a[0])!=="/")return;var _iterator11=_createForOfIteratorHelper(parsedRef.fragment.slice(1).split("/")),_step11;try{for(_iterator11.s();!(_step11=_iterator11.n()).done;){var part=_step11.value;if(typeof schema=="boolean")return;schema=schema[util.unescapeFragment(part)];if(schema===undefined)return;// TODO PREVENT_SCOPE_CHANGE could be defined in keyword def?
-var schId=_typeof3(schema)=="object"&&schema[this.opts.schemaId];if(!PREVENT_SCOPE_CHANGE.has(part)&&schId){baseId=resolve.resolveUrl(baseId,schId);}}}catch(err){_iterator11.e(err);}finally{_iterator11.f();}var env;if(typeof schema!="boolean"&&schema.$ref&&!util.schemaHasRulesButRef(schema,this.RULES)){var $ref=resolve.resolveUrl(baseId,schema.$ref);env=resolveSchema.call(this,root,$ref);}// even though resolution failed we need to return SchemaEnv to throw exception
-// so that compileAsync loads missing schema.
-var schemaId=this.opts.schemaId;env=env||new SchemaEnv({schema:schema,schemaId:schemaId,root:root,baseId:baseId});if(env.schema!==env.root.schema)return env;return undefined;}});var $id$1="https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#";var description="Meta-schema for $data reference (JSON AnySchema extension proposal)";var type$1="object";var required$1=["$data"];var properties$2={$data:{type:"string",anyOf:[{format:"relative-json-pointer"},{format:"json-pointer"}]}};var additionalProperties$1=false;var $dataRefSchema={$id:$id$1,description:description,type:type$1,required:required$1,properties:properties$2,additionalProperties:additionalProperties$1};var core$1=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.CodeGen=exports.Name=exports.nil=exports.stringify=exports.str=exports._=exports.KeywordCxt=void 0;Object.defineProperty(exports,"KeywordCxt",{enumerable:true,get:function get(){return validate.KeywordCxt;}});Object.defineProperty(exports,"_",{enumerable:true,get:function get(){return codegen._;}});Object.defineProperty(exports,"str",{enumerable:true,get:function get(){return codegen.str;}});Object.defineProperty(exports,"stringify",{enumerable:true,get:function get(){return codegen.stringify;}});Object.defineProperty(exports,"nil",{enumerable:true,get:function get(){return codegen.nil;}});Object.defineProperty(exports,"Name",{enumerable:true,get:function get(){return codegen.Name;}});Object.defineProperty(exports,"CodeGen",{enumerable:true,get:function get(){return codegen.CodeGen;}});var codegen_2=codegen;var META_IGNORE_OPTIONS=["removeAdditional","useDefaults","coerceTypes"];var EXT_SCOPE_NAMES=new Set(["validate","serialize","parse","wrapper","root","schema","keyword","pattern","formats","validate$data","func","obj","Error"]);var removedOptions={errorDataPath:"",format:"`validateFormats: false` can be used instead.",nullable:'"nullable" keyword is supported by default.',jsonPointers:"Deprecated jsPropertySyntax can be used instead.",extendRefs:"Deprecated ignoreKeywordsWithRef can be used instead.",missingRefs:"Pass empty schema with $id that should be ignored to ajv.addSchema.",processCode:"Use option `code: {process: (code, schemaEnv: object) => string}`",sourceCode:"Use option `code: {source: true}`",strictDefaults:"It is default now, see option `strict`.",strictKeywords:"It is default now, see option `strict`.",uniqueItems:'"uniqueItems" keyword is always validated.',unknownFormats:"Disable strict mode or pass `true` to `ajv.addFormat` (or `formats` option).",cache:"Map is used as cache, schema object as key.",serialize:"Map is used as cache, schema object as key.",ajvErrors:"It is default now."};var deprecatedOptions={ignoreKeywordsWithRef:"",jsPropertySyntax:"",unicode:'"minLength"/"maxLength" account for unicode characters by default.'};var MAX_EXPRESSION=200;// eslint-disable-next-line complexity
-function requiredOptions(o){var _a,_b,_c,_d,_e,_f,_g,_h,_j,_k,_l,_m,_o,_p,_q,_r,_s,_t,_u,_v,_w,_x;var s=o.strict;var _optz=(_a=o.code)===null||_a===void 0?void 0:_a.optimize;var optimize=_optz===true||_optz===undefined?1:_optz||0;return{strictSchema:(_c=(_b=o.strictSchema)!==null&&_b!==void 0?_b:s)!==null&&_c!==void 0?_c:true,strictNumbers:(_e=(_d=o.strictNumbers)!==null&&_d!==void 0?_d:s)!==null&&_e!==void 0?_e:true,strictTypes:(_g=(_f=o.strictTypes)!==null&&_f!==void 0?_f:s)!==null&&_g!==void 0?_g:"log",strictTuples:(_j=(_h=o.strictTuples)!==null&&_h!==void 0?_h:s)!==null&&_j!==void 0?_j:"log",strictRequired:(_l=(_k=o.strictRequired)!==null&&_k!==void 0?_k:s)!==null&&_l!==void 0?_l:false,code:o.code?_objectSpread2(_objectSpread2({},o.code),{},{optimize:optimize}):{optimize:optimize},loopRequired:(_m=o.loopRequired)!==null&&_m!==void 0?_m:MAX_EXPRESSION,loopEnum:(_o=o.loopEnum)!==null&&_o!==void 0?_o:MAX_EXPRESSION,meta:(_p=o.meta)!==null&&_p!==void 0?_p:true,messages:(_q=o.messages)!==null&&_q!==void 0?_q:true,inlineRefs:(_r=o.inlineRefs)!==null&&_r!==void 0?_r:true,schemaId:(_s=o.schemaId)!==null&&_s!==void 0?_s:"$id",addUsedSchema:(_t=o.addUsedSchema)!==null&&_t!==void 0?_t:true,validateSchema:(_u=o.validateSchema)!==null&&_u!==void 0?_u:true,validateFormats:(_v=o.validateFormats)!==null&&_v!==void 0?_v:true,unicodeRegExp:(_w=o.unicodeRegExp)!==null&&_w!==void 0?_w:true,int32range:(_x=o.int32range)!==null&&_x!==void 0?_x:true};}var Ajv=/*#__PURE__*/function(){function Ajv(){var opts=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{};_classCallCheck3(this,Ajv);this.schemas={};this.refs={};this.formats={};this._compilations=new Set();this._loading={};this._cache=new Map();opts=this.opts=_objectSpread2(_objectSpread2({},opts),requiredOptions(opts));var _this$opts$code2=this.opts.code,es5=_this$opts$code2.es5,lines=_this$opts$code2.lines;this.scope=new codegen_2.ValueScope({scope:{},prefixes:EXT_SCOPE_NAMES,es5:es5,lines:lines});this.logger=getLogger(opts.logger);var formatOpt=opts.validateFormats;opts.validateFormats=false;this.RULES=rules.getRules();checkOptions.call(this,removedOptions,opts,"NOT SUPPORTED");checkOptions.call(this,deprecatedOptions,opts,"DEPRECATED","warn");this._metaOpts=getMetaSchemaOptions.call(this);if(opts.formats)addInitialFormats.call(this);this._addVocabularies();this._addDefaultMetaSchema();if(opts.keywords)addInitialKeywords.call(this,opts.keywords);if(_typeof3(opts.meta)=="object")this.addMetaSchema(opts.meta);addInitialSchemas.call(this);opts.validateFormats=formatOpt;}_createClass3(Ajv,[{key:"_addVocabularies",value:function _addVocabularies(){this.addKeyword("$async");}},{key:"_addDefaultMetaSchema",value:function _addDefaultMetaSchema(){var _this$opts=this.opts,$data=_this$opts.$data,meta=_this$opts.meta,schemaId=_this$opts.schemaId;var _dataRefSchema=$dataRefSchema;if(schemaId==="id"){_dataRefSchema=_objectSpread2({},$dataRefSchema);_dataRefSchema.id=_dataRefSchema.$id;delete _dataRefSchema.$id;}if(meta&&$data)this.addMetaSchema(_dataRefSchema,_dataRefSchema[schemaId],false);}},{key:"defaultMeta",value:function defaultMeta(){var _this$opts2=this.opts,meta=_this$opts2.meta,schemaId=_this$opts2.schemaId;return this.opts.defaultMeta=_typeof3(meta)=="object"?meta[schemaId]||meta:undefined;}},{key:"validate",value:function validate(schemaKeyRef,// key, ref or schema object
-data// to be validated
-){var v;if(typeof schemaKeyRef=="string"){v=this.getSchema(schemaKeyRef);if(!v)throw new Error("no schema with key or ref \"".concat(schemaKeyRef,"\""));}else{v=this.compile(schemaKeyRef);}var valid=v(data);if(!("$async"in v))this.errors=v.errors;return valid;}},{key:"compile",value:function compile(schema,_meta){var sch=this._addSchema(schema,_meta);return sch.validate||this._compileSchemaEnv(sch);}},{key:"compileAsync",value:function compileAsync(schema,meta){if(typeof this.opts.loadSchema!="function"){throw new Error("options.loadSchema should be a function");}var loadSchema=this.opts.loadSchema;return runCompileAsync.call(this,schema,meta);function runCompileAsync(_x3,_x4){return _runCompileAsync.apply(this,arguments);}function _runCompileAsync(){_runCompileAsync=_asyncToGenerator(/*#__PURE__*/regeneratorRuntime.mark(function _callee(_schema,_meta){var sch;return regeneratorRuntime.wrap(function _callee$(_context34){while(1){switch(_context34.prev=_context34.next){case 0:_context34.next=2;return loadMetaSchema.call(this,_schema.$schema);case 2:sch=this._addSchema(_schema,_meta);return _context34.abrupt("return",sch.validate||_compileAsync.call(this,sch));case 4:case"end":return _context34.stop();}}},_callee,this);}));return _runCompileAsync.apply(this,arguments);}function loadMetaSchema(_x5){return _loadMetaSchema.apply(this,arguments);}function _loadMetaSchema(){_loadMetaSchema=_asyncToGenerator(/*#__PURE__*/regeneratorRuntime.mark(function _callee2($ref){return regeneratorRuntime.wrap(function _callee2$(_context35){while(1){switch(_context35.prev=_context35.next){case 0:if(!($ref&&!this.getSchema($ref))){_context35.next=3;break;}_context35.next=3;return runCompileAsync.call(this,{$ref:$ref},true);case 3:case"end":return _context35.stop();}}},_callee2,this);}));return _loadMetaSchema.apply(this,arguments);}function _compileAsync(_x6){return _compileAsync2.apply(this,arguments);}function _compileAsync2(){_compileAsync2=_asyncToGenerator(/*#__PURE__*/regeneratorRuntime.mark(function _callee3(sch){return regeneratorRuntime.wrap(function _callee3$(_context36){while(1){switch(_context36.prev=_context36.next){case 0:_context36.prev=0;return _context36.abrupt("return",this._compileSchemaEnv(sch));case 4:_context36.prev=4;_context36.t0=_context36["catch"](0);if(_context36.t0 instanceof ref_error["default"]){_context36.next=8;break;}throw _context36.t0;case 8:checkLoaded.call(this,_context36.t0);_context36.next=11;return loadMissingSchema.call(this,_context36.t0.missingSchema);case 11:return _context36.abrupt("return",_compileAsync.call(this,sch));case 12:case"end":return _context36.stop();}}},_callee3,this,[[0,4]]);}));return _compileAsync2.apply(this,arguments);}function checkLoaded(_ref60){var ref=_ref60.missingSchema,missingRef=_ref60.missingRef;if(this.refs[ref]){throw new Error("AnySchema ".concat(ref," is loaded but ").concat(missingRef," cannot be resolved"));}}function loadMissingSchema(_x7){return _loadMissingSchema.apply(this,arguments);}function _loadMissingSchema(){_loadMissingSchema=_asyncToGenerator(/*#__PURE__*/regeneratorRuntime.mark(function _callee4(ref){var _schema;return regeneratorRuntime.wrap(function _callee4$(_context37){while(1){switch(_context37.prev=_context37.next){case 0:_context37.next=2;return _loadSchema.call(this,ref);case 2:_schema=_context37.sent;if(this.refs[ref]){_context37.next=6;break;}_context37.next=6;return loadMetaSchema.call(this,_schema.$schema);case 6:if(!this.refs[ref])this.addSchema(_schema,ref,meta);case 7:case"end":return _context37.stop();}}},_callee4,this);}));return _loadMissingSchema.apply(this,arguments);}function _loadSchema(_x8){return _loadSchema2.apply(this,arguments);}function _loadSchema2(){_loadSchema2=_asyncToGenerator(/*#__PURE__*/regeneratorRuntime.mark(function _callee5(ref){var p;return regeneratorRuntime.wrap(function _callee5$(_context38){while(1){switch(_context38.prev=_context38.next){case 0:p=this._loading[ref];if(!p){_context38.next=3;break;}return _context38.abrupt("return",p);case 3:_context38.prev=3;_context38.next=6;return this._loading[ref]=loadSchema(ref);case 6:return _context38.abrupt("return",_context38.sent);case 7:_context38.prev=7;delete this._loading[ref];return _context38.finish(7);case 10:case"end":return _context38.stop();}}},_callee5,this,[[3,,7,10]]);}));return _loadSchema2.apply(this,arguments);}}// Adds schema to the instance
-},{key:"addSchema",value:function addSchema(schema,// If array is passed, `key` will be ignored
-key,// Optional schema key. Can be passed to `validate` method instead of schema object or id/ref. One schema per instance can have empty `id` and `key`.
-_meta){var _validateSchema=arguments.length>3&&arguments[3]!==undefined?arguments[3]:this.opts.validateSchema;if(Array.isArray(schema)){var _iterator12=_createForOfIteratorHelper(schema),_step12;try{for(_iterator12.s();!(_step12=_iterator12.n()).done;){var sch=_step12.value;this.addSchema(sch,undefined,_meta,_validateSchema);}}catch(err){_iterator12.e(err);}finally{_iterator12.f();}return this;}var id;if(_typeof3(schema)==="object"){var schemaId=this.opts.schemaId;id=schema[schemaId];if(id!==undefined&&typeof id!="string"){throw new Error("schema ".concat(schemaId," must be string"));}}key=resolve.normalizeId(key||id);this._checkUnique(key);this.schemas[key]=this._addSchema(schema,_meta,key,_validateSchema,true);return this;}// Add schema that will be used to validate other schemas
-// options in META_IGNORE_OPTIONS are alway set to false
-},{key:"addMetaSchema",value:function addMetaSchema(schema,key){var _validateSchema=arguments.length>2&&arguments[2]!==undefined?arguments[2]:this.opts.validateSchema;this.addSchema(schema,key,true,_validateSchema);return this;}//  Validate schema against its meta-schema
-},{key:"validateSchema",value:function validateSchema(schema,throwOrLogError){if(typeof schema=="boolean")return true;var $schema;$schema=schema.$schema;if($schema!==undefined&&typeof $schema!="string"){throw new Error("$schema must be a string");}$schema=$schema||this.opts.defaultMeta||this.defaultMeta();if(!$schema){this.logger.warn("meta-schema not available");this.errors=null;return true;}var valid=this.validate($schema,schema);if(!valid&&throwOrLogError){var message="schema is invalid: "+this.errorsText();if(this.opts.validateSchema==="log")this.logger.error(message);else throw new Error(message);}return valid;}// Get compiled schema by `key` or `ref`.
-// (`key` that was passed to `addSchema` or full schema reference - `schema.$id` or resolved id)
-},{key:"getSchema",value:function getSchema(keyRef){var sch;while(typeof(sch=getSchEnv.call(this,keyRef))=="string"){keyRef=sch;}if(sch===undefined){var schemaId=this.opts.schemaId;var _root=new compile.SchemaEnv({schema:{},schemaId:schemaId});sch=compile.resolveSchema.call(this,_root,keyRef);if(!sch)return;this.refs[keyRef]=sch;}return sch.validate||this._compileSchemaEnv(sch);}// Remove cached schema(s).
-// If no parameter is passed all schemas but meta-schemas are removed.
-// If RegExp is passed all schemas with key/id matching pattern but meta-schemas are removed.
-// Even if schema is referenced by other schemas it still can be removed as other schemas have local references.
-},{key:"removeSchema",value:function removeSchema(schemaKeyRef){if(schemaKeyRef instanceof RegExp){this._removeAllSchemas(this.schemas,schemaKeyRef);this._removeAllSchemas(this.refs,schemaKeyRef);return this;}switch(_typeof3(schemaKeyRef)){case"undefined":this._removeAllSchemas(this.schemas);this._removeAllSchemas(this.refs);this._cache.clear();return this;case"string":{var sch=getSchEnv.call(this,schemaKeyRef);if(_typeof3(sch)=="object")this._cache["delete"](sch.schema);delete this.schemas[schemaKeyRef];delete this.refs[schemaKeyRef];return this;}case"object":{var cacheKey=schemaKeyRef;this._cache["delete"](cacheKey);var _id=schemaKeyRef[this.opts.schemaId];if(_id){_id=resolve.normalizeId(_id);delete this.schemas[_id];delete this.refs[_id];}return this;}default:throw new Error("ajv.removeSchema: invalid parameter");}}// add "vocabulary" - a collection of keywords
-},{key:"addVocabulary",value:function addVocabulary(definitions){var _iterator13=_createForOfIteratorHelper(definitions),_step13;try{for(_iterator13.s();!(_step13=_iterator13.n()).done;){var _def2=_step13.value;this.addKeyword(_def2);}}catch(err){_iterator13.e(err);}finally{_iterator13.f();}return this;}},{key:"addKeyword",value:function addKeyword(kwdOrDef,def// deprecated
-){var _this35=this;var keyword;if(typeof kwdOrDef=="string"){keyword=kwdOrDef;if(_typeof3(def)=="object"){this.logger.warn("these parameters are deprecated, see docs for addKeyword");def.keyword=keyword;}}else if(_typeof3(kwdOrDef)=="object"&&def===undefined){def=kwdOrDef;keyword=def.keyword;if(Array.isArray(keyword)&&!keyword.length){throw new Error("addKeywords: keyword must be string or non-empty array");}}else{throw new Error("invalid addKeywords parameters");}checkKeyword.call(this,keyword,def);if(!def){util.eachItem(keyword,function(kwd){return addRule.call(_this35,kwd);});return this;}keywordMetaschema.call(this,def);var definition=_objectSpread2(_objectSpread2({},def),{},{type:dataType.getJSONTypes(def.type),schemaType:dataType.getJSONTypes(def.schemaType)});util.eachItem(keyword,definition.type.length===0?function(k){return addRule.call(_this35,k,definition);}:function(k){return definition.type.forEach(function(t){return addRule.call(_this35,k,definition,t);});});return this;}},{key:"getKeyword",value:function getKeyword(keyword){var rule=this.RULES.all[keyword];return _typeof3(rule)=="object"?rule.definition:!!rule;}// Remove keyword
-},{key:"removeKeyword",value:function removeKeyword(keyword){// TODO return type should be Ajv
-var RULES=this.RULES;delete RULES.keywords[keyword];delete RULES.all[keyword];var _iterator14=_createForOfIteratorHelper(RULES.rules),_step14;try{for(_iterator14.s();!(_step14=_iterator14.n()).done;){var group=_step14.value;var _i3=group.rules.findIndex(function(rule){return rule.keyword===keyword;});if(_i3>=0)group.rules.splice(_i3,1);}}catch(err){_iterator14.e(err);}finally{_iterator14.f();}return this;}// Add format
-},{key:"addFormat",value:function addFormat(name,format){if(typeof format=="string")format=new RegExp(format);this.formats[name]=format;return this;}},{key:"errorsText",value:function errorsText(){var errors=arguments.length>0&&arguments[0]!==undefined?arguments[0]:this.errors;var _ref61=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{},_ref61$separator=_ref61.separator,separator=_ref61$separator===void 0?", ":_ref61$separator,_ref61$dataVar=_ref61.dataVar,dataVar=_ref61$dataVar===void 0?"data":_ref61$dataVar;if(!errors||errors.length===0)return"No errors";return errors.map(function(e){return"".concat(dataVar).concat(e.instancePath," ").concat(e.message);}).reduce(function(text,msg){return text+separator+msg;});}},{key:"$dataMetaSchema",value:function $dataMetaSchema(metaSchema,keywordsJsonPointers){var rules=this.RULES.all;metaSchema=JSON.parse(JSON.stringify(metaSchema));var _iterator15=_createForOfIteratorHelper(keywordsJsonPointers),_step15;try{for(_iterator15.s();!(_step15=_iterator15.n()).done;){var jsonPointer=_step15.value;var segments=jsonPointer.split("/").slice(1);// first segment is an empty string
-var keywords=metaSchema;var _iterator16=_createForOfIteratorHelper(segments),_step16;try{for(_iterator16.s();!(_step16=_iterator16.n()).done;){var seg=_step16.value;keywords=keywords[seg];}}catch(err){_iterator16.e(err);}finally{_iterator16.f();}for(var key in rules){var rule=rules[key];if(_typeof3(rule)!="object")continue;var $data=rule.definition.$data;var schema=keywords[key];if($data&&schema)keywords[key]=schemaOrData(schema);}}}catch(err){_iterator15.e(err);}finally{_iterator15.f();}return metaSchema;}},{key:"_removeAllSchemas",value:function _removeAllSchemas(schemas,regex){for(var keyRef in schemas){var sch=schemas[keyRef];if(!regex||regex.test(keyRef)){if(typeof sch=="string"){delete schemas[keyRef];}else if(sch&&!sch.meta){this._cache["delete"](sch.schema);delete schemas[keyRef];}}}}},{key:"_addSchema",value:function _addSchema(schema,meta,baseId){var validateSchema=arguments.length>3&&arguments[3]!==undefined?arguments[3]:this.opts.validateSchema;var addSchema=arguments.length>4&&arguments[4]!==undefined?arguments[4]:this.opts.addUsedSchema;var id;var schemaId=this.opts.schemaId;if(_typeof3(schema)=="object"){id=schema[schemaId];}else{if(this.opts.jtd)throw new Error("schema must be object");else if(typeof schema!="boolean")throw new Error("schema must be object or boolean");}var sch=this._cache.get(schema);if(sch!==undefined)return sch;var localRefs=resolve.getSchemaRefs.call(this,schema);baseId=resolve.normalizeId(id||baseId);sch=new compile.SchemaEnv({schema:schema,schemaId:schemaId,meta:meta,baseId:baseId,localRefs:localRefs});this._cache.set(sch.schema,sch);if(addSchema&&!baseId.startsWith("#")){// TODO atm it is allowed to overwrite schemas without id (instead of not adding them)
-if(baseId)this._checkUnique(baseId);this.refs[baseId]=sch;}if(validateSchema)this.validateSchema(schema,true);return sch;}},{key:"_checkUnique",value:function _checkUnique(id){if(this.schemas[id]||this.refs[id]){throw new Error("schema with key or id \"".concat(id,"\" already exists"));}}},{key:"_compileSchemaEnv",value:function _compileSchemaEnv(sch){if(sch.meta)this._compileMetaSchema(sch);else compile.compileSchema.call(this,sch);/* istanbul ignore if */if(!sch.validate)throw new Error("ajv implementation error");return sch.validate;}},{key:"_compileMetaSchema",value:function _compileMetaSchema(sch){var currentOpts=this.opts;this.opts=this._metaOpts;try{compile.compileSchema.call(this,sch);}finally{this.opts=currentOpts;}}}]);return Ajv;}();exports["default"]=Ajv;Ajv.ValidationError=validation_error["default"];Ajv.MissingRefError=ref_error["default"];function checkOptions(checkOpts,options,msg){var log=arguments.length>3&&arguments[3]!==undefined?arguments[3]:"error";for(var key in checkOpts){var opt=key;if(opt in options)this.logger[log]("".concat(msg,": option ").concat(key,". ").concat(checkOpts[opt]));}}function getSchEnv(keyRef){keyRef=resolve.normalizeId(keyRef);// TODO tests fail without this line
-return this.schemas[keyRef]||this.refs[keyRef];}function addInitialSchemas(){var optsSchemas=this.opts.schemas;if(!optsSchemas)return;if(Array.isArray(optsSchemas))this.addSchema(optsSchemas);else for(var key in optsSchemas){this.addSchema(optsSchemas[key],key);}}function addInitialFormats(){for(var name in this.opts.formats){var _format=this.opts.formats[name];if(_format)this.addFormat(name,_format);}}function addInitialKeywords(defs){if(Array.isArray(defs)){this.addVocabulary(defs);return;}this.logger.warn("keywords option as map is deprecated, pass array");for(var _keyword2 in defs){var _def3=defs[_keyword2];if(!_def3.keyword)_def3.keyword=_keyword2;this.addKeyword(_def3);}}function getMetaSchemaOptions(){var metaOpts=_objectSpread2({},this.opts);var _iterator17=_createForOfIteratorHelper(META_IGNORE_OPTIONS),_step17;try{for(_iterator17.s();!(_step17=_iterator17.n()).done;){var opt=_step17.value;delete metaOpts[opt];}}catch(err){_iterator17.e(err);}finally{_iterator17.f();}return metaOpts;}var noLogs={log:function log(){},warn:function warn(){},error:function error(){}};function getLogger(logger){if(logger===false)return noLogs;if(logger===undefined)return console;if(logger.log&&logger.warn&&logger.error)return logger;throw new Error("logger must implement log, warn and error methods");}var KEYWORD_NAME=/^[a-z_$][a-z0-9_$:-]*$/i;function checkKeyword(keyword,def){var RULES=this.RULES;util.eachItem(keyword,function(kwd){if(RULES.keywords[kwd])throw new Error("Keyword ".concat(kwd," is already defined"));if(!KEYWORD_NAME.test(kwd))throw new Error("Keyword ".concat(kwd," has invalid name"));});if(!def)return;if(def.$data&&!("code"in def||"validate"in def)){throw new Error('$data keyword must have "code" or "validate" function');}}function addRule(keyword,definition,dataType$1){var _this36=this;var _a;var post=definition===null||definition===void 0?void 0:definition.post;if(dataType$1&&post)throw new Error('keyword with "post" flag cannot have "type"');var RULES=this.RULES;var ruleGroup=post?RULES.post:RULES.rules.find(function(_ref62){var t=_ref62.type;return t===dataType$1;});if(!ruleGroup){ruleGroup={type:dataType$1,rules:[]};RULES.rules.push(ruleGroup);}RULES.keywords[keyword]=true;if(!definition)return;var rule={keyword:keyword,definition:_objectSpread2(_objectSpread2({},definition),{},{type:dataType.getJSONTypes(definition.type),schemaType:dataType.getJSONTypes(definition.schemaType)})};if(definition.before)addBeforeRule.call(this,ruleGroup,rule,definition.before);else ruleGroup.rules.push(rule);RULES.all[keyword]=rule;(_a=definition["implements"])===null||_a===void 0?void 0:_a.forEach(function(kwd){return _this36.addKeyword(kwd);});}function addBeforeRule(ruleGroup,rule,before){var i=ruleGroup.rules.findIndex(function(_rule){return _rule.keyword===before;});if(i>=0){ruleGroup.rules.splice(i,0,rule);}else{ruleGroup.rules.push(rule);this.logger.warn("rule ".concat(before," is not defined"));}}function keywordMetaschema(def){var metaSchema=def.metaSchema;if(metaSchema===undefined)return;if(def.$data&&this.opts.$data)metaSchema=schemaOrData(metaSchema);def.validateSchema=this.compile(metaSchema,true);}var $dataRef={$ref:"https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#"};function schemaOrData(schema){return{anyOf:[schema,$dataRef]};}});var def$p={keyword:"id",code:function code(){throw new Error('NOT SUPPORTED: keyword "id", use "$id" for schema ID');}};var _default$w=def$p;var id$1=/*#__PURE__*/Object.defineProperty({"default":_default$w},'__esModule',{value:true});var ref=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.callRef=exports.getValidate=void 0;var def={keyword:"$ref",schemaType:"string",code:function code(cxt){var gen=cxt.gen,$ref=cxt.schema,it=cxt.it;var baseId=it.baseId,env=it.schemaEnv,validateName=it.validateName,opts=it.opts,self=it.self;var root=env.root;if(($ref==="#"||$ref==="#/")&&baseId===root.baseId)return callRootRef();var schOrEnv=compile.resolveRef.call(self,root,baseId,$ref);if(schOrEnv===undefined)throw new ref_error["default"](baseId,$ref);if(schOrEnv instanceof compile.SchemaEnv)return callValidate(schOrEnv);return inlineRefSchema(schOrEnv);function callRootRef(){if(env===root)return callRef(cxt,validateName,env,env.$async);var rootName=gen.scopeValue("root",{ref:root});return callRef(cxt,codegen._(_templateObject165||(_templateObject165=_taggedTemplateLiteral(["",".validate"])),rootName),root,root.$async);}function callValidate(sch){var v=getValidate(cxt,sch);callRef(cxt,v,sch,sch.$async);}function inlineRefSchema(sch){var schName=gen.scopeValue("schema",opts.code.source===true?{ref:sch,code:codegen.stringify(sch)}:{ref:sch});var valid=gen.name("valid");var schCxt=cxt.subschema({schema:sch,dataTypes:[],schemaPath:codegen.nil,topSchemaRef:schName,errSchemaPath:$ref},valid);cxt.mergeEvaluated(schCxt);cxt.ok(valid);}}};function getValidate(cxt,sch){var gen=cxt.gen;return sch.validate?gen.scopeValue("validate",{ref:sch.validate}):codegen._(_templateObject166||(_templateObject166=_taggedTemplateLiteral(["",".validate"])),gen.scopeValue("wrapper",{ref:sch}));}exports.getValidate=getValidate;function callRef(cxt,v,sch,$async){var gen=cxt.gen,it=cxt.it;var allErrors=it.allErrors,env=it.schemaEnv,opts=it.opts;var passCxt=opts.passContext?names_1["default"]["this"]:codegen.nil;if($async)callAsyncRef();else callSyncRef();function callAsyncRef(){if(!env.$async)throw new Error("async schema referenced by sync schema");var valid=gen["let"]("valid");gen["try"](function(){gen.code(codegen._(_templateObject167||(_templateObject167=_taggedTemplateLiteral(["await ",""])),_code.callValidateCode(cxt,v,passCxt)));addEvaluatedFrom(v);// TODO will not work with async, it has to be returned with the result
-if(!allErrors)gen.assign(valid,true);},function(e){gen["if"](codegen._(_templateObject168||(_templateObject168=_taggedTemplateLiteral(["!("," instanceof ",")"])),e,it.ValidationError),function(){return gen["throw"](e);});addErrorsFrom(e);if(!allErrors)gen.assign(valid,false);});cxt.ok(valid);}function callSyncRef(){cxt.result(_code.callValidateCode(cxt,v,passCxt),function(){return addEvaluatedFrom(v);},function(){return addErrorsFrom(v);});}function addErrorsFrom(source){var errs=codegen._(_templateObject169||(_templateObject169=_taggedTemplateLiteral(["",".errors"])),source);gen.assign(names_1["default"].vErrors,codegen._(_templateObject170||(_templateObject170=_taggedTemplateLiteral([""," === null ? "," : ",".concat(",")"])),names_1["default"].vErrors,errs,names_1["default"].vErrors,errs));// TODO tagged
-gen.assign(names_1["default"].errors,codegen._(_templateObject171||(_templateObject171=_taggedTemplateLiteral(["",".length"])),names_1["default"].vErrors));}function addEvaluatedFrom(source){var _a;if(!it.opts.unevaluated)return;var schEvaluated=(_a=sch===null||sch===void 0?void 0:sch.validate)===null||_a===void 0?void 0:_a.evaluated;// TODO refactor
-if(it.props!==true){if(schEvaluated&&!schEvaluated.dynamicProps){if(schEvaluated.props!==undefined){it.props=util.mergeEvaluated.props(gen,schEvaluated.props,it.props);}}else{var props=gen["var"]("props",codegen._(_templateObject172||(_templateObject172=_taggedTemplateLiteral(["",".evaluated.props"])),source));it.props=util.mergeEvaluated.props(gen,props,it.props,codegen.Name);}}if(it.items!==true){if(schEvaluated&&!schEvaluated.dynamicItems){if(schEvaluated.items!==undefined){it.items=util.mergeEvaluated.items(gen,schEvaluated.items,it.items);}}else{var _items2=gen["var"]("items",codegen._(_templateObject173||(_templateObject173=_taggedTemplateLiteral(["",".evaluated.items"])),source));it.items=util.mergeEvaluated.items(gen,_items2,it.items,codegen.Name);}}}}exports.callRef=callRef;exports["default"]=def;});var core=["$schema","$id","$defs","$vocabulary",{keyword:"$comment"},"definitions",id$1["default"],ref["default"]];var _default$v=core;var core_1=/*#__PURE__*/Object.defineProperty({"default":_default$v},'__esModule',{value:true});var ops=codegen.operators;var KWDs={maximum:{okStr:"<=",ok:ops.LTE,fail:ops.GT},minimum:{okStr:">=",ok:ops.GTE,fail:ops.LT},exclusiveMaximum:{okStr:"<",ok:ops.LT,fail:ops.GTE},exclusiveMinimum:{okStr:">",ok:ops.GT,fail:ops.LTE}};var error$h={message:function message(_ref63){var keyword=_ref63.keyword,schemaCode=_ref63.schemaCode;return codegen.str(_templateObject174||(_templateObject174=_taggedTemplateLiteral(["must be "," ",""])),KWDs[keyword].okStr,schemaCode);},params:function params(_ref64){var keyword=_ref64.keyword,schemaCode=_ref64.schemaCode;return codegen._(_templateObject175||(_templateObject175=_taggedTemplateLiteral(["{comparison: ",", limit: ","}"])),KWDs[keyword].okStr,schemaCode);}};var def$o={keyword:Object.keys(KWDs),type:"number",schemaType:"number",$data:true,error:error$h,code:function code(cxt){var keyword=cxt.keyword,data=cxt.data,schemaCode=cxt.schemaCode;cxt.fail$data(codegen._(_templateObject176||(_templateObject176=_taggedTemplateLiteral([""," "," "," || isNaN(",")"])),data,KWDs[keyword].fail,schemaCode,data));}};var _default$u=def$o;var limitNumber=/*#__PURE__*/Object.defineProperty({"default":_default$u},'__esModule',{value:true});var error$g={message:function message(_ref65){var schemaCode=_ref65.schemaCode;return codegen.str(_templateObject177||(_templateObject177=_taggedTemplateLiteral(["must be multiple of ",""])),schemaCode);},params:function params(_ref66){var schemaCode=_ref66.schemaCode;return codegen._(_templateObject178||(_templateObject178=_taggedTemplateLiteral(["{multipleOf: ","}"])),schemaCode);}};var def$n={keyword:"multipleOf",type:"number",schemaType:"number",$data:true,error:error$g,code:function code(cxt){var gen=cxt.gen,data=cxt.data,schemaCode=cxt.schemaCode,it=cxt.it;// const bdt = bad$DataType(schemaCode, <string>def.schemaType, $data)
-var prec=it.opts.multipleOfPrecision;var res=gen["let"]("res");var invalid=prec?codegen._(_templateObject179||(_templateObject179=_taggedTemplateLiteral(["Math.abs(Math.round(",") - ",") > 1e-",""])),res,res,prec):codegen._(_templateObject180||(_templateObject180=_taggedTemplateLiteral([""," !== parseInt(",")"])),res,res);cxt.fail$data(codegen._(_templateObject181||(_templateObject181=_taggedTemplateLiteral(["("," === 0 || ("," = ","/",", ","))"])),schemaCode,res,data,schemaCode,invalid));}};var _default$t=def$n;var multipleOf=/*#__PURE__*/Object.defineProperty({"default":_default$t},'__esModule',{value:true});// https://mathiasbynens.be/notes/javascript-encoding
-// https://github.com/bestiejs/punycode.js - punycode.ucs2.decode
-function ucs2length(str){var len=str.length;var length=0;var pos=0;var value;while(pos<len){length++;value=str.charCodeAt(pos++);if(value>=0xd800&&value<=0xdbff&&pos<len){// high surrogate, and there is a next character
-value=str.charCodeAt(pos);if((value&0xfc00)===0xdc00)pos++;// low surrogate
-}}return length;}var _default$s=ucs2length;ucs2length.code='require("ajv/dist/runtime/ucs2length").default';var ucs2length_1=/*#__PURE__*/Object.defineProperty({"default":_default$s},'__esModule',{value:true});var error$f={message:function message(_ref67){var keyword=_ref67.keyword,schemaCode=_ref67.schemaCode;var comp=keyword==="maxLength"?"more":"fewer";return codegen.str(_templateObject182||(_templateObject182=_taggedTemplateLiteral(["must NOT have "," than "," characters"])),comp,schemaCode);},params:function params(_ref68){var schemaCode=_ref68.schemaCode;return codegen._(_templateObject183||(_templateObject183=_taggedTemplateLiteral(["{limit: ","}"])),schemaCode);}};var def$m={keyword:["maxLength","minLength"],type:"string",schemaType:"number",$data:true,error:error$f,code:function code(cxt){var keyword=cxt.keyword,data=cxt.data,schemaCode=cxt.schemaCode,it=cxt.it;var op=keyword==="maxLength"?codegen.operators.GT:codegen.operators.LT;var len=it.opts.unicode===false?codegen._(_templateObject184||(_templateObject184=_taggedTemplateLiteral(["",".length"])),data):codegen._(_templateObject185||(_templateObject185=_taggedTemplateLiteral(["","(",")"])),util.useFunc(cxt.gen,ucs2length_1["default"]),data);cxt.fail$data(codegen._(_templateObject186||(_templateObject186=_taggedTemplateLiteral([""," "," ",""])),len,op,schemaCode));}};var _default$r=def$m;var limitLength=/*#__PURE__*/Object.defineProperty({"default":_default$r},'__esModule',{value:true});var error$e={message:function message(_ref69){var schemaCode=_ref69.schemaCode;return codegen.str(_templateObject187||(_templateObject187=_taggedTemplateLiteral(["must match pattern \"","\""])),schemaCode);},params:function params(_ref70){var schemaCode=_ref70.schemaCode;return codegen._(_templateObject188||(_templateObject188=_taggedTemplateLiteral(["{pattern: ","}"])),schemaCode);}};var def$l={keyword:"pattern",type:"string",schemaType:"string",$data:true,error:error$e,code:function code(cxt){var data=cxt.data,$data=cxt.$data,schema=cxt.schema,schemaCode=cxt.schemaCode,it=cxt.it;// TODO regexp should be wrapped in try/catchs
-var u=it.opts.unicodeRegExp?"u":"";var regExp=$data?codegen._(_templateObject189||(_templateObject189=_taggedTemplateLiteral(["(new RegExp(",", ","))"])),schemaCode,u):_code.usePattern(cxt,schema);cxt.fail$data(codegen._(_templateObject190||(_templateObject190=_taggedTemplateLiteral(["!",".test(",")"])),regExp,data));}};var _default$q=def$l;var pattern=/*#__PURE__*/Object.defineProperty({"default":_default$q},'__esModule',{value:true});var error$d={message:function message(_ref71){var keyword=_ref71.keyword,schemaCode=_ref71.schemaCode;var comp=keyword==="maxProperties"?"more":"fewer";return codegen.str(_templateObject191||(_templateObject191=_taggedTemplateLiteral(["must NOT have "," than "," items"])),comp,schemaCode);},params:function params(_ref72){var schemaCode=_ref72.schemaCode;return codegen._(_templateObject192||(_templateObject192=_taggedTemplateLiteral(["{limit: ","}"])),schemaCode);}};var def$k={keyword:["maxProperties","minProperties"],type:"object",schemaType:"number",$data:true,error:error$d,code:function code(cxt){var keyword=cxt.keyword,data=cxt.data,schemaCode=cxt.schemaCode;var op=keyword==="maxProperties"?codegen.operators.GT:codegen.operators.LT;cxt.fail$data(codegen._(_templateObject193||(_templateObject193=_taggedTemplateLiteral(["Object.keys(",").length "," ",""])),data,op,schemaCode));}};var _default$p=def$k;var limitProperties=/*#__PURE__*/Object.defineProperty({"default":_default$p},'__esModule',{value:true});var error$c={message:function message(_ref73){var missingProperty=_ref73.params.missingProperty;return codegen.str(_templateObject194||(_templateObject194=_taggedTemplateLiteral(["must have required property '","'"])),missingProperty);},params:function params(_ref74){var missingProperty=_ref74.params.missingProperty;return codegen._(_templateObject195||(_templateObject195=_taggedTemplateLiteral(["{missingProperty: ","}"])),missingProperty);}};var def$j={keyword:"required",type:"object",schemaType:"array",$data:true,error:error$c,code:function code(cxt){var gen=cxt.gen,schema=cxt.schema,schemaCode=cxt.schemaCode,data=cxt.data,$data=cxt.$data,it=cxt.it;var opts=it.opts;if(!$data&&schema.length===0)return;var useLoop=schema.length>=opts.loopRequired;if(it.allErrors)allErrorsMode();else exitOnErrorMode();if(opts.strictRequired){var props=cxt.parentSchema.properties;var definedProperties=cxt.it.definedProperties;var _iterator18=_createForOfIteratorHelper(schema),_step18;try{for(_iterator18.s();!(_step18=_iterator18.n()).done;){var requiredKey=_step18.value;if((props===null||props===void 0?void 0:props[requiredKey])===undefined&&!definedProperties.has(requiredKey)){var schemaPath=it.schemaEnv.baseId+it.errSchemaPath;var msg="required property \"".concat(requiredKey,"\" is not defined at \"").concat(schemaPath,"\" (strictRequired)");util.checkStrictMode(it,msg,it.opts.strictRequired);}}}catch(err){_iterator18.e(err);}finally{_iterator18.f();}}function allErrorsMode(){if(useLoop||$data){cxt.block$data(codegen.nil,loopAllRequired);}else{var _iterator19=_createForOfIteratorHelper(schema),_step19;try{for(_iterator19.s();!(_step19=_iterator19.n()).done;){var prop=_step19.value;_code.checkReportMissingProp(cxt,prop);}}catch(err){_iterator19.e(err);}finally{_iterator19.f();}}}function exitOnErrorMode(){var missing=gen["let"]("missing");if(useLoop||$data){var valid=gen["let"]("valid",true);cxt.block$data(valid,function(){return loopUntilMissing(missing,valid);});cxt.ok(valid);}else{gen["if"](_code.checkMissingProp(cxt,schema,missing));_code.reportMissingProp(cxt,missing);gen["else"]();}}function loopAllRequired(){gen.forOf("prop",schemaCode,function(prop){cxt.setParams({missingProperty:prop});gen["if"](_code.noPropertyInData(gen,data,prop,opts.ownProperties),function(){return cxt.error();});});}function loopUntilMissing(missing,valid){cxt.setParams({missingProperty:missing});gen.forOf(missing,schemaCode,function(){gen.assign(valid,_code.propertyInData(gen,data,missing,opts.ownProperties));gen["if"](codegen.not(valid),function(){cxt.error();gen["break"]();});},codegen.nil);}}};var _default$o=def$j;var required=/*#__PURE__*/Object.defineProperty({"default":_default$o},'__esModule',{value:true});var error$b={message:function message(_ref75){var keyword=_ref75.keyword,schemaCode=_ref75.schemaCode;var comp=keyword==="maxItems"?"more":"fewer";return codegen.str(_templateObject196||(_templateObject196=_taggedTemplateLiteral(["must NOT have "," than "," items"])),comp,schemaCode);},params:function params(_ref76){var schemaCode=_ref76.schemaCode;return codegen._(_templateObject197||(_templateObject197=_taggedTemplateLiteral(["{limit: ","}"])),schemaCode);}};var def$i={keyword:["maxItems","minItems"],type:"array",schemaType:"number",$data:true,error:error$b,code:function code(cxt){var keyword=cxt.keyword,data=cxt.data,schemaCode=cxt.schemaCode;var op=keyword==="maxItems"?codegen.operators.GT:codegen.operators.LT;cxt.fail$data(codegen._(_templateObject198||(_templateObject198=_taggedTemplateLiteral(["",".length "," ",""])),data,op,schemaCode));}};var _default$n=def$i;var limitItems=/*#__PURE__*/Object.defineProperty({"default":_default$n},'__esModule',{value:true});// https://github.com/ajv-validator/ajv/issues/889
-fastDeepEqual.code='require("ajv/dist/runtime/equal").default';var _default$m=fastDeepEqual;var equal_1=/*#__PURE__*/Object.defineProperty({"default":_default$m},'__esModule',{value:true});var error$a={message:function message(_ref77){var _ref77$params=_ref77.params,i=_ref77$params.i,j=_ref77$params.j;return codegen.str(_templateObject199||(_templateObject199=_taggedTemplateLiteral(["must NOT have duplicate items (items ## "," and "," are identical)"])),j,i);},params:function params(_ref78){var _ref78$params=_ref78.params,i=_ref78$params.i,j=_ref78$params.j;return codegen._(_templateObject200||(_templateObject200=_taggedTemplateLiteral(["{i: ",", j: ","}"])),i,j);}};var def$h={keyword:"uniqueItems",type:"array",schemaType:"boolean",$data:true,error:error$a,code:function code(cxt){var gen=cxt.gen,data=cxt.data,$data=cxt.$data,schema=cxt.schema,parentSchema=cxt.parentSchema,schemaCode=cxt.schemaCode,it=cxt.it;if(!$data&&!schema)return;var valid=gen["let"]("valid");var itemTypes=parentSchema.items?dataType.getSchemaTypes(parentSchema.items):[];cxt.block$data(valid,validateUniqueItems,codegen._(_templateObject201||(_templateObject201=_taggedTemplateLiteral([""," === false"])),schemaCode));cxt.ok(valid);function validateUniqueItems(){var i=gen["let"]("i",codegen._(_templateObject202||(_templateObject202=_taggedTemplateLiteral(["",".length"])),data));var j=gen["let"]("j");cxt.setParams({i:i,j:j});gen.assign(valid,true);gen["if"](codegen._(_templateObject203||(_templateObject203=_taggedTemplateLiteral([""," > 1"])),i),function(){return(canOptimize()?loopN:loopN2)(i,j);});}function canOptimize(){return itemTypes.length>0&&!itemTypes.some(function(t){return t==="object"||t==="array";});}function loopN(i,j){var item=gen.name("item");var wrongType=dataType.checkDataTypes(itemTypes,item,it.opts.strictNumbers,dataType.DataType.Wrong);var indices=gen["const"]("indices",codegen._(_templateObject204||(_templateObject204=_taggedTemplateLiteral(["{}"]))));gen["for"](codegen._(_templateObject205||(_templateObject205=_taggedTemplateLiteral([";","--;"])),i),function(){gen["let"](item,codegen._(_templateObject206||(_templateObject206=_taggedTemplateLiteral(["","[","]"])),data,i));gen["if"](wrongType,codegen._(_templateObject207||(_templateObject207=_taggedTemplateLiteral(["continue"]))));if(itemTypes.length>1)gen["if"](codegen._(_templateObject208||(_templateObject208=_taggedTemplateLiteral(["typeof "," == \"string\""])),item),codegen._(_templateObject209||(_templateObject209=_taggedTemplateLiteral([""," += \"_\""])),item));gen["if"](codegen._(_templateObject210||(_templateObject210=_taggedTemplateLiteral(["typeof ","[","] == \"number\""])),indices,item),function(){gen.assign(j,codegen._(_templateObject211||(_templateObject211=_taggedTemplateLiteral(["","[","]"])),indices,item));cxt.error();gen.assign(valid,false)["break"]();}).code(codegen._(_templateObject212||(_templateObject212=_taggedTemplateLiteral(["","[","] = ",""])),indices,item,i));});}function loopN2(i,j){var eql=util.useFunc(gen,equal_1["default"]);var outer=gen.name("outer");gen.label(outer)["for"](codegen._(_templateObject213||(_templateObject213=_taggedTemplateLiteral([";","--;"])),i),function(){return gen["for"](codegen._(_templateObject214||(_templateObject214=_taggedTemplateLiteral([""," = ","; ","--;"])),j,i,j),function(){return gen["if"](codegen._(_templateObject215||(_templateObject215=_taggedTemplateLiteral(["","(","[","], ","[","])"])),eql,data,i,data,j),function(){cxt.error();gen.assign(valid,false)["break"](outer);});});});}}};var _default$l=def$h;var uniqueItems=/*#__PURE__*/Object.defineProperty({"default":_default$l},'__esModule',{value:true});var error$9={message:"must be equal to constant",params:function params(_ref79){var schemaCode=_ref79.schemaCode;return codegen._(_templateObject216||(_templateObject216=_taggedTemplateLiteral(["{allowedValue: ","}"])),schemaCode);}};var def$g={keyword:"const",$data:true,error:error$9,code:function code(cxt){var gen=cxt.gen,data=cxt.data,$data=cxt.$data,schemaCode=cxt.schemaCode,schema=cxt.schema;if($data||schema&&_typeof3(schema)=="object"){cxt.fail$data(codegen._(_templateObject217||(_templateObject217=_taggedTemplateLiteral(["!","(",", ",")"])),util.useFunc(gen,equal_1["default"]),data,schemaCode));}else{cxt.fail(codegen._(_templateObject218||(_templateObject218=_taggedTemplateLiteral([""," !== ",""])),schema,data));}}};var _default$k=def$g;var _const=/*#__PURE__*/Object.defineProperty({"default":_default$k},'__esModule',{value:true});var error$8={message:"must be equal to one of the allowed values",params:function params(_ref80){var schemaCode=_ref80.schemaCode;return codegen._(_templateObject219||(_templateObject219=_taggedTemplateLiteral(["{allowedValues: ","}"])),schemaCode);}};var def$f={keyword:"enum",schemaType:"array",$data:true,error:error$8,code:function code(cxt){var gen=cxt.gen,data=cxt.data,$data=cxt.$data,schema=cxt.schema,schemaCode=cxt.schemaCode,it=cxt.it;if(!$data&&schema.length===0)throw new Error("enum must have non-empty array");var useLoop=schema.length>=it.opts.loopEnum;var eql=util.useFunc(gen,equal_1["default"]);var valid;if(useLoop||$data){valid=gen["let"]("valid");cxt.block$data(valid,loopEnum);}else{/* istanbul ignore if */if(!Array.isArray(schema))throw new Error("ajv implementation error");var vSchema=gen["const"]("vSchema",schemaCode);valid=codegen.or.apply(codegen,_toConsumableArray3(schema.map(function(_x,i){return equalCode(vSchema,i);})));}cxt.pass(valid);function loopEnum(){gen.assign(valid,false);gen.forOf("v",schemaCode,function(v){return gen["if"](codegen._(_templateObject220||(_templateObject220=_taggedTemplateLiteral(["","(",", ",")"])),eql,data,v),function(){return gen.assign(valid,true)["break"]();});});}function equalCode(vSchema,i){var sch=schema[i];return _typeof3(sch)==="object"&&sch!==null?codegen._(_templateObject221||(_templateObject221=_taggedTemplateLiteral(["","(",", ","[","])"])),eql,data,vSchema,i):codegen._(_templateObject222||(_templateObject222=_taggedTemplateLiteral([""," === ",""])),data,sch);}}};var _default$j=def$f;var _enum=/*#__PURE__*/Object.defineProperty({"default":_default$j},'__esModule',{value:true});var validation=[// number
-limitNumber["default"],multipleOf["default"],// string
-limitLength["default"],pattern["default"],// object
-limitProperties["default"],required["default"],// array
-limitItems["default"],uniqueItems["default"],// any
-{keyword:"type",schemaType:["string","array"]},{keyword:"nullable",schemaType:"boolean"},_const["default"],_enum["default"]];var _default$i=validation;var validation_1=/*#__PURE__*/Object.defineProperty({"default":_default$i},'__esModule',{value:true});var additionalItems=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.validateAdditionalItems=void 0;var error={message:function message(_ref81){var len=_ref81.params.len;return codegen.str(_templateObject223||(_templateObject223=_taggedTemplateLiteral(["must NOT have more than "," items"])),len);},params:function params(_ref82){var len=_ref82.params.len;return codegen._(_templateObject224||(_templateObject224=_taggedTemplateLiteral(["{limit: ","}"])),len);}};var def={keyword:"additionalItems",type:"array",schemaType:["boolean","object"],before:"uniqueItems",error:error,code:function code(cxt){var parentSchema=cxt.parentSchema,it=cxt.it;var items=parentSchema.items;if(!Array.isArray(items)){util.checkStrictMode(it,'"additionalItems" is ignored when "items" is not an array of schemas');return;}validateAdditionalItems(cxt,items);}};function validateAdditionalItems(cxt,items){var gen=cxt.gen,schema=cxt.schema,data=cxt.data,keyword=cxt.keyword,it=cxt.it;it.items=true;var len=gen["const"]("len",codegen._(_templateObject225||(_templateObject225=_taggedTemplateLiteral(["",".length"])),data));if(schema===false){cxt.setParams({len:items.length});cxt.pass(codegen._(_templateObject226||(_templateObject226=_taggedTemplateLiteral([""," <= ",""])),len,items.length));}else if(_typeof3(schema)=="object"&&!util.alwaysValidSchema(it,schema)){var valid=gen["var"]("valid",codegen._(_templateObject227||(_templateObject227=_taggedTemplateLiteral([""," <= ",""])),len,items.length));// TODO var
-gen["if"](codegen.not(valid),function(){return validateItems(valid);});cxt.ok(valid);}function validateItems(valid){gen.forRange("i",items.length,len,function(i){cxt.subschema({keyword:keyword,dataProp:i,dataPropType:util.Type.Num},valid);if(!it.allErrors)gen["if"](codegen.not(valid),function(){return gen["break"]();});});}}exports.validateAdditionalItems=validateAdditionalItems;exports["default"]=def;});var items=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.validateTuple=void 0;var def={keyword:"items",type:"array",schemaType:["object","array","boolean"],before:"uniqueItems",code:function code(cxt){var schema=cxt.schema,it=cxt.it;if(Array.isArray(schema))return validateTuple(cxt,"additionalItems",schema);it.items=true;if(util.alwaysValidSchema(it,schema))return;cxt.ok(_code.validateArray(cxt));}};function validateTuple(cxt,extraItems){var schArr=arguments.length>2&&arguments[2]!==undefined?arguments[2]:cxt.schema;var gen=cxt.gen,parentSchema=cxt.parentSchema,data=cxt.data,keyword=cxt.keyword,it=cxt.it;checkStrictTuple(parentSchema);if(it.opts.unevaluated&&schArr.length&&it.items!==true){it.items=util.mergeEvaluated.items(gen,schArr.length,it.items);}var valid=gen.name("valid");var len=gen["const"]("len",codegen._(_templateObject228||(_templateObject228=_taggedTemplateLiteral(["",".length"])),data));schArr.forEach(function(sch,i){if(util.alwaysValidSchema(it,sch))return;gen["if"](codegen._(_templateObject229||(_templateObject229=_taggedTemplateLiteral([""," > ",""])),len,i),function(){return cxt.subschema({keyword:keyword,schemaProp:i,dataProp:i},valid);});cxt.ok(valid);});function checkStrictTuple(sch){var opts=it.opts,errSchemaPath=it.errSchemaPath;var l=schArr.length;var fullTuple=l===sch.minItems&&(l===sch.maxItems||sch[extraItems]===false);if(opts.strictTuples&&!fullTuple){var msg="\"".concat(keyword,"\" is ").concat(l,"-tuple, but minItems or maxItems/").concat(extraItems," are not specified or different at path \"").concat(errSchemaPath,"\"");util.checkStrictMode(it,msg,opts.strictTuples);}}}exports.validateTuple=validateTuple;exports["default"]=def;});var def$e={keyword:"prefixItems",type:"array",schemaType:["array"],before:"uniqueItems",code:function code(cxt){return items.validateTuple(cxt,"items");}};var _default$h=def$e;var prefixItems=/*#__PURE__*/Object.defineProperty({"default":_default$h},'__esModule',{value:true});var error$7={message:function message(_ref83){var len=_ref83.params.len;return codegen.str(_templateObject230||(_templateObject230=_taggedTemplateLiteral(["must NOT have more than "," items"])),len);},params:function params(_ref84){var len=_ref84.params.len;return codegen._(_templateObject231||(_templateObject231=_taggedTemplateLiteral(["{limit: ","}"])),len);}};var def$d={keyword:"items",type:"array",schemaType:["object","boolean"],before:"uniqueItems",error:error$7,code:function code(cxt){var schema=cxt.schema,parentSchema=cxt.parentSchema,it=cxt.it;var prefixItems=parentSchema.prefixItems;it.items=true;if(util.alwaysValidSchema(it,schema))return;if(prefixItems)additionalItems.validateAdditionalItems(cxt,prefixItems);else cxt.ok(_code.validateArray(cxt));}};var _default$g=def$d;var items2020=/*#__PURE__*/Object.defineProperty({"default":_default$g},'__esModule',{value:true});var error$6={message:function message(_ref85){var _ref85$params=_ref85.params,min=_ref85$params.min,max=_ref85$params.max;return max===undefined?codegen.str(_templateObject232||(_templateObject232=_taggedTemplateLiteral(["must contain at least "," valid item(s)"])),min):codegen.str(_templateObject233||(_templateObject233=_taggedTemplateLiteral(["must contain at least "," and no more than "," valid item(s)"])),min,max);},params:function params(_ref86){var _ref86$params=_ref86.params,min=_ref86$params.min,max=_ref86$params.max;return max===undefined?codegen._(_templateObject234||(_templateObject234=_taggedTemplateLiteral(["{minContains: ","}"])),min):codegen._(_templateObject235||(_templateObject235=_taggedTemplateLiteral(["{minContains: ",", maxContains: ","}"])),min,max);}};var def$c={keyword:"contains",type:"array",schemaType:["object","boolean"],before:"uniqueItems",trackErrors:true,error:error$6,code:function code(cxt){var gen=cxt.gen,schema=cxt.schema,parentSchema=cxt.parentSchema,data=cxt.data,it=cxt.it;var min;var max;var minContains=parentSchema.minContains,maxContains=parentSchema.maxContains;if(it.opts.next){min=minContains===undefined?1:minContains;max=maxContains;}else{min=1;}var len=gen["const"]("len",codegen._(_templateObject236||(_templateObject236=_taggedTemplateLiteral(["",".length"])),data));cxt.setParams({min:min,max:max});if(max===undefined&&min===0){util.checkStrictMode(it,"\"minContains\" == 0 without \"maxContains\": \"contains\" keyword ignored");return;}if(max!==undefined&&min>max){util.checkStrictMode(it,"\"minContains\" > \"maxContains\" is always invalid");cxt.fail();return;}if(util.alwaysValidSchema(it,schema)){var cond=codegen._(_templateObject237||(_templateObject237=_taggedTemplateLiteral([""," >= ",""])),len,min);if(max!==undefined)cond=codegen._(_templateObject238||(_templateObject238=_taggedTemplateLiteral([""," && "," <= ",""])),cond,len,max);cxt.pass(cond);return;}it.items=true;var valid=gen.name("valid");if(max===undefined&&min===1){validateItems(valid,function(){return gen["if"](valid,function(){return gen["break"]();});});}else{gen["let"](valid,false);var schValid=gen.name("_valid");var count=gen["let"]("count",0);validateItems(schValid,function(){return gen["if"](schValid,function(){return checkLimits(count);});});}cxt.result(valid,function(){return cxt.reset();});function validateItems(_valid,block){gen.forRange("i",0,len,function(i){cxt.subschema({keyword:"contains",dataProp:i,dataPropType:util.Type.Num,compositeRule:true},_valid);block();});}function checkLimits(count){gen.code(codegen._(_templateObject239||(_templateObject239=_taggedTemplateLiteral(["","++"])),count));if(max===undefined){gen["if"](codegen._(_templateObject240||(_templateObject240=_taggedTemplateLiteral([""," >= ",""])),count,min),function(){return gen.assign(valid,true)["break"]();});}else{gen["if"](codegen._(_templateObject241||(_templateObject241=_taggedTemplateLiteral([""," > ",""])),count,max),function(){return gen.assign(valid,false)["break"]();});if(min===1)gen.assign(valid,true);else gen["if"](codegen._(_templateObject242||(_templateObject242=_taggedTemplateLiteral([""," >= ",""])),count,min),function(){return gen.assign(valid,true);});}}}};var _default$f=def$c;var contains=/*#__PURE__*/Object.defineProperty({"default":_default$f},'__esModule',{value:true});var dependencies=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.validateSchemaDeps=exports.validatePropertyDeps=exports.error=void 0;exports.error={message:function message(_ref87){var _ref87$params=_ref87.params,property=_ref87$params.property,depsCount=_ref87$params.depsCount,deps=_ref87$params.deps;var property_ies=depsCount===1?"property":"properties";return codegen.str(_templateObject243||(_templateObject243=_taggedTemplateLiteral(["must have "," "," when property "," is present"])),property_ies,deps,property);},params:function params(_ref88){var _ref88$params=_ref88.params,property=_ref88$params.property,depsCount=_ref88$params.depsCount,deps=_ref88$params.deps,missingProperty=_ref88$params.missingProperty;return codegen._(_templateObject244||(_templateObject244=_taggedTemplateLiteral(["{property: ",",\n    missingProperty: ",",\n    depsCount: ",",\n    deps: ","}"])),property,missingProperty,depsCount,deps);}// TODO change to reference
-};var def={keyword:"dependencies",type:"object",schemaType:"object",error:exports.error,code:function code(cxt){var _splitDependencies=splitDependencies(cxt),_splitDependencies2=_slicedToArray3(_splitDependencies,2),propDeps=_splitDependencies2[0],schDeps=_splitDependencies2[1];validatePropertyDeps(cxt,propDeps);validateSchemaDeps(cxt,schDeps);}};function splitDependencies(_ref89){var schema=_ref89.schema;var propertyDeps={};var schemaDeps={};for(var key in schema){if(key==="__proto__")continue;var deps=Array.isArray(schema[key])?propertyDeps:schemaDeps;deps[key]=schema[key];}return[propertyDeps,schemaDeps];}function validatePropertyDeps(cxt){var propertyDeps=arguments.length>1&&arguments[1]!==undefined?arguments[1]:cxt.schema;var gen=cxt.gen,data=cxt.data,it=cxt.it;if(Object.keys(propertyDeps).length===0)return;var missing=gen["let"]("missing");var _loop2=function _loop2(prop){var deps=propertyDeps[prop];if(deps.length===0)return"continue";var hasProperty=_code.propertyInData(gen,data,prop,it.opts.ownProperties);cxt.setParams({property:prop,depsCount:deps.length,deps:deps.join(", ")});if(it.allErrors){gen["if"](hasProperty,function(){var _iterator20=_createForOfIteratorHelper(deps),_step20;try{for(_iterator20.s();!(_step20=_iterator20.n()).done;){var depProp=_step20.value;_code.checkReportMissingProp(cxt,depProp);}}catch(err){_iterator20.e(err);}finally{_iterator20.f();}});}else{gen["if"](codegen._(_templateObject245||(_templateObject245=_taggedTemplateLiteral([""," && (",")"])),hasProperty,_code.checkMissingProp(cxt,deps,missing)));_code.reportMissingProp(cxt,missing);gen["else"]();}};for(var prop in propertyDeps){var _ret2=_loop2(prop);if(_ret2==="continue")continue;}}exports.validatePropertyDeps=validatePropertyDeps;function validateSchemaDeps(cxt){var schemaDeps=arguments.length>1&&arguments[1]!==undefined?arguments[1]:cxt.schema;var gen=cxt.gen,data=cxt.data,keyword=cxt.keyword,it=cxt.it;var valid=gen.name("valid");var _loop3=function _loop3(prop){if(util.alwaysValidSchema(it,schemaDeps[prop]))return"continue";gen["if"](_code.propertyInData(gen,data,prop,it.opts.ownProperties),function(){var schCxt=cxt.subschema({keyword:keyword,schemaProp:prop},valid);cxt.mergeValidEvaluated(schCxt,valid);},function(){return gen["var"](valid,true);}// TODO var
-);cxt.ok(valid);};for(var prop in schemaDeps){var _ret3=_loop3(prop);if(_ret3==="continue")continue;}}exports.validateSchemaDeps=validateSchemaDeps;exports["default"]=def;});var error$5={message:"property name must be valid",params:function params(_ref90){var _params=_ref90.params;return codegen._(_templateObject246||(_templateObject246=_taggedTemplateLiteral(["{propertyName: ","}"])),_params.propertyName);}};var def$b={keyword:"propertyNames",type:"object",schemaType:["object","boolean"],error:error$5,code:function code(cxt){var gen=cxt.gen,schema=cxt.schema,data=cxt.data,it=cxt.it;if(util.alwaysValidSchema(it,schema))return;var valid=gen.name("valid");gen.forIn("key",data,function(key){cxt.setParams({propertyName:key});cxt.subschema({keyword:"propertyNames",data:key,dataTypes:["string"],propertyName:key,compositeRule:true},valid);gen["if"](codegen.not(valid),function(){cxt.error(true);if(!it.allErrors)gen["break"]();});});cxt.ok(valid);}};var _default$e=def$b;var propertyNames=/*#__PURE__*/Object.defineProperty({"default":_default$e},'__esModule',{value:true});var error$4={message:"must NOT have additional properties",params:function params(_ref91){var _params2=_ref91.params;return codegen._(_templateObject247||(_templateObject247=_taggedTemplateLiteral(["{additionalProperty: ","}"])),_params2.additionalProperty);}};var def$a={keyword:"additionalProperties",type:["object"],schemaType:["boolean","object"],allowUndefined:true,trackErrors:true,error:error$4,code:function code(cxt){var gen=cxt.gen,schema=cxt.schema,parentSchema=cxt.parentSchema,data=cxt.data,errsCount=cxt.errsCount,it=cxt.it;/* istanbul ignore if */if(!errsCount)throw new Error("ajv implementation error");var allErrors=it.allErrors,opts=it.opts;it.props=true;if(opts.removeAdditional!=="all"&&util.alwaysValidSchema(it,schema))return;var props=_code.allSchemaProperties(parentSchema.properties);var patProps=_code.allSchemaProperties(parentSchema.patternProperties);checkAdditionalProperties();cxt.ok(codegen._(_templateObject248||(_templateObject248=_taggedTemplateLiteral([""," === ",""])),errsCount,names_1["default"].errors));function checkAdditionalProperties(){gen.forIn("key",data,function(key){if(!props.length&&!patProps.length)additionalPropertyCode(key);else gen["if"](isAdditional(key),function(){return additionalPropertyCode(key);});});}function isAdditional(key){var definedProp;if(props.length>8){// TODO maybe an option instead of hard-coded 8?
-var propsSchema=util.schemaRefOrVal(it,parentSchema.properties,"properties");definedProp=_code.isOwnProperty(gen,propsSchema,key);}else if(props.length){definedProp=codegen.or.apply(codegen,_toConsumableArray3(props.map(function(p){return codegen._(_templateObject249||(_templateObject249=_taggedTemplateLiteral([""," === ",""])),key,p);})));}else{definedProp=codegen.nil;}if(patProps.length){definedProp=codegen.or.apply(codegen,[definedProp].concat(_toConsumableArray3(patProps.map(function(p){return codegen._(_templateObject250||(_templateObject250=_taggedTemplateLiteral(["",".test(",")"])),_code.usePattern(cxt,p),key);}))));}return codegen.not(definedProp);}function deleteAdditional(key){gen.code(codegen._(_templateObject251||(_templateObject251=_taggedTemplateLiteral(["delete ","[","]"])),data,key));}function additionalPropertyCode(key){if(opts.removeAdditional==="all"||opts.removeAdditional&&schema===false){deleteAdditional(key);return;}if(schema===false){cxt.setParams({additionalProperty:key});cxt.error();if(!allErrors)gen["break"]();return;}if(_typeof3(schema)=="object"&&!util.alwaysValidSchema(it,schema)){var valid=gen.name("valid");if(opts.removeAdditional==="failing"){applyAdditionalSchema(key,valid,false);gen["if"](codegen.not(valid),function(){cxt.reset();deleteAdditional(key);});}else{applyAdditionalSchema(key,valid);if(!allErrors)gen["if"](codegen.not(valid),function(){return gen["break"]();});}}}function applyAdditionalSchema(key,valid,errors){var subschema={keyword:"additionalProperties",dataProp:key,dataPropType:util.Type.Str};if(errors===false){Object.assign(subschema,{compositeRule:true,createErrors:false,allErrors:false});}cxt.subschema(subschema,valid);}}};var _default$d=def$a;var additionalProperties=/*#__PURE__*/Object.defineProperty({"default":_default$d},'__esModule',{value:true});var def$9={keyword:"properties",type:"object",schemaType:"object",code:function code(cxt){var gen=cxt.gen,schema=cxt.schema,parentSchema=cxt.parentSchema,data=cxt.data,it=cxt.it;if(it.opts.removeAdditional==="all"&&parentSchema.additionalProperties===undefined){additionalProperties["default"].code(new validate.KeywordCxt(it,additionalProperties["default"],"additionalProperties"));}var allProps=_code.allSchemaProperties(schema);var _iterator21=_createForOfIteratorHelper(allProps),_step21;try{for(_iterator21.s();!(_step21=_iterator21.n()).done;){var prop=_step21.value;it.definedProperties.add(prop);}}catch(err){_iterator21.e(err);}finally{_iterator21.f();}if(it.opts.unevaluated&&allProps.length&&it.props!==true){it.props=util.mergeEvaluated.props(gen,util.toHash(allProps),it.props);}var properties=allProps.filter(function(p){return!util.alwaysValidSchema(it,schema[p]);});if(properties.length===0)return;var valid=gen.name("valid");var _iterator22=_createForOfIteratorHelper(properties),_step22;try{for(_iterator22.s();!(_step22=_iterator22.n()).done;){var _prop=_step22.value;if(hasDefault(_prop)){applyPropertySchema(_prop);}else{gen["if"](_code.propertyInData(gen,data,_prop,it.opts.ownProperties));applyPropertySchema(_prop);if(!it.allErrors)gen["else"]()["var"](valid,true);gen.endIf();}cxt.it.definedProperties.add(_prop);cxt.ok(valid);}}catch(err){_iterator22.e(err);}finally{_iterator22.f();}function hasDefault(prop){return it.opts.useDefaults&&!it.compositeRule&&schema[prop]["default"]!==undefined;}function applyPropertySchema(prop){cxt.subschema({keyword:"properties",schemaProp:prop,dataProp:prop},valid);}}};var _default$c=def$9;var properties$1=/*#__PURE__*/Object.defineProperty({"default":_default$c},'__esModule',{value:true});var util_2=util;var def$8={keyword:"patternProperties",type:"object",schemaType:"object",code:function code(cxt){var gen=cxt.gen,schema=cxt.schema,data=cxt.data,parentSchema=cxt.parentSchema,it=cxt.it;var opts=it.opts;var patterns=_code.allSchemaProperties(schema);var alwaysValidPatterns=patterns.filter(function(p){return util.alwaysValidSchema(it,schema[p]);});if(patterns.length===0||alwaysValidPatterns.length===patterns.length&&(!it.opts.unevaluated||it.props===true)){return;}var checkProperties=opts.strictSchema&&!opts.allowMatchingProperties&&parentSchema.properties;var valid=gen.name("valid");if(it.props!==true&&!(it.props instanceof codegen.Name)){it.props=util_2.evaluatedPropsToName(gen,it.props);}var props=it.props;validatePatternProperties();function validatePatternProperties(){var _iterator23=_createForOfIteratorHelper(patterns),_step23;try{for(_iterator23.s();!(_step23=_iterator23.n()).done;){var pat=_step23.value;if(checkProperties)checkMatchingProperties(pat);if(it.allErrors){validateProperties(pat);}else{gen["var"](valid,true);// TODO var
-validateProperties(pat);gen["if"](valid);}}}catch(err){_iterator23.e(err);}finally{_iterator23.f();}}function checkMatchingProperties(pat){for(var prop in checkProperties){if(new RegExp(pat).test(prop)){util.checkStrictMode(it,"property ".concat(prop," matches pattern ").concat(pat," (use allowMatchingProperties)"));}}}function validateProperties(pat){gen.forIn("key",data,function(key){gen["if"](codegen._(_templateObject252||(_templateObject252=_taggedTemplateLiteral(["",".test(",")"])),_code.usePattern(cxt,pat),key),function(){var alwaysValid=alwaysValidPatterns.includes(pat);if(!alwaysValid){cxt.subschema({keyword:"patternProperties",schemaProp:pat,dataProp:key,dataPropType:util_2.Type.Str},valid);}if(it.opts.unevaluated&&props!==true){gen.assign(codegen._(_templateObject253||(_templateObject253=_taggedTemplateLiteral(["","[","]"])),props,key),true);}else if(!alwaysValid&&!it.allErrors){// can short-circuit if `unevaluatedProperties` is not supported (opts.next === false)
-// or if all properties were evaluated (props === true)
-gen["if"](codegen.not(valid),function(){return gen["break"]();});}});});}}};var _default$b=def$8;var patternProperties=/*#__PURE__*/Object.defineProperty({"default":_default$b},'__esModule',{value:true});var def$7={keyword:"not",schemaType:["object","boolean"],trackErrors:true,code:function code(cxt){var gen=cxt.gen,schema=cxt.schema,it=cxt.it;if(util.alwaysValidSchema(it,schema)){cxt.fail();return;}var valid=gen.name("valid");cxt.subschema({keyword:"not",compositeRule:true,createErrors:false,allErrors:false},valid);cxt.failResult(valid,function(){return cxt.reset();},function(){return cxt.error();});},error:{message:"must NOT be valid"}};var _default$a=def$7;var not=/*#__PURE__*/Object.defineProperty({"default":_default$a},'__esModule',{value:true});var def$6={keyword:"anyOf",schemaType:"array",trackErrors:true,code:_code.validateUnion,error:{message:"must match a schema in anyOf"}};var _default$9=def$6;var anyOf=/*#__PURE__*/Object.defineProperty({"default":_default$9},'__esModule',{value:true});var error$3={message:"must match exactly one schema in oneOf",params:function params(_ref92){var _params3=_ref92.params;return codegen._(_templateObject254||(_templateObject254=_taggedTemplateLiteral(["{passingSchemas: ","}"])),_params3.passing);}};var def$5={keyword:"oneOf",schemaType:"array",trackErrors:true,error:error$3,code:function code(cxt){var gen=cxt.gen,schema=cxt.schema,parentSchema=cxt.parentSchema,it=cxt.it;/* istanbul ignore if */if(!Array.isArray(schema))throw new Error("ajv implementation error");if(it.opts.discriminator&&parentSchema.discriminator)return;var schArr=schema;var valid=gen["let"]("valid",false);var passing=gen["let"]("passing",null);var schValid=gen.name("_valid");cxt.setParams({passing:passing});// TODO possibly fail straight away (with warning or exception) if there are two empty always valid schemas
-gen.block(validateOneOf);cxt.result(valid,function(){return cxt.reset();},function(){return cxt.error(true);});function validateOneOf(){schArr.forEach(function(sch,i){var schCxt;if(util.alwaysValidSchema(it,sch)){gen["var"](schValid,true);}else{schCxt=cxt.subschema({keyword:"oneOf",schemaProp:i,compositeRule:true},schValid);}if(i>0){gen["if"](codegen._(_templateObject255||(_templateObject255=_taggedTemplateLiteral([""," && ",""])),schValid,valid)).assign(valid,false).assign(passing,codegen._(_templateObject256||(_templateObject256=_taggedTemplateLiteral(["[",", ","]"])),passing,i))["else"]();}gen["if"](schValid,function(){gen.assign(valid,true);gen.assign(passing,i);if(schCxt)cxt.mergeEvaluated(schCxt,codegen.Name);});});}}};var _default$8=def$5;var oneOf=/*#__PURE__*/Object.defineProperty({"default":_default$8},'__esModule',{value:true});var def$4={keyword:"allOf",schemaType:"array",code:function code(cxt){var gen=cxt.gen,schema=cxt.schema,it=cxt.it;/* istanbul ignore if */if(!Array.isArray(schema))throw new Error("ajv implementation error");var valid=gen.name("valid");schema.forEach(function(sch,i){if(util.alwaysValidSchema(it,sch))return;var schCxt=cxt.subschema({keyword:"allOf",schemaProp:i},valid);cxt.ok(valid);cxt.mergeEvaluated(schCxt);});}};var _default$7=def$4;var allOf=/*#__PURE__*/Object.defineProperty({"default":_default$7},'__esModule',{value:true});var error$2={message:function message(_ref93){var params=_ref93.params;return codegen.str(_templateObject257||(_templateObject257=_taggedTemplateLiteral(["must match \"","\" schema"])),params.ifClause);},params:function params(_ref94){var _params4=_ref94.params;return codegen._(_templateObject258||(_templateObject258=_taggedTemplateLiteral(["{failingKeyword: ","}"])),_params4.ifClause);}};var def$3={keyword:"if",schemaType:["object","boolean"],trackErrors:true,error:error$2,code:function code(cxt){var gen=cxt.gen,parentSchema=cxt.parentSchema,it=cxt.it;if(parentSchema.then===undefined&&parentSchema["else"]===undefined){util.checkStrictMode(it,'"if" without "then" and "else" is ignored');}var hasThen=hasSchema(it,"then");var hasElse=hasSchema(it,"else");if(!hasThen&&!hasElse)return;var valid=gen["let"]("valid",true);var schValid=gen.name("_valid");validateIf();cxt.reset();if(hasThen&&hasElse){var ifClause=gen["let"]("ifClause");cxt.setParams({ifClause:ifClause});gen["if"](schValid,validateClause("then",ifClause),validateClause("else",ifClause));}else if(hasThen){gen["if"](schValid,validateClause("then"));}else{gen["if"](codegen.not(schValid),validateClause("else"));}cxt.pass(valid,function(){return cxt.error(true);});function validateIf(){var schCxt=cxt.subschema({keyword:"if",compositeRule:true,createErrors:false,allErrors:false},schValid);cxt.mergeEvaluated(schCxt);}function validateClause(keyword,ifClause){return function(){var schCxt=cxt.subschema({keyword:keyword},schValid);gen.assign(valid,schValid);cxt.mergeValidEvaluated(schCxt,valid);if(ifClause)gen.assign(ifClause,codegen._(_templateObject259||(_templateObject259=_taggedTemplateLiteral(["",""])),keyword));else cxt.setParams({ifClause:keyword});};}}};function hasSchema(it,keyword){var schema=it.schema[keyword];return schema!==undefined&&!util.alwaysValidSchema(it,schema);}var _default$6=def$3;var _if=/*#__PURE__*/Object.defineProperty({"default":_default$6},'__esModule',{value:true});var def$2={keyword:["then","else"],schemaType:["object","boolean"],code:function code(_ref95){var keyword=_ref95.keyword,parentSchema=_ref95.parentSchema,it=_ref95.it;if(parentSchema["if"]===undefined)util.checkStrictMode(it,"\"".concat(keyword,"\" without \"if\" is ignored"));}};var _default$5=def$2;var thenElse=/*#__PURE__*/Object.defineProperty({"default":_default$5},'__esModule',{value:true});function getApplicator(){var draft2020=arguments.length>0&&arguments[0]!==undefined?arguments[0]:false;var applicator=[// any
-not["default"],anyOf["default"],oneOf["default"],allOf["default"],_if["default"],thenElse["default"],// object
-propertyNames["default"],additionalProperties["default"],dependencies["default"],properties$1["default"],patternProperties["default"]];// array
-if(draft2020)applicator.push(prefixItems["default"],items2020["default"]);else applicator.push(additionalItems["default"],items["default"]);applicator.push(contains["default"]);return applicator;}var _default$4=getApplicator;var applicator=/*#__PURE__*/Object.defineProperty({"default":_default$4},'__esModule',{value:true});var error$1={message:function message(_ref96){var schemaCode=_ref96.schemaCode;return codegen.str(_templateObject260||(_templateObject260=_taggedTemplateLiteral(["must match format \"","\""])),schemaCode);},params:function params(_ref97){var schemaCode=_ref97.schemaCode;return codegen._(_templateObject261||(_templateObject261=_taggedTemplateLiteral(["{format: ","}"])),schemaCode);}};var def$1={keyword:"format",type:["number","string"],schemaType:"string",$data:true,error:error$1,code:function code(cxt,ruleType){var gen=cxt.gen,data=cxt.data,$data=cxt.$data,schema=cxt.schema,schemaCode=cxt.schemaCode,it=cxt.it;var opts=it.opts,errSchemaPath=it.errSchemaPath,schemaEnv=it.schemaEnv,self=it.self;if(!opts.validateFormats)return;if($data)validate$DataFormat();else validateFormat();function validate$DataFormat(){var fmts=gen.scopeValue("formats",{ref:self.formats,code:opts.code.formats});var fDef=gen["const"]("fDef",codegen._(_templateObject262||(_templateObject262=_taggedTemplateLiteral(["","[","]"])),fmts,schemaCode));var fType=gen["let"]("fType");var format=gen["let"]("format");// TODO simplify
-gen["if"](codegen._(_templateObject263||(_templateObject263=_taggedTemplateLiteral(["typeof "," == \"object\" && !("," instanceof RegExp)"])),fDef,fDef),function(){return gen.assign(fType,codegen._(_templateObject264||(_templateObject264=_taggedTemplateLiteral(["",".type || \"string\""])),fDef)).assign(format,codegen._(_templateObject265||(_templateObject265=_taggedTemplateLiteral(["",".validate"])),fDef));},function(){return gen.assign(fType,codegen._(_templateObject266||(_templateObject266=_taggedTemplateLiteral(["\"string\""])))).assign(format,fDef);});cxt.fail$data(codegen.or(unknownFmt(),invalidFmt()));function unknownFmt(){if(opts.strictSchema===false)return codegen.nil;return codegen._(_templateObject267||(_templateObject267=_taggedTemplateLiteral([""," && !",""])),schemaCode,format);}function invalidFmt(){var callFormat=schemaEnv.$async?codegen._(_templateObject268||(_templateObject268=_taggedTemplateLiteral(["(",".async ? await ","(",") : ","(","))"])),fDef,format,data,format,data):codegen._(_templateObject269||(_templateObject269=_taggedTemplateLiteral(["","(",")"])),format,data);var validData=codegen._(_templateObject270||(_templateObject270=_taggedTemplateLiteral(["(typeof "," == \"function\" ? "," : ",".test(","))"])),format,callFormat,format,data);return codegen._(_templateObject271||(_templateObject271=_taggedTemplateLiteral([""," && "," !== true && "," === "," && !",""])),format,format,fType,ruleType,validData);}}function validateFormat(){var formatDef=self.formats[schema];if(!formatDef){unknownFormat();return;}if(formatDef===true)return;var _getFormat=getFormat(formatDef),_getFormat2=_slicedToArray3(_getFormat,3),fmtType=_getFormat2[0],format=_getFormat2[1],fmtRef=_getFormat2[2];if(fmtType===ruleType)cxt.pass(validCondition());function unknownFormat(){if(opts.strictSchema===false){self.logger.warn(unknownMsg());return;}throw new Error(unknownMsg());function unknownMsg(){return"unknown format \"".concat(schema,"\" ignored in schema at path \"").concat(errSchemaPath,"\"");}}function getFormat(fmtDef){var code=fmtDef instanceof RegExp?codegen.regexpCode(fmtDef):opts.code.formats?codegen._(_templateObject272||(_templateObject272=_taggedTemplateLiteral(["","",""])),opts.code.formats,codegen.getProperty(schema)):undefined;var fmt=gen.scopeValue("formats",{key:schema,ref:fmtDef,code:code});if(_typeof3(fmtDef)=="object"&&!(fmtDef instanceof RegExp)){return[fmtDef.type||"string",fmtDef.validate,codegen._(_templateObject273||(_templateObject273=_taggedTemplateLiteral(["",".validate"])),fmt)];}return["string",fmtDef,fmt];}function validCondition(){if(_typeof3(formatDef)=="object"&&!(formatDef instanceof RegExp)&&formatDef.async){if(!schemaEnv.$async)throw new Error("async format in sync schema");return codegen._(_templateObject274||(_templateObject274=_taggedTemplateLiteral(["await ","(",")"])),fmtRef,data);}return typeof format=="function"?codegen._(_templateObject275||(_templateObject275=_taggedTemplateLiteral(["","(",")"])),fmtRef,data):codegen._(_templateObject276||(_templateObject276=_taggedTemplateLiteral(["",".test(",")"])),fmtRef,data);}}}};var _default$3=def$1;var format$1=/*#__PURE__*/Object.defineProperty({"default":_default$3},'__esModule',{value:true});var format=[format$1["default"]];var _default$2=format;var format_2=/*#__PURE__*/Object.defineProperty({"default":_default$2},'__esModule',{value:true});var metadata=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.contentVocabulary=exports.metadataVocabulary=void 0;exports.metadataVocabulary=["title","description","default","deprecated","readOnly","writeOnly","examples"];exports.contentVocabulary=["contentMediaType","contentEncoding","contentSchema"];});var draft7Vocabularies=[core_1["default"],validation_1["default"],applicator["default"](),format_2["default"],metadata.metadataVocabulary,metadata.contentVocabulary];var _default$1=draft7Vocabularies;var draft7=/*#__PURE__*/Object.defineProperty({"default":_default$1},'__esModule',{value:true});var types=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.DiscrError=void 0;(function(DiscrError){DiscrError["Tag"]="tag";DiscrError["Mapping"]="mapping";})(exports.DiscrError||(exports.DiscrError={}));});var error={message:function message(_ref98){var _ref98$params=_ref98.params,discrError=_ref98$params.discrError,tagName=_ref98$params.tagName;return discrError===types.DiscrError.Tag?"tag \"".concat(tagName,"\" must be string"):"value of tag \"".concat(tagName,"\" must be in oneOf");},params:function params(_ref99){var _ref99$params=_ref99.params,discrError=_ref99$params.discrError,tag=_ref99$params.tag,tagName=_ref99$params.tagName;return codegen._(_templateObject277||(_templateObject277=_taggedTemplateLiteral(["{error: ",", tag: ",", tagValue: ","}"])),discrError,tagName,tag);}};var def={keyword:"discriminator",type:"object",schemaType:"object",error:error,code:function code(cxt){var gen=cxt.gen,data=cxt.data,schema=cxt.schema,parentSchema=cxt.parentSchema,it=cxt.it;var oneOf=parentSchema.oneOf;if(!it.opts.discriminator){throw new Error("discriminator: requires discriminator option");}var tagName=schema.propertyName;if(typeof tagName!="string")throw new Error("discriminator: requires propertyName");if(schema.mapping)throw new Error("discriminator: mapping is not supported");if(!oneOf)throw new Error("discriminator: requires oneOf keyword");var valid=gen["let"]("valid",false);var tag=gen["const"]("tag",codegen._(_templateObject278||(_templateObject278=_taggedTemplateLiteral(["","",""])),data,codegen.getProperty(tagName)));gen["if"](codegen._(_templateObject279||(_templateObject279=_taggedTemplateLiteral(["typeof "," == \"string\""])),tag),function(){return validateMapping();},function(){return cxt.error(false,{discrError:types.DiscrError.Tag,tag:tag,tagName:tagName});});cxt.ok(valid);function validateMapping(){var mapping=getMapping();gen["if"](false);for(var tagValue in mapping){gen.elseIf(codegen._(_templateObject280||(_templateObject280=_taggedTemplateLiteral([""," === ",""])),tag,tagValue));gen.assign(valid,applyTagSchema(mapping[tagValue]));}gen["else"]();cxt.error(false,{discrError:types.DiscrError.Mapping,tag:tag,tagName:tagName});gen.endIf();}function applyTagSchema(schemaProp){var _valid=gen.name("valid");var schCxt=cxt.subschema({keyword:"oneOf",schemaProp:schemaProp},_valid);cxt.mergeEvaluated(schCxt,codegen.Name);return _valid;}function getMapping(){var _a;var oneOfMapping={};var topRequired=hasRequired(parentSchema);var tagRequired=true;for(var _i4=0;_i4<oneOf.length;_i4++){var sch=oneOf[_i4];var propSch=(_a=sch.properties)===null||_a===void 0?void 0:_a[tagName];if(_typeof3(propSch)!="object"){throw new Error("discriminator: oneOf schemas must have \"properties/".concat(tagName,"\""));}tagRequired=tagRequired&&(topRequired||hasRequired(sch));addMappings(propSch,_i4);}if(!tagRequired)throw new Error("discriminator: \"".concat(tagName,"\" must be required"));return oneOfMapping;function hasRequired(_ref100){var required=_ref100.required;return Array.isArray(required)&&required.includes(tagName);}function addMappings(sch,i){if(sch["const"]){addMapping(sch["const"],i);}else if(sch["enum"]){var _iterator24=_createForOfIteratorHelper(sch["enum"]),_step24;try{for(_iterator24.s();!(_step24=_iterator24.n()).done;){var tagValue=_step24.value;addMapping(tagValue,i);}}catch(err){_iterator24.e(err);}finally{_iterator24.f();}}else{throw new Error("discriminator: \"properties/".concat(tagName,"\" must have \"const\" or \"enum\""));}}function addMapping(tagValue,i){if(typeof tagValue!="string"||tagValue in oneOfMapping){throw new Error("discriminator: \"".concat(tagName,"\" values must be unique strings"));}oneOfMapping[tagValue]=i;}}}};var _default=def;var discriminator=/*#__PURE__*/Object.defineProperty({"default":_default},'__esModule',{value:true});var $schema="http://json-schema.org/draft-07/schema#";var $id="http://json-schema.org/draft-07/schema#";var title="Core schema meta-schema";var definitions={schemaArray:{type:"array",minItems:1,items:{$ref:"#"}},nonNegativeInteger:{type:"integer",minimum:0},nonNegativeIntegerDefault0:{allOf:[{$ref:"#/definitions/nonNegativeInteger"},{"default":0}]},simpleTypes:{"enum":["array","boolean","integer","null","number","object","string"]},stringArray:{type:"array",items:{type:"string"},uniqueItems:true,"default":[]}};var type=["object","boolean"];var properties={$id:{type:"string",format:"uri-reference"},$schema:{type:"string",format:"uri"},$ref:{type:"string",format:"uri-reference"},$comment:{type:"string"},title:{type:"string"},description:{type:"string"},"default":true,readOnly:{type:"boolean","default":false},examples:{type:"array",items:true},multipleOf:{type:"number",exclusiveMinimum:0},maximum:{type:"number"},exclusiveMaximum:{type:"number"},minimum:{type:"number"},exclusiveMinimum:{type:"number"},maxLength:{$ref:"#/definitions/nonNegativeInteger"},minLength:{$ref:"#/definitions/nonNegativeIntegerDefault0"},pattern:{type:"string",format:"regex"},additionalItems:{$ref:"#"},items:{anyOf:[{$ref:"#"},{$ref:"#/definitions/schemaArray"}],"default":true},maxItems:{$ref:"#/definitions/nonNegativeInteger"},minItems:{$ref:"#/definitions/nonNegativeIntegerDefault0"},uniqueItems:{type:"boolean","default":false},contains:{$ref:"#"},maxProperties:{$ref:"#/definitions/nonNegativeInteger"},minProperties:{$ref:"#/definitions/nonNegativeIntegerDefault0"},required:{$ref:"#/definitions/stringArray"},additionalProperties:{$ref:"#"},definitions:{type:"object",additionalProperties:{$ref:"#"},"default":{}},properties:{type:"object",additionalProperties:{$ref:"#"},"default":{}},patternProperties:{type:"object",additionalProperties:{$ref:"#"},propertyNames:{format:"regex"},"default":{}},dependencies:{type:"object",additionalProperties:{anyOf:[{$ref:"#"},{$ref:"#/definitions/stringArray"}]}},propertyNames:{$ref:"#"},"const":true,"enum":{type:"array",items:true,minItems:1,uniqueItems:true},type:{anyOf:[{$ref:"#/definitions/simpleTypes"},{type:"array",items:{$ref:"#/definitions/simpleTypes"},minItems:1,uniqueItems:true}]},format:{type:"string"},contentMediaType:{type:"string"},contentEncoding:{type:"string"},"if":{$ref:"#"},then:{$ref:"#"},"else":{$ref:"#"},allOf:{$ref:"#/definitions/schemaArray"},anyOf:{$ref:"#/definitions/schemaArray"},oneOf:{$ref:"#/definitions/schemaArray"},not:{$ref:"#"}};var draft7MetaSchema={$schema:$schema,$id:$id,title:title,definitions:definitions,type:type,properties:properties,"default":true};var ajv=createCommonjsModule(function(module,exports){Object.defineProperty(exports,"__esModule",{value:true});exports.CodeGen=exports.Name=exports.nil=exports.stringify=exports.str=exports._=exports.KeywordCxt=void 0;var META_SUPPORT_DATA=["/properties"];var META_SCHEMA_ID="http://json-schema.org/draft-07/schema";var Ajv=/*#__PURE__*/function(_core$1$default){_inherits3(Ajv,_core$1$default);var _super30=_createSuper2(Ajv);function Ajv(){_classCallCheck3(this,Ajv);return _super30.apply(this,arguments);}_createClass3(Ajv,[{key:"_addVocabularies",value:function _addVocabularies(){var _this37=this;_get(_getPrototypeOf3(Ajv.prototype),"_addVocabularies",this).call(this);draft7["default"].forEach(function(v){return _this37.addVocabulary(v);});if(this.opts.discriminator)this.addKeyword(discriminator["default"]);}},{key:"_addDefaultMetaSchema",value:function _addDefaultMetaSchema(){_get(_getPrototypeOf3(Ajv.prototype),"_addDefaultMetaSchema",this).call(this);if(!this.opts.meta)return;var metaSchema=this.opts.$data?this.$dataMetaSchema(draft7MetaSchema,META_SUPPORT_DATA):draft7MetaSchema;this.addMetaSchema(metaSchema,META_SCHEMA_ID,false);this.refs["http://json-schema.org/schema"]=META_SCHEMA_ID;}},{key:"defaultMeta",value:function defaultMeta(){return this.opts.defaultMeta=_get(_getPrototypeOf3(Ajv.prototype),"defaultMeta",this).call(this)||(this.getSchema(META_SCHEMA_ID)?META_SCHEMA_ID:undefined);}}]);return Ajv;}(core$1["default"]);module.exports=exports=Ajv;Object.defineProperty(exports,"__esModule",{value:true});exports["default"]=Ajv;Object.defineProperty(exports,"KeywordCxt",{enumerable:true,get:function get(){return validate.KeywordCxt;}});Object.defineProperty(exports,"_",{enumerable:true,get:function get(){return codegen._;}});Object.defineProperty(exports,"str",{enumerable:true,get:function get(){return codegen.str;}});Object.defineProperty(exports,"stringify",{enumerable:true,get:function get(){return codegen.stringify;}});Object.defineProperty(exports,"nil",{enumerable:true,get:function get(){return codegen.nil;}});Object.defineProperty(exports,"Name",{enumerable:true,get:function get(){return codegen.Name;}});Object.defineProperty(exports,"CodeGen",{enumerable:true,get:function get(){return codegen.CodeGen;}});});var interopRequireDefault=createCommonjsModule(function(module){function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{"default":obj};}module.exports=_interopRequireDefault;module.exports["default"]=module.exports,module.exports.__esModule=true;});var require$$0=/*@__PURE__*/getAugmentedNamespace(toConsumableArray);var require$$1=/*@__PURE__*/getAugmentedNamespace(inherits);var require$$2=/*@__PURE__*/getAugmentedNamespace(possibleConstructorReturn);var require$$3=/*@__PURE__*/getAugmentedNamespace(getPrototypeOf);var require$$4=/*@__PURE__*/getAugmentedNamespace(defineProperty$2);var require$$5=/*@__PURE__*/getAugmentedNamespace(classCallCheck);var require$$6=/*@__PURE__*/getAugmentedNamespace(createClass);var require$$7=/*@__PURE__*/getAugmentedNamespace(slicedToArray);var require$$8=/*@__PURE__*/getAugmentedNamespace(_typeof$1);var bachJs_esm=createCommonjsModule(function(module,exports){(function(global,factory){{factory(exports,require$$0,require$$1,require$$2,require$$3,require$$4,require$$5,require$$6,require$$7,require$$8,stringify,concat,slice$3,map,filter,includes,reduce,some,maxSafeInteger,assign,entries,sort,flatMap,every,keys,values,isArray,set,find$1,reverse,teoria_1,require("bach-cljs"),bachJsonSchema,ajv);}})(typeof globalThis!=="undefined"?globalThis:typeof self!=="undefined"?self:commonjsGlobal,function(_exports,_toConsumableArray2,_inherits2,_possibleConstructorReturn2,_getPrototypeOf2,_defineProperty2,_classCallCheck2,_createClass2,_slicedToArray2,_typeof2,_stringify,_concat,_slice,_map,_filter,_includes,_reduce,_some,_maxSafeInteger,_assign,_entries,_sort,_flatMap,_every,_keys,_values,_isArray,_set,_find,_reverse,_teoria,_bachCljs,_bachJsonSchema,_ajv){var _interopRequireDefault=interopRequireDefault;defineProperty$6(_exports,"__esModule",{value:true});_exports.chordify=chordify;_exports.clamp=clamp$1;_exports.gcd=gcd$1;_exports.invlerp=invlerp$1;_exports.lerp=lerp$1;_exports.notesIn=notesIn;_exports.notesInChord=notesInChord;_exports.notesInScale=notesInScale;_exports.notesIntersect=notesIntersect;_exports.scaleToString=scaleToString;_exports.scaleify=scaleify;_exports.steps=steps;_exports.validate=_exports.valid=_exports.notesOf=_exports.compose=_exports.Note=_exports.Music=_exports.MUSICAL_ELEMENTS=_exports.Elements=_exports.Element=_exports.Durations=void 0;_toConsumableArray2=_interopRequireDefault(_toConsumableArray2);_inherits2=_interopRequireDefault(_inherits2);_possibleConstructorReturn2=_interopRequireDefault(_possibleConstructorReturn2);_getPrototypeOf2=_interopRequireDefault(_getPrototypeOf2);_defineProperty2=_interopRequireDefault(_defineProperty2);_classCallCheck2=_interopRequireDefault(_classCallCheck2);_createClass2=_interopRequireDefault(_createClass2);_slicedToArray2=_interopRequireDefault(_slicedToArray2);_typeof2=_interopRequireDefault(_typeof2);_stringify=_interopRequireDefault(_stringify);_concat=_interopRequireDefault(_concat);_slice=_interopRequireDefault(_slice);_map=_interopRequireDefault(_map);_filter=_interopRequireDefault(_filter);_includes=_interopRequireDefault(_includes);_reduce=_interopRequireDefault(_reduce);_some=_interopRequireDefault(_some);_maxSafeInteger=_interopRequireDefault(_maxSafeInteger);_assign=_interopRequireDefault(_assign);_entries=_interopRequireDefault(_entries);_sort=_interopRequireDefault(_sort);_flatMap=_interopRequireDefault(_flatMap);_every=_interopRequireDefault(_every);_keys=_interopRequireDefault(_keys);_values=_interopRequireDefault(_values);_isArray=_interopRequireDefault(_isArray);_set=_interopRequireDefault(_set);_find=_interopRequireDefault(_find);_reverse=_interopRequireDefault(_reverse);_bachCljs=_interopRequireWildcard(_bachCljs);_bachJsonSchema=_interopRequireDefault(_bachJsonSchema);_ajv=_interopRequireDefault(_ajv);function _getRequireWildcardCache(nodeInterop){if(typeof weakMap!=="function")return null;var cacheBabelInterop=new weakMap();var cacheNodeInterop=new weakMap();return(_getRequireWildcardCache=function _getRequireWildcardCache(nodeInterop){return nodeInterop?cacheNodeInterop:cacheBabelInterop;})(nodeInterop);}function _interopRequireWildcard(obj,nodeInterop){if(!nodeInterop&&obj&&obj.__esModule){return obj;}if(obj===null||_typeof_1(obj)!=="object"&&typeof obj!=="function"){return{"default":obj};}var cache=_getRequireWildcardCache(nodeInterop);if(cache&&cache.has(obj)){return cache.get(obj);}var newObj={};var hasPropertyDescriptor=defineProperty$6&&getOwnPropertyDescriptor;for(var key in obj){if(key!=="default"&&Object.prototype.hasOwnProperty.call(obj,key)){var desc=hasPropertyDescriptor?getOwnPropertyDescriptor(obj,key):null;if(desc&&(desc.get||desc.set)){defineProperty$6(newObj,key,desc);}else{newObj[key]=obj[key];}}}newObj["default"]=obj;if(cache){cache.set(obj,newObj);}return newObj;}function ownKeys(object,enumerableOnly){var keys$1=keys(object);if(getOwnPropertySymbols){var symbols=getOwnPropertySymbols(object);if(enumerableOnly){symbols=filter(symbols).call(symbols,function(sym){return getOwnPropertyDescriptor(object,sym).enumerable;});}keys$1.push.apply(keys$1,symbols);}return keys$1;}function _objectSpread(target){for(var i=1;i<arguments.length;i++){var source=arguments[i]!=null?arguments[i]:{};if(i%2){var _context32;forEach(_context32=ownKeys(Object(source),true)).call(_context32,function(key){(0,_defineProperty2["default"])(target,key,source[key]);});}else if(getOwnPropertyDescriptors){defineProperties(target,getOwnPropertyDescriptors(source));}else{var _context33;forEach(_context33=ownKeys(Object(source))).call(_context33,function(key){defineProperty$6(target,key,getOwnPropertyDescriptor(source,key));});}}return target;}function _createSuper(Derived){var hasNativeReflectConstruct=_isNativeReflectConstruct();return function _createSuperInternal(){var Super=(0,_getPrototypeOf2["default"])(Derived),result;if(hasNativeReflectConstruct){var NewTarget=(0,_getPrototypeOf2["default"])(this).constructor;result=construct(Super,arguments,NewTarget);}else{result=Super.apply(this,arguments);}return(0,_possibleConstructorReturn2["default"])(this,result);};}function _isNativeReflectConstruct(){if(typeof Reflect==="undefined"||!construct)return false;if(construct.sham)return false;if(typeof Proxy==="function")return true;try{Boolean.prototype.valueOf.call(construct(Boolean,[],function(){}));return true;}catch(e){return false;}}var ajv=new _ajv["default"]({strictTuples:false});var validate=ajv.compile(_bachJsonSchema["default"]);_exports.validate=validate;var valid=function valid(bach){if(!validate(bach)){var message='Invalid Bach.JSON source data';var pretty=function pretty(json){return(0,_stringify["default"])(json,null,2);};console.error(message,pretty(bach));console.error(pretty(validate.errors));throw TypeError("Invalid Bach.JSON source data");}return bach;};/**
-   * Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
-   * Given a string, automatically upgrades source to v3 (simple replacement of !play with play!).
-   * Main entry point for integrating with core bach ClojureScript library.
-   */_exports.valid=valid;var compose=function compose(source){var strict=arguments.length>1&&arguments[1]!==undefined?arguments[1]:true;if(typeof source==='string'){var upgraded=source.replace(/!play/i,'play!');return _bachCljs["default"].compose(upgraded);}if((0,_typeof2["default"])(source)==='object'){return strict?valid(source):source;}throw TypeError("Unsupported Bach.JSON data type (".concat((0,_typeof2["default"])(source),"). Must be a bach.json object or raw bach string."));};_exports.compose=compose;function scaleify(value){var _context;if(typeof value==='string'){var _value$split=value.split(' '),_value$split2=(0,_slicedToArray2["default"])(_value$split,2),tonic=_value$split2[0],type=_value$split2[1];// TODO: Potentially use type.toLowerCase instead, to guarantee smooth interopability
-return(0,_teoria.scale)(tonic,type.toLowerCase());}else if(value instanceof _teoria.Scale){return value;}throw TypeError((0,_concat["default"])(_context="Unknown scale type (".concat((0,_typeof2["default"])(value),"): ")).call(_context,value));}function chordify(value){var _context2;if(typeof value==='string'){return(0,_teoria.chord)(value);}else if(value instanceof _teoria.Chord){return value;}throw TypeError((0,_concat["default"])(_context2="Unknown chord type (".concat((0,_typeof2["default"])(value),"): ")).call(_context2,value));}function scaleToString(scale){var _context3,_context4;return(0,_concat["default"])(_context3="".concat((0,_slice["default"])(_context4=scale.tonic.toString()).call(_context4,0,2)," ")).call(_context3,scale.name);}function notesInChord(value){var _context5;return(0,_map["default"])(_context5=chordify(value).notes()).call(_context5,function(note){return Note.valueOf(note);});}function notesInScale(value){var _context6;return(0,_map["default"])(_context6=scaleify(value).notes()).call(_context6,function(note){return Note.valueOf(note);});}function notesIn(kind,value){var notes=notesOf[kind];if(notes){return notes(value);}return[];}// TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
-//  - Could call this `itemsOf` to be more generic and flexible
-var notesOf={note:function note(value){return[value];},chord:function chord(value){return notesInChord(value);},scale:function scale(value){return notesInScale(value);},penta:function penta(value){return notesInScale(value);}};// TODO: Note.valueOf
-_exports.notesOf=notesOf;function notesIntersect(left,right){return(0,_filter["default"])(left).call(left,function(note){return(0,_includes["default"])(right).call(right,note);});}// TODO: Replce with individual functions and remove class, no longer necessary
-// TODO: Remove cyclic reference between data module by bringing in all note related functions.
-var Note=/*#__PURE__*/function(){function Note(){(0,_classCallCheck2["default"])(this,Note);}(0,_createClass2["default"])(Note,null,[{key:"parse",value:function parse(value){var _context7;if(typeof value==='string'){return(0,_teoria.note)(value);}else if((0,_typeof2["default"])(value)==='object'||value instanceof _teoria.Note){return value;}throw TypeError((0,_concat["default"])(_context7="Unknown note type (".concat((0,_typeof2["default"])(value),"): ")).call(_context7,value));}},{key:"all",value:function all(kind,note){try{return notesIn(kind,note);}catch(e){return[];}}},{key:"hash",value:function hash(note){return Note.parse(note).chroma();}},{key:"pitchOf",value:function pitchOf(note){return Note.valueOf(note);}// TODO: Consider using chroma instead
-// TODO: Use this in nek, and anywhere else this same logic might be used
-},{key:"valueOf",value:function valueOf(note){return Note.parse(note).scientific()// .toLowerCase()
-// TODO: Centralize! Replace everywhere in bach-sheet, nek, etc.
-.replace(/[0-9]+$/,'');}},{key:"valuesOf",value:function valuesOf(notes){return(0,_map["default"])(notes).call(notes,Note.valueOf);}},{key:"generalize",value:function generalize(note$1){return(0,_teoria.note)(Note.valueOf(note$1));}},{key:"unite",value:function unite(){var notes=arguments.length>0&&arguments[0]!==undefined?arguments[0]:[];return(0,_reduce["default"])(notes).call(notes,function(all,note){var value=Note.valueOf(note);var has=(0,_includes["default"])(Note).call(Note,all,value);return!has?(0,_concat["default"])(all).call(all,value):all;},[]);}},{key:"includes",value:function includes(){var notes=arguments.length>0&&arguments[0]!==undefined?arguments[0]:[];var note=arguments.length>1?arguments[1]:undefined;return(0,_some["default"])(notes).call(notes,function(other){return Note.equals(other,note);});}},{key:"equals",value:function equals(left,right){return Note.hash(left)==Note.hash(right);}}]);return Note;}();/**
-   * Recursively calculates the greatest common denominator (GCD) between two values
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define(["exports", "bach-js", "raf", "howler", "performance-now", "events"], factory);
+  } else if (typeof exports !== "undefined") {
+    factory(exports, require("bach-js"), require("raf"), require("howler"), require("performance-now"), require("events"));
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod.exports, global.bachJs, global.raf, global.howler, global.performanceNow, global.events);
+    global.unknown = mod.exports;
+  }
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _bachJs, _raf, _howler, _performanceNow, _events) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.clock = _exports.STATUS = _exports.INACTIVE_STATUS = _exports.Gig = _exports.EXPIRED_STATUS = _exports.CONSTANTS = _exports.BASED_STATUS = _exports.ACTIVE_STATUS = void 0;
+  _raf = _interopRequireDefault(_raf);
+  _performanceNow = _interopRequireDefault(_performanceNow);
+  _events = _interopRequireDefault(_events);
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+  function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+  function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+  function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+  function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+  function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+  function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+  function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+  function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+  function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+  /**
+   * Default monotonic/stateless timer for Gig.
+   * Uses requestAnimationFrame and performance.now (polyfilled).
    *
-   * @param {Number} a
-   * @param {Number} b
-   * @returns {Number}
-   */_exports.Note=Note;function gcd$1(a,b){if(b==0){return a;}return gcd$1(b,a%b);}/**
-   * Modifies a value so that it is always between the provided min and max
-   *
-   * @param {Number} value
-   * @param {Number} min
-   * @param {Number} max
-   * @returns {Number}
-   */function clamp$1(value){var min=arguments.length>1&&arguments[1]!==undefined?arguments[1]:0;var max=arguments.length>2&&arguments[2]!==undefined?arguments[2]:1;return Math.min(max,Math.max(min,value));}/**
-   * Interpolation function returning the value between x and y at a specific ratio
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */function lerp$1(ratio,x,y){return x*(1-ratio)+y*ratio;}/**
-   * Interpolation function returning the ratio of a value clamped between x and y
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */function invlerp$1(value,x,y){return clamp$1((value-x)/(y-x));}/**
-   * Determines the element found in an array at a given ratio
-   *
-   * @param {Float} ratio
-   * @param {Array} all
-   */function steps(ratio,all){ratio%=1;if(ratio<0)ratio+=1;return all[Math.floor(ratio*all.length)];}var Lens=/*#__PURE__*/function(){function Lens(){var _ref=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{},_ref$unit=_ref.unit,unit=_ref$unit===void 0?1:_ref$unit,_ref$is=_ref.is,is=_ref$is===void 0?1:_ref$is,_ref$as=_ref.as,as=_ref$as===void 0?1:_ref$as,_ref$min=_ref.min,min=_ref$min===void 0?0:_ref$min,_ref$max=_ref.max,max=_ref$max===void 0?1:_ref$max,_ref$grid=_ref.grid,grid=_ref$grid===void 0?1:_ref$grid,_ref$origin=_ref.origin,origin=_ref$origin===void 0?0:_ref$origin;(0,_classCallCheck2["default"])(this,Lens);this.data={unit:unit,is:is,as:as,min:min,max:max,grid:grid,origin:origin};// Would improve flexibility by wrapping all getters in Lens with this, allowing Units and Lens to use the same normalization function
-// this.normalize = normalize || Units.normalize
-}(0,_createClass2["default"])(Lens,[{key:"unit",get:function get(){return this.data.unit||this.data.is||1;}},{key:"is",get:function get(){return this.data.is||this.unit;}},{key:"as",get:function get(){return this.data.as||this.unit;}},{key:"min",get:function get(){return this.data.min||0;}},{key:"max",get:function get(){return this.data.max||_maxSafeInteger["default"];}},{key:"grid",get:function get(){return this.data.grid||1;}},{key:"origin",get:function get(){return this.data.origin||0;}},{key:"use",value:function use(data){return(0,_assign["default"])({},this.data,data);}},{key:"assign",value:function assign(data){this.data=this.use(data);return this;}}]);return Lens;}();/**
-   * Recursively calculates the greatest common denominator (GCD) between two values
-   *
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */function gcd(x,y){return y===0?x:gcd(y,x%y);}/**
-   * Modifies a value so that it is always between x and y
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */function _clamp(value){var x=arguments.length>1&&arguments[1]!==undefined?arguments[1]:0;var y=arguments.length>2&&arguments[2]!==undefined?arguments[2]:1;return Math.min(y,Math.max(x,value));}/**
-   * Interpolation function returning the value between x and y at a specific ratio
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */function _lerp(ratio,x,y){return x*(1-ratio)+y*ratio;}/**
-   * Interpolation function returning the ratio of a value clamped between x and y
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */function _invlerp(value,x,y){return _clamp((value-x)/(y-x));}/**
-   * Cycles a value around an range (from x to y).
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-  */function _cyclic(value,x,y){return(value>=x?value:value+y)%y;}var Units=/*#__PURE__*/function(){function Units(){var _ref2=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{},_ref2$map=(0,_map["default"])(_ref2),map=_ref2$map===void 0?{}:_ref2$map,_ref2$lens=_ref2.lens,lens=_ref2$lens===void 0?{}:_ref2$lens;(0,_classCallCheck2["default"])(this,Units);this.map=map;this.lens=new Lens(lens);}(0,_createClass2["default"])(Units,[{key:"normalize",value:function normalize(unit){if(typeof unit==='number'){return unit;}if(typeof unit==='string'){var value=(0,_map["default"])(this)[unit]||1;return typeof value==='function'?value(unit):Number(value);}return 1;}},{key:"scope",value:function scope(){var value=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;var lens=arguments.length>1&&arguments[1]!==undefined?arguments[1]:this.lens;var _this$lens$use=this.lens.use(lens),is=_this$lens$use.is,as=_this$lens$use.as,min=_this$lens$use.min,max=_this$lens$use.max,origin=_this$lens$use.origin;var index=this.cast(value-origin,{is:is,as:as});var head=this.cast(min||0,{is:is,as:as});var tail=this.cast(max||value,{is:is,as:as});return{value:value,index:index,head:head,tail:tail};}},{key:"cast",value:function cast(){var value=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;var _ref3=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{},_ref3$is=_ref3.is,is=_ref3$is===void 0?this.lens.unit:_ref3$is,_ref3$as=_ref3.as,as=_ref3$as===void 0?this.lens.unit:_ref3$as;// cast (value = 1, { is = this.lens.is, as = this.lens.as } = {}) {
-return this.normalize(value)/(this.normalize(as)/this.normalize(is));}},{key:"snap",value:function snap(){var value=arguments.length>0&&arguments[0]!==undefined?arguments[0]:1;var _ref4=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{},_ref4$to=_ref4.to,to=_ref4$to===void 0?this.lens.unit:_ref4$to,_ref4$calc=_ref4.calc,calc=_ref4$calc===void 0?Math.floor:_ref4$calc;var unit=this.normalize(to);var adjust=typeof calc==='function'?calc:function(_){return _;};var output=adjust(value/unit)*unit;return this.normalize(output||0);}},{key:"clamp",value:function clamp(value,lens){var _this$scope=this.scope(value,lens),index=_this$scope.index,head=_this$scope.head,tail=_this$scope.tail;return _clamp(index,head,tail);}},{key:"cyclic",value:function cyclic(value,lens){var _this$scope2=this.scope(value,lens),index=_this$scope2.index,head=_this$scope2.head,tail=_this$scope2.tail;return _cyclic(index,head,tail);}},{key:"lerp",value:function lerp(ratio,lens){var _this$scope3=this.scope(0,lens),head=_this$scope3.head,tail=_this$scope3.tail;return _lerp(ratio,head,tail);}},{key:"invlerp",value:function invlerp(value,lens){var _this$scope4=this.scope(value,lens),index=_this$scope4.index,head=_this$scope4.head,tail=_this$scope4.tail;return _invlerp(index,head,tail);}},{key:"delta",value:function delta(value,lens){var _this$scope5=this.scope(value,lens),index=_this$scope5.index,head=_this$scope5.head;return index-head;}},{key:"range",value:function range(value,lens){var _this$scope6=this.scope(value,lens),head=_this$scope6.head,tail=_this$scope6.tail;return tail-head;}},{key:"progress",value:function progress(value,lens){var delta=this.delta(value,lens);var range=this.range(value,lens);return delta/range;}},{key:"fold",value:function fold(value){var lens=arguments.length>1&&arguments[1]!==undefined?arguments[1]:this.lens;var grid=lens.grid||1;var basis=gcd(value,grid);var size=this.clamp(value,lens);var container=this.snap(size,{to:basis});var ratio=Math.max(1,Math.min(value/basis,grid));var min=value>=grid?grid:basis;return Math.max(min,this.snap(container,{to:ratio}));}// Changes the base unit to the provided key by recalculating and replacing the unit map pairs.
-// TODO: Test, and ensure that the base unit is equal to 1 (or, could just use scale)
-},{key:"rebase",value:function rebase(){var _context8,_this=this;var unit=arguments.length>0&&arguments[0]!==undefined?arguments[0]:this.lens.unit;if(unit===this.lens.unit)return this;var map=(0,_reduce["default"])(_context8=(0,_entries["default"])((0,_map["default"])(this))).call(_context8,function(map,_ref5){var _ref6=(0,_slicedToArray2["default"])(_ref5,2),key=_ref6[0],value=_ref6[1];return(0,_assign["default"])(map,(0,_defineProperty2["default"])({},key,_this.cast(value,{is:_this.lens.is,as:unit})),(0,_defineProperty2["default"])({},unit,1));});this.map=map;this.lens.unit=unit;return this;}},{key:"clone",value:function clone(props){var map=(0,_assign["default"])({},(0,_map["default"])(this),(0,_map["default"])(props));var lens=(0,_assign["default"])({},this.lens,props.lens);return new Units({map:map,lens:lens});}}],[{key:"use",value:function use(props){return new Units(props);}}]);return Units;}();/**
-   * Provides essential duration values and calculations of a bach track.
-   * Enables trivial conversions between any duration unit via cast (based
-   * on milliseconds) and unitize (based on steps, bach's iteration unit).
-   */var Durations=/*#__PURE__*/function(_Units){(0,_inherits2["default"])(Durations,_Units);var _super=_createSuper(Durations);function Durations(source,lens){var _this2;(0,_classCallCheck2["default"])(this,Durations);_this2=_super.call(this,{map:null,lens:lens});_this2.source=source;_this2.data=compose(source);_this2.init();return _this2;}(0,_createClass2["default"])(Durations,[{key:"init",value:function init(){this.map=(0,_map["default"])(Durations).call(Durations,this.data);this.lens.assign({unit:'step',max:this.total});}},{key:"units",get:function get(){return this.data.units;}},{key:"steps",get:function get(){return this.data.steps;}},{key:"bar",get:function get(){return this.units.bar;}},{key:"metrics",get:function get(){return this.data.metrics;}},{key:"min",get:function get(){return this.metrics.min;}},{key:"max",get:function get(){return this.metrics.max;}},{key:"total",get:function get(){return this.metrics.total;}},{key:"at",value:function at(duration){var is=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'step';var step=Math.floor(this.cast(duration,{is:is,as:'step'}));var index=this.cyclic(step);var state=this.steps[index];var _ref7=state||[],_ref8=(0,_slicedToArray2["default"])(_ref7,3),context=_ref8[0],play=_ref8[1],stop=_ref8[2];return{beat:context[0],elems:(0,_slice["default"])(context).call(context,1),play:play,stop:stop,index:index};}},{key:"metronize",value:function metronize(duration){var _ref9=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{},_ref9$is=_ref9.is,is=_ref9$is===void 0?'ms':_ref9$is,_ref9$as=_ref9.as,as=_ref9$as===void 0?'pulse':_ref9$as;var index=this.cast(duration,{is:is,as:as});var bar=this.cast(this.bar.step,{as:as});return Math.floor(index%bar);}// TODO: Either replace or improve via inspiration with this:
-// @see: https://tonejs.github.io/docs/r13/Time#quantize
-},{key:"rhythmic",value:function rhythmic(duration){var _context9,_this3=this;var _ref10=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{},_ref10$is=_ref10.is,is=_ref10$is===void 0?'ms':_ref10$is,_ref10$units=_ref10.units,units=_ref10$units===void 0?['8n','4n']:_ref10$units,_ref10$calc=_ref10.calc,calc=_ref10$calc===void 0?'floor':_ref10$calc,_ref10$size=_ref10.size,size=_ref10$size===void 0?'min':_ref10$size;var durations=(0,_sort["default"])(_context9=(0,_map["default"])(units).call(units,function(unit){var value=_this3.cast(duration,{is:is,as:unit});var result=Math[calc](value);return _this3.cast(result,{is:unit,as:is});})).call(_context9,function(a,b){return Math.abs(duration-a)-Math.abs(duration-b);});return Math[size].apply(Math,(0,_toConsumableArray2["default"])(durations));}}],[{key:"map",value:function map(source){var data=compose(source,false);var _data$units=data.units,beat=_data$units.beat,step=_data$units.step,pulse=_data$units.pulse,time=_data$units.time,bar=_data$units.bar;return{step:1,pulse:1/(beat.step/beat.pulse),bar:bar.step,ms:1/time.step,second:1/time.step*1000,'s':step,'p':pulse,'m':bar.step,'2n':bar.step/2,'4n':bar.step/4,'8n':bar.step/8,'16n':bar.step/16,'32n':bar.step/32,'64n':bar.step/64,'4up':bar.step-bar.step/4,'8up':bar.step-bar.step/8,'16up':bar.step-bar.step/16,'32up':bar.step-bar.step/32,'64up':bar.step-bar.step/64};}}]);return Durations;}(Units);/**
-   * Represents a single and unique playable element.
-   * Uniqueness and equality are determined by `id`.
-   */_exports.Durations=Durations;var Element=/*#__PURE__*/function(){function Element(data){(0,_classCallCheck2["default"])(this,Element);this.data=data;}(0,_createClass2["default"])(Element,[{key:"id",get:function get(){var _context10;return(0,_concat["default"])(_context10="".concat(this.data.kind,".")).call(_context10,this.data.id);}},{key:"uid",get:function get(){return Element.uid(this.id);}},{key:"value",get:function get(){return this.data.value;}},{key:"props",get:function get(){return this.data.props||[];}},{key:"kind",get:function get(){return this.data.kind.toLowerCase();}},{key:"duration",get:function get(){return this.data.duration;}},{key:"notes",get:function get(){return Note.all(this.kind,this.value);}},{key:"musical",get:function get(){return(0,_includes["default"])(MUSICAL_ELEMENTS).call(MUSICAL_ELEMENTS,this.kind);}}],[{key:"uid",value:function uid(id){return id.split('.').pop();}}]);return Element;}();/**
-   * Provides a centralized and shareable store of parsed elements in a bach track.
-   */_exports.Element=Element;var Elements=/*#__PURE__*/function(){function Elements(){var _ref11=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{},source=_ref11.source,store=_ref11.store,cast=_ref11.cast;(0,_classCallCheck2["default"])(this,Elements);this.source=compose(source);this.cast=cast||function(_){return _;};this.data=store||Elements.cast(this.source.elements,cast);}(0,_createClass2["default"])(Elements,[{key:"all",get:function get(){var _context11,_this4=this;return(0,_flatMap["default"])(_context11=this.kinds).call(_context11,function(kind){return(0,_every["default"])(_this4).call(_this4,kind);});}},{key:"kinds",get:function get(){return(0,_keys["default"])(this.data);}},{key:"values",get:function get(){var _context12;return(0,_map["default"])(_context12=this.all).call(_context12,function(elem){return elem.value;});}},{key:"ids",get:function get(){var _context13;return(0,_map["default"])(_context13=this.all).call(_context13,function(elem){return elem.id;});}},{key:"get",value:function get(id){var parts=typeof id==='string'?id.split('.'):[];if(parts.length===2){var _parts=(0,_slicedToArray2["default"])(parts,2),kind=_parts[0],uid=_parts[1];var elem=this.data[kind][uid];return elem?_objectSpread(_objectSpread({},elem),{},{id:uid,kind:kind}):null;}throw TypeError('Element id must be a string in the format of "kind.hash"');}},{key:"one",value:function one(kind){var _context14;return(0,_every["default"])(_context14=this).call(_context14,kind)[0];}},{key:"every",value:function every(kind){var _context15;return(0,_map["default"])(_context15=(0,_values["default"])(this.data[kind])).call(_context15,function(elem){return new Element(elem);});}},{key:"resolve",value:function resolve(elem){var _this5=this;// FIXME: Use json-schema validator here instead to support cross-context typing.
-// if (elem instanceof Element) return elem
-if((0,_typeof2["default"])(elem)==='object')return elem;if(typeof elem==='string')return this.get(elem);if((0,_isArray["default"])(elem))return(0,_map["default"])(elem).call(elem,function(el){return _this5.get(el);});if(elem==null)return null;throw TypeError('Failed to resolve element due to unsupported data type');}// TODO: Rename to `insert`
-},{key:"register",value:function register(_ref12){var _context16;var kind=_ref12.kind,value=_ref12.value,props=_ref12.props;if(!kind||typeof kind!=='string')throw TypeError('kind must be a non-empty string');if(value==null)throw TypeError('value must be defined and non-null');var elem=(0,_bachCljs.elementize)(kind,(0,_concat["default"])(_context16=[value]).call(_context16,(0,_toConsumableArray2["default"])(props)));var uid=Element.uid(elem.id);var record=this.cast(_objectSpread(_objectSpread({},elem),{},{id:uid,kind:kind}));this.data[kind]=this.data[kind]||{};this.data[kind][uid]=record;this.source.elements=this.data;return new Element(record);}}],[{key:"cast",value:function cast(elements){var _context17;var as=arguments.length>1&&arguments[1]!==undefined?arguments[1]:function(_){return _;};if(!elements)return null;// TODO: Validate element shape with JSON Schema
-return(0,_reduce["default"])(_context17=(0,_entries["default"])(elements)).call(_context17,function(acc,_ref13){var _context18;var _ref14=(0,_slicedToArray2["default"])(_ref13,2),kind=_ref14[0],ids=_ref14[1];var elems=(0,_reduce["default"])(_context18=(0,_entries["default"])(ids)).call(_context18,function(acc,_ref15){var _ref16=(0,_slicedToArray2["default"])(_ref15,2),id=_ref16[0],elem=_ref16[1];return _objectSpread(_objectSpread({},acc),{},(0,_defineProperty2["default"])({},id,as(_objectSpread({id:id,kind:kind},elem))));},{});return _objectSpread(_objectSpread({},acc),{},(0,_defineProperty2["default"])({},kind,elems));},{});}}]);return Elements;}();// TODO: Hoist out to Music, leaky abstraction
-_exports.Elements=Elements;var MUSICAL_ELEMENTS=['note','chord','scale',' penta'];// triad
-/**
-   * Represents a single beat in a track.
-   *
-   * Beats are represented as a tuple and may contain multiple elements
-   *
-   * duration -> items -> elements
-   */_exports.MUSICAL_ELEMENTS=MUSICAL_ELEMENTS;var Beat=/*#__PURE__*/function(){function Beat(data,store){(0,_classCallCheck2["default"])(this,Beat);this.data=data;this.store=store;}(0,_createClass2["default"])(Beat,[{key:"id",get:function get(){return this.data.id;}},{key:"index",get:function get(){return this.data.index;}},{key:"duration",get:function get(){return this.data.duration;}},{key:"items",get:function get(){var _context19,_this6=this;return(0,_map["default"])(_context19=this.data.items).call(_context19,function(item){var _context20;return _objectSpread(_objectSpread({},item),{},{elements:(0,_map["default"])(_context20=item.elements).call(_context20,function(elem){return _this6.store.resolve(elem);})});});}},{key:"elements",get:function get(){var _context21,_this7=this;return(0,_flatMap["default"])(_context21=this.data.items).call(_context21,function(_ref17){var elements=_ref17.elements;return(0,_map["default"])(elements).call(elements,function(elem){return _this7.store.resolve(elem);});});}},{key:"kinds",get:function get(){return this.all(function(_ref18){var kind=_ref18.kind;return kind;});}},{key:"values",get:function get(){return this.all(function(_ref19){var value=_ref19.value;return value;});}},{key:"notes",get:function get(){return this.notesOf(this.elements);}// Provides map of elements in a beat grouped by kind.
-// WARN: Doesn't support multiple elements of the same kind.
-},{key:"parts",get:function get(){var _context22;return(0,_reduce["default"])(_context22=this.elements).call(_context22,function(parts,elem){return _objectSpread(_objectSpread({},parts),{},(0,_defineProperty2["default"])({},elem.kind,elem));},{});}},{key:"musical",get:function get(){var _context23;return(0,_every["default"])(_context23=this.elements).call(_context23,function(elem){return elem.musical;});}},{key:"all",value:function all(){var _context24;var cast=arguments.length>0&&arguments[0]!==undefined?arguments[0]:function(_){return _;};return(0,_toConsumableArray2["default"])(new _set["default"]((0,_map["default"])(_context24=this.elements).call(_context24,cast)));}},{key:"find",value:function find(kind){var _context25;return(0,_find["default"])(_context25=this.elements).call(_context25,function(elem){return kind===elem.kind;});}},{key:"filter",value:function filter(kind){var _context26;return(0,_filter["default"])(_context26=this.elements).call(_context26,function(elem){return kind===elem.kind;});}},{key:"last",value:function last(kind){var _context27,_context28;return(0,_reverse["default"])(_context27=(0,_filter["default"])(_context28=this).call(_context28,kind)).call(_context27)[0];}},{key:"either",value:function either(kinds){var _this8=this;return(0,_reduce["default"])(kinds).call(kinds,function(acc,kind){return acc.length?acc:(0,_filter["default"])(_this8).call(_this8,kind);},[]);}},{key:"notesOf",value:function notesOf(elements){return Note.unite((0,_flatMap["default"])(elements).call(elements,function(_ref20){var notes=_ref20.notes;return notes;}));}}],[{key:"from",value:function from(beats,store){if((0,_isArray["default"])(beats)){return(0,_map["default"])(beats).call(beats,function(beat){return new Beat(beat,store);});}return[new Beat(beats,store)];}}]);return Beat;}();var Music=/*#__PURE__*/function(){function Music(source){(0,_classCallCheck2["default"])(this,Music);this.assign(source);}(0,_createClass2["default"])(Music,[{key:"init",value:function init(){if(!this.parses)return null;this.store=new Elements({source:this.data,cast:function cast(elem){return _objectSpread(_objectSpread({},elem),{},{notes:Note.all(elem.kind,elem.value)});}});this.beats=Beat.from(this.data.beats,this.store);this.durations=new Durations(this.data);}},{key:"assign",value:function assign(source){this.source=source;this.data=compose(source);this.init();return this;}},{key:"headers",get:function get(){return this.data.headers;}},{key:"metrics",get:function get(){return this.data.metrics;}},{key:"units",get:function get(){return this.data.units;}},{key:"meter",get:function get(){return this.headers.meter;}},{key:"tempo",get:function get(){return this.headers.tempo;}},{key:"elements",get:function get(){return this.store.all;}},{key:"notes",get:function get(){var _context29;return Note.unite((0,_flatMap["default"])(_context29=this.beats).call(_context29,function(beat){var _context30;return(0,_flatMap["default"])(_context30=beat.elements).call(_context30,function(_ref21){var notes=_ref21.notes;return notes;});}));}},{key:"musical",get:function get(){var _context31;return(0,_every["default"])(_context31=this.beats).call(_context31,function(beat){return beat.musical;});}},{key:"step",get:function get(){return this.units.beat.step;}},{key:"interval",get:function get(){return this.units.time.step;}},{key:"parses",get:function get(){return!this.data.fail;}},{key:"at",value:function at(duration){var is=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'step';var cursor=this.durations.at(duration,is);return{beat:this.beats[cursor.beat],elems:this.store.resolve(cursor.elems),play:this.store.resolve(cursor.play),stop:this.store.resolve(cursor.stop)};}},{key:"beat",value:function beat(index){var cursor=this.durations.cyclic(index,{max:this.beats.length});return this.beats[cursor];}}]);return Music;}();_exports.Music=Music;});});var performanceNow=createCommonjsModule(function(module){// Generated by CoffeeScript 1.12.2
-(function(){var getNanoSeconds,hrtime,loadTime,moduleLoadTime,nodeLoadTime,upTime;if(typeof performance!=="undefined"&&performance!==null&&performance.now){module.exports=function(){return performance.now();};}else if(typeof process!=="undefined"&&process!==null&&process.hrtime){module.exports=function(){return(getNanoSeconds()-nodeLoadTime)/1e6;};hrtime=process.hrtime;getNanoSeconds=function getNanoSeconds(){var hr;hr=hrtime();return hr[0]*1e9+hr[1];};moduleLoadTime=getNanoSeconds();upTime=process.uptime()*1e9;nodeLoadTime=moduleLoadTime-upTime;}else if(Date.now){module.exports=function(){return Date.now()-loadTime;};loadTime=Date.now();}else{module.exports=function(){return new Date().getTime()-loadTime;};loadTime=new Date().getTime();}}).call(commonjsGlobal);});var root=typeof window==='undefined'?commonjsGlobal:window,vendors=['moz','webkit'],suffix='AnimationFrame',raf=root['request'+suffix],caf=root['cancel'+suffix]||root['cancelRequest'+suffix];for(var i=0;!raf&&i<vendors.length;i++){raf=root[vendors[i]+'Request'+suffix];caf=root[vendors[i]+'Cancel'+suffix]||root[vendors[i]+'CancelRequest'+suffix];}// Some versions of FF have rAF but not cAF
-if(!raf||!caf){var last=0,id=0,queue=[],frameDuration=1000/60;raf=function raf(callback){if(queue.length===0){var _now=performanceNow(),next=Math.max(0,frameDuration-(_now-last));last=next+_now;setTimeout(function(){var cp=queue.slice(0);// Clear queue here to prevent
-// callbacks from appending listeners
-// to the current frame's queue
-queue.length=0;for(var i=0;i<cp.length;i++){if(!cp[i].cancelled){try{cp[i].callback(last);}catch(e){setTimeout(function(){throw e;},0);}}}},Math.round(next));}queue.push({handle:++id,callback:callback,cancelled:false});return id;};caf=function caf(handle){for(var i=0;i<queue.length;i++){if(queue[i].handle===handle){queue[i].cancelled=true;}}};}var raf_1=function raf_1(fn){// Wrap in a new function to prevent
-// `cancel` potentially being assigned
-// to the native rAF function
-return raf.call(root,fn);};var cancel=function cancel(){caf.apply(root,arguments);};var polyfill=function polyfill(object){if(!object){object=root;}object.requestAnimationFrame=raf;object.cancelAnimationFrame=caf;};raf_1.cancel=cancel;raf_1.polyfill=polyfill;/**
- * Default monotonic/stateless timer for Gig.
- * Uses requestAnimationFrame and performance.now (polyfilled).
- *
- * @param {Gig} gig parent instance provided on construction
- * @param {function} [tick] optional function to call on each tick of the clock
- */function clock(gig,tick){var last=null;var interval=null;var loop=function loop(){var time=gig.time,cursor=gig.cursor,expired=gig.expired;if(expired)return cancel();if(cursor!==last){last=cursor;gig.step();}if(typeof tick==='function'){tick(gig,time);}interval=raf_1(loop);};var cancel=function cancel(){raf_1.cancel(interval);interval=null;};var timer={play:function play(){loop(performanceNow());},pause:function pause(){cancel();},resume:function resume(){timer.play();},stop:function stop(){last=null;cancel();}};timer.play();return timer;}/*!
- *  howler.js v2.2.3
- *  howlerjs.com
- *
- *  (c) 2013-2020, James Simpson of GoldFire Studios
- *  goldfirestudios.com
- *
- *  MIT License
- */var howler=createCommonjsModule(function(module,exports){(function(){/** Global Methods **/ /***************************************************************************/ /**
-   * Create the global controller. All contained methods and properties apply
-   * to all sounds that are currently playing or will be in the future.
-   */var HowlerGlobal=function HowlerGlobal(){this.init();};HowlerGlobal.prototype={/**
-     * Initialize the global Howler object.
-     * @return {Howler}
-     */init:function init(){var self=this||Howler;// Create a global ID counter.
-self._counter=1000;// Pool of unlocked HTML5 Audio objects.
-self._html5AudioPool=[];self.html5PoolSize=10;// Internal properties.
-self._codecs={};self._howls=[];self._muted=false;self._volume=1;self._canPlayEvent='canplaythrough';self._navigator=typeof window!=='undefined'&&window.navigator?window.navigator:null;// Public properties.
-self.masterGain=null;self.noAudio=false;self.usingWebAudio=true;self.autoSuspend=true;self.ctx=null;// Set to false to disable the auto audio unlocker.
-self.autoUnlock=true;// Setup the various state values for global tracking.
-self._setup();return self;},/**
-     * Get/set the global volume for all sounds.
-     * @param  {Float} vol Volume from 0.0 to 1.0.
-     * @return {Howler/Float}     Returns self or current volume.
-     */volume:function volume(vol){var self=this||Howler;vol=parseFloat(vol);// If we don't have an AudioContext created yet, run the setup.
-if(!self.ctx){setupAudioContext();}if(typeof vol!=='undefined'&&vol>=0&&vol<=1){self._volume=vol;// Don't update any of the nodes if we are muted.
-if(self._muted){return self;}// When using Web Audio, we just need to adjust the master gain.
-if(self.usingWebAudio){self.masterGain.gain.setValueAtTime(vol,Howler.ctx.currentTime);}// Loop through and change volume for all HTML5 audio nodes.
-for(var i=0;i<self._howls.length;i++){if(!self._howls[i]._webAudio){// Get all of the sounds in this Howl group.
-var ids=self._howls[i]._getSoundIds();// Loop through all sounds and change the volumes.
-for(var j=0;j<ids.length;j++){var sound=self._howls[i]._soundById(ids[j]);if(sound&&sound._node){sound._node.volume=sound._volume*vol;}}}}return self;}return self._volume;},/**
-     * Handle muting and unmuting globally.
-     * @param  {Boolean} muted Is muted or not.
-     */mute:function mute(muted){var self=this||Howler;// If we don't have an AudioContext created yet, run the setup.
-if(!self.ctx){setupAudioContext();}self._muted=muted;// With Web Audio, we just need to mute the master gain.
-if(self.usingWebAudio){self.masterGain.gain.setValueAtTime(muted?0:self._volume,Howler.ctx.currentTime);}// Loop through and mute all HTML5 Audio nodes.
-for(var i=0;i<self._howls.length;i++){if(!self._howls[i]._webAudio){// Get all of the sounds in this Howl group.
-var ids=self._howls[i]._getSoundIds();// Loop through all sounds and mark the audio node as muted.
-for(var j=0;j<ids.length;j++){var sound=self._howls[i]._soundById(ids[j]);if(sound&&sound._node){sound._node.muted=muted?true:sound._muted;}}}}return self;},/**
-     * Handle stopping all sounds globally.
-     */stop:function stop(){var self=this||Howler;// Loop through all Howls and stop them.
-for(var i=0;i<self._howls.length;i++){self._howls[i].stop();}return self;},/**
-     * Unload and destroy all currently loaded Howl objects.
-     * @return {Howler}
-     */unload:function unload(){var self=this||Howler;for(var i=self._howls.length-1;i>=0;i--){self._howls[i].unload();}// Create a new AudioContext to make sure it is fully reset.
-if(self.usingWebAudio&&self.ctx&&typeof self.ctx.close!=='undefined'){self.ctx.close();self.ctx=null;setupAudioContext();}return self;},/**
-     * Check for codec support of specific extension.
-     * @param  {String} ext Audio file extention.
-     * @return {Boolean}
-     */codecs:function codecs(ext){return(this||Howler)._codecs[ext.replace(/^x-/,'')];},/**
-     * Setup various state values for global tracking.
-     * @return {Howler}
-     */_setup:function _setup(){var self=this||Howler;// Keeps track of the suspend/resume state of the AudioContext.
-self.state=self.ctx?self.ctx.state||'suspended':'suspended';// Automatically begin the 30-second suspend process
-self._autoSuspend();// Check if audio is available.
-if(!self.usingWebAudio){// No audio is available on this system if noAudio is set to true.
-if(typeof Audio!=='undefined'){try{var test=new Audio();// Check if the canplaythrough event is available.
-if(typeof test.oncanplaythrough==='undefined'){self._canPlayEvent='canplay';}}catch(e){self.noAudio=true;}}else{self.noAudio=true;}}// Test to make sure audio isn't disabled in Internet Explorer.
-try{var test=new Audio();if(test.muted){self.noAudio=true;}}catch(e){}// Check for supported codecs.
-if(!self.noAudio){self._setupCodecs();}return self;},/**
-     * Check for browser support for various codecs and cache the results.
-     * @return {Howler}
-     */_setupCodecs:function _setupCodecs(){var self=this||Howler;var audioTest=null;// Must wrap in a try/catch because IE11 in server mode throws an error.
-try{audioTest=typeof Audio!=='undefined'?new Audio():null;}catch(err){return self;}if(!audioTest||typeof audioTest.canPlayType!=='function'){return self;}var mpegTest=audioTest.canPlayType('audio/mpeg;').replace(/^no$/,'');// Opera version <33 has mixed MP3 support, so we need to check for and block it.
-var ua=self._navigator?self._navigator.userAgent:'';var checkOpera=ua.match(/OPR\/([0-6].)/g);var isOldOpera=checkOpera&&parseInt(checkOpera[0].split('/')[1],10)<33;var checkSafari=ua.indexOf('Safari')!==-1&&ua.indexOf('Chrome')===-1;var safariVersion=ua.match(/Version\/(.*?) /);var isOldSafari=checkSafari&&safariVersion&&parseInt(safariVersion[1],10)<15;self._codecs={mp3:!!(!isOldOpera&&(mpegTest||audioTest.canPlayType('audio/mp3;').replace(/^no$/,''))),mpeg:!!mpegTest,opus:!!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),ogg:!!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),oga:!!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),wav:!!(audioTest.canPlayType('audio/wav; codecs="1"')||audioTest.canPlayType('audio/wav')).replace(/^no$/,''),aac:!!audioTest.canPlayType('audio/aac;').replace(/^no$/,''),caf:!!audioTest.canPlayType('audio/x-caf;').replace(/^no$/,''),m4a:!!(audioTest.canPlayType('audio/x-m4a;')||audioTest.canPlayType('audio/m4a;')||audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),m4b:!!(audioTest.canPlayType('audio/x-m4b;')||audioTest.canPlayType('audio/m4b;')||audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),mp4:!!(audioTest.canPlayType('audio/x-mp4;')||audioTest.canPlayType('audio/mp4;')||audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),weba:!!(!isOldSafari&&audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')),webm:!!(!isOldSafari&&audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')),dolby:!!audioTest.canPlayType('audio/mp4; codecs="ec-3"').replace(/^no$/,''),flac:!!(audioTest.canPlayType('audio/x-flac;')||audioTest.canPlayType('audio/flac;')).replace(/^no$/,'')};return self;},/**
-     * Some browsers/devices will only allow audio to be played after a user interaction.
-     * Attempt to automatically unlock audio on the first user interaction.
-     * Concept from: http://paulbakaus.com/tutorials/html5/web-audio-on-ios/
-     * @return {Howler}
-     */_unlockAudio:function _unlockAudio(){var self=this||Howler;// Only run this if Web Audio is supported and it hasn't already been unlocked.
-if(self._audioUnlocked||!self.ctx){return;}self._audioUnlocked=false;self.autoUnlock=false;// Some mobile devices/platforms have distortion issues when opening/closing tabs and/or web views.
-// Bugs in the browser (especially Mobile Safari) can cause the sampleRate to change from 44100 to 48000.
-// By calling Howler.unload(), we create a new AudioContext with the correct sampleRate.
-if(!self._mobileUnloaded&&self.ctx.sampleRate!==44100){self._mobileUnloaded=true;self.unload();}// Scratch buffer for enabling iOS to dispose of web audio buffers correctly, as per:
-// http://stackoverflow.com/questions/24119684
-self._scratchBuffer=self.ctx.createBuffer(1,1,22050);// Call this method on touch start to create and play a buffer,
-// then check if the audio actually played to determine if
-// audio has now been unlocked on iOS, Android, etc.
-var unlock=function unlock(e){// Create a pool of unlocked HTML5 Audio objects that can
-// be used for playing sounds without user interaction. HTML5
-// Audio objects must be individually unlocked, as opposed
-// to the WebAudio API which only needs a single activation.
-// This must occur before WebAudio setup or the source.onended
-// event will not fire.
-while(self._html5AudioPool.length<self.html5PoolSize){try{var audioNode=new Audio();// Mark this Audio object as unlocked to ensure it can get returned
-// to the unlocked pool when released.
-audioNode._unlocked=true;// Add the audio node to the pool.
-self._releaseHtml5Audio(audioNode);}catch(e){self.noAudio=true;break;}}// Loop through any assigned audio nodes and unlock them.
-for(var i=0;i<self._howls.length;i++){if(!self._howls[i]._webAudio){// Get all of the sounds in this Howl group.
-var ids=self._howls[i]._getSoundIds();// Loop through all sounds and unlock the audio nodes.
-for(var j=0;j<ids.length;j++){var sound=self._howls[i]._soundById(ids[j]);if(sound&&sound._node&&!sound._node._unlocked){sound._node._unlocked=true;sound._node.load();}}}}// Fix Android can not play in suspend state.
-self._autoResume();// Create an empty buffer.
-var source=self.ctx.createBufferSource();source.buffer=self._scratchBuffer;source.connect(self.ctx.destination);// Play the empty buffer.
-if(typeof source.start==='undefined'){source.noteOn(0);}else{source.start(0);}// Calling resume() on a stack initiated by user gesture is what actually unlocks the audio on Android Chrome >= 55.
-if(typeof self.ctx.resume==='function'){self.ctx.resume();}// Setup a timeout to check that we are unlocked on the next event loop.
-source.onended=function(){source.disconnect(0);// Update the unlocked state and prevent this check from happening again.
-self._audioUnlocked=true;// Remove the touch start listener.
-document.removeEventListener('touchstart',unlock,true);document.removeEventListener('touchend',unlock,true);document.removeEventListener('click',unlock,true);document.removeEventListener('keydown',unlock,true);// Let all sounds know that audio has been unlocked.
-for(var i=0;i<self._howls.length;i++){self._howls[i]._emit('unlock');}};};// Setup a touch start listener to attempt an unlock in.
-document.addEventListener('touchstart',unlock,true);document.addEventListener('touchend',unlock,true);document.addEventListener('click',unlock,true);document.addEventListener('keydown',unlock,true);return self;},/**
-     * Get an unlocked HTML5 Audio object from the pool. If none are left,
-     * return a new Audio object and throw a warning.
-     * @return {Audio} HTML5 Audio object.
-     */_obtainHtml5Audio:function _obtainHtml5Audio(){var self=this||Howler;// Return the next object from the pool if one exists.
-if(self._html5AudioPool.length){return self._html5AudioPool.pop();}//.Check if the audio is locked and throw a warning.
-var testPlay=new Audio().play();if(testPlay&&typeof Promise!=='undefined'&&(testPlay instanceof Promise||typeof testPlay.then==='function')){testPlay["catch"](function(){console.warn('HTML5 Audio pool exhausted, returning potentially locked audio object.');});}return new Audio();},/**
-     * Return an activated HTML5 Audio object to the pool.
-     * @return {Howler}
-     */_releaseHtml5Audio:function _releaseHtml5Audio(audio){var self=this||Howler;// Don't add audio to the pool if we don't know if it has been unlocked.
-if(audio._unlocked){self._html5AudioPool.push(audio);}return self;},/**
-     * Automatically suspend the Web Audio AudioContext after no sound has played for 30 seconds.
-     * This saves processing/energy and fixes various browser-specific bugs with audio getting stuck.
-     * @return {Howler}
-     */_autoSuspend:function _autoSuspend(){var self=this;if(!self.autoSuspend||!self.ctx||typeof self.ctx.suspend==='undefined'||!Howler.usingWebAudio){return;}// Check if any sounds are playing.
-for(var i=0;i<self._howls.length;i++){if(self._howls[i]._webAudio){for(var j=0;j<self._howls[i]._sounds.length;j++){if(!self._howls[i]._sounds[j]._paused){return self;}}}}if(self._suspendTimer){clearTimeout(self._suspendTimer);}// If no sound has played after 30 seconds, suspend the context.
-self._suspendTimer=setTimeout(function(){if(!self.autoSuspend){return;}self._suspendTimer=null;self.state='suspending';// Handle updating the state of the audio context after suspending.
-var handleSuspension=function handleSuspension(){self.state='suspended';if(self._resumeAfterSuspend){delete self._resumeAfterSuspend;self._autoResume();}};// Either the state gets suspended or it is interrupted.
-// Either way, we need to update the state to suspended.
-self.ctx.suspend().then(handleSuspension,handleSuspension);},30000);return self;},/**
-     * Automatically resume the Web Audio AudioContext when a new sound is played.
-     * @return {Howler}
-     */_autoResume:function _autoResume(){var self=this;if(!self.ctx||typeof self.ctx.resume==='undefined'||!Howler.usingWebAudio){return;}if(self.state==='running'&&self.ctx.state!=='interrupted'&&self._suspendTimer){clearTimeout(self._suspendTimer);self._suspendTimer=null;}else if(self.state==='suspended'||self.state==='running'&&self.ctx.state==='interrupted'){self.ctx.resume().then(function(){self.state='running';// Emit to all Howls that the audio has resumed.
-for(var i=0;i<self._howls.length;i++){self._howls[i]._emit('resume');}});if(self._suspendTimer){clearTimeout(self._suspendTimer);self._suspendTimer=null;}}else if(self.state==='suspending'){self._resumeAfterSuspend=true;}return self;}};// Setup the global audio controller.
-var Howler=new HowlerGlobal();/** Group Methods **/ /***************************************************************************/ /**
-   * Create an audio group controller.
-   * @param {Object} o Passed in properties for this group.
-   */var Howl=function Howl(o){var self=this;// Throw an error if no source is provided.
-if(!o.src||o.src.length===0){console.error('An array of source files must be passed with any new Howl.');return;}self.init(o);};Howl.prototype={/**
-     * Initialize a new Howl group object.
-     * @param  {Object} o Passed in properties for this group.
-     * @return {Howl}
-     */init:function init(o){var self=this;// If we don't have an AudioContext created yet, run the setup.
-if(!Howler.ctx){setupAudioContext();}// Setup user-defined default properties.
-self._autoplay=o.autoplay||false;self._format=typeof o.format!=='string'?o.format:[o.format];self._html5=o.html5||false;self._muted=o.mute||false;self._loop=o.loop||false;self._pool=o.pool||5;self._preload=typeof o.preload==='boolean'||o.preload==='metadata'?o.preload:true;self._rate=o.rate||1;self._sprite=o.sprite||{};self._src=typeof o.src!=='string'?o.src:[o.src];self._volume=o.volume!==undefined?o.volume:1;self._xhr={method:o.xhr&&o.xhr.method?o.xhr.method:'GET',headers:o.xhr&&o.xhr.headers?o.xhr.headers:null,withCredentials:o.xhr&&o.xhr.withCredentials?o.xhr.withCredentials:false};// Setup all other default properties.
-self._duration=0;self._state='unloaded';self._sounds=[];self._endTimers={};self._queue=[];self._playLock=false;// Setup event listeners.
-self._onend=o.onend?[{fn:o.onend}]:[];self._onfade=o.onfade?[{fn:o.onfade}]:[];self._onload=o.onload?[{fn:o.onload}]:[];self._onloaderror=o.onloaderror?[{fn:o.onloaderror}]:[];self._onplayerror=o.onplayerror?[{fn:o.onplayerror}]:[];self._onpause=o.onpause?[{fn:o.onpause}]:[];self._onplay=o.onplay?[{fn:o.onplay}]:[];self._onstop=o.onstop?[{fn:o.onstop}]:[];self._onmute=o.onmute?[{fn:o.onmute}]:[];self._onvolume=o.onvolume?[{fn:o.onvolume}]:[];self._onrate=o.onrate?[{fn:o.onrate}]:[];self._onseek=o.onseek?[{fn:o.onseek}]:[];self._onunlock=o.onunlock?[{fn:o.onunlock}]:[];self._onresume=[];// Web Audio or HTML5 Audio?
-self._webAudio=Howler.usingWebAudio&&!self._html5;// Automatically try to enable audio.
-if(typeof Howler.ctx!=='undefined'&&Howler.ctx&&Howler.autoUnlock){Howler._unlockAudio();}// Keep track of this Howl group in the global controller.
-Howler._howls.push(self);// If they selected autoplay, add a play event to the load queue.
-if(self._autoplay){self._queue.push({event:'play',action:function action(){self.play();}});}// Load the source file unless otherwise specified.
-if(self._preload&&self._preload!=='none'){self.load();}return self;},/**
-     * Load the audio file.
-     * @return {Howler}
-     */load:function load(){var self=this;var url=null;// If no audio is available, quit immediately.
-if(Howler.noAudio){self._emit('loaderror',null,'No audio support.');return;}// Make sure our source is in an array.
-if(typeof self._src==='string'){self._src=[self._src];}// Loop through the sources and pick the first one that is compatible.
-for(var i=0;i<self._src.length;i++){var ext,str;if(self._format&&self._format[i]){// If an extension was specified, use that instead.
-ext=self._format[i];}else{// Make sure the source is a string.
-str=self._src[i];if(typeof str!=='string'){self._emit('loaderror',null,'Non-string found in selected audio sources - ignoring.');continue;}// Extract the file extension from the URL or base64 data URI.
-ext=/^data:audio\/([^;,]+);/i.exec(str);if(!ext){ext=/\.([^.]+)$/.exec(str.split('?',1)[0]);}if(ext){ext=ext[1].toLowerCase();}}// Log a warning if no extension was found.
-if(!ext){console.warn('No file extension was found. Consider using the "format" property or specify an extension.');}// Check if this extension is available.
-if(ext&&Howler.codecs(ext)){url=self._src[i];break;}}if(!url){self._emit('loaderror',null,'No codec support for selected audio sources.');return;}self._src=url;self._state='loading';// If the hosting page is HTTPS and the source isn't,
-// drop down to HTML5 Audio to avoid Mixed Content errors.
-if(window.location.protocol==='https:'&&url.slice(0,5)==='http:'){self._html5=true;self._webAudio=false;}// Create a new sound object and add it to the pool.
-new Sound(self);// Load and decode the audio data for playback.
-if(self._webAudio){loadBuffer(self);}return self;},/**
-     * Play a sound or resume previous playback.
-     * @param  {String/Number} sprite   Sprite name for sprite playback or sound id to continue previous.
-     * @param  {Boolean} internal Internal Use: true prevents event firing.
-     * @return {Number}          Sound ID.
-     */play:function play(sprite,internal){var self=this;var id=null;// Determine if a sprite, sound id or nothing was passed
-if(typeof sprite==='number'){id=sprite;sprite=null;}else if(typeof sprite==='string'&&self._state==='loaded'&&!self._sprite[sprite]){// If the passed sprite doesn't exist, do nothing.
-return null;}else if(typeof sprite==='undefined'){// Use the default sound sprite (plays the full audio length).
-sprite='__default';// Check if there is a single paused sound that isn't ended.
-// If there is, play that sound. If not, continue as usual.
-if(!self._playLock){var num=0;for(var i=0;i<self._sounds.length;i++){if(self._sounds[i]._paused&&!self._sounds[i]._ended){num++;id=self._sounds[i]._id;}}if(num===1){sprite=null;}else{id=null;}}}// Get the selected node, or get one from the pool.
-var sound=id?self._soundById(id):self._inactiveSound();// If the sound doesn't exist, do nothing.
-if(!sound){return null;}// Select the sprite definition.
-if(id&&!sprite){sprite=sound._sprite||'__default';}// If the sound hasn't loaded, we must wait to get the audio's duration.
-// We also need to wait to make sure we don't run into race conditions with
-// the order of function calls.
-if(self._state!=='loaded'){// Set the sprite value on this sound.
-sound._sprite=sprite;// Mark this sound as not ended in case another sound is played before this one loads.
-sound._ended=false;// Add the sound to the queue to be played on load.
-var soundId=sound._id;self._queue.push({event:'play',action:function action(){self.play(soundId);}});return soundId;}// Don't play the sound if an id was passed and it is already playing.
-if(id&&!sound._paused){// Trigger the play event, in order to keep iterating through queue.
-if(!internal){self._loadQueue('play');}return sound._id;}// Make sure the AudioContext isn't suspended, and resume it if it is.
-if(self._webAudio){Howler._autoResume();}// Determine how long to play for and where to start playing.
-var seek=Math.max(0,sound._seek>0?sound._seek:self._sprite[sprite][0]/1000);var duration=Math.max(0,(self._sprite[sprite][0]+self._sprite[sprite][1])/1000-seek);var timeout=duration*1000/Math.abs(sound._rate);var start=self._sprite[sprite][0]/1000;var stop=(self._sprite[sprite][0]+self._sprite[sprite][1])/1000;sound._sprite=sprite;// Mark the sound as ended instantly so that this async playback
-// doesn't get grabbed by another call to play while this one waits to start.
-sound._ended=false;// Update the parameters of the sound.
-var setParams=function setParams(){sound._paused=false;sound._seek=seek;sound._start=start;sound._stop=stop;sound._loop=!!(sound._loop||self._sprite[sprite][2]);};// End the sound instantly if seek is at the end.
-if(seek>=stop){self._ended(sound);return;}// Begin the actual playback.
-var node=sound._node;if(self._webAudio){// Fire this when the sound is ready to play to begin Web Audio playback.
-var playWebAudio=function playWebAudio(){self._playLock=false;setParams();self._refreshBuffer(sound);// Setup the playback params.
-var vol=sound._muted||self._muted?0:sound._volume;node.gain.setValueAtTime(vol,Howler.ctx.currentTime);sound._playStart=Howler.ctx.currentTime;// Play the sound using the supported method.
-if(typeof node.bufferSource.start==='undefined'){sound._loop?node.bufferSource.noteGrainOn(0,seek,86400):node.bufferSource.noteGrainOn(0,seek,duration);}else{sound._loop?node.bufferSource.start(0,seek,86400):node.bufferSource.start(0,seek,duration);}// Start a new timer if none is present.
-if(timeout!==Infinity){self._endTimers[sound._id]=setTimeout(self._ended.bind(self,sound),timeout);}if(!internal){setTimeout(function(){self._emit('play',sound._id);self._loadQueue();},0);}};if(Howler.state==='running'&&Howler.ctx.state!=='interrupted'){playWebAudio();}else{self._playLock=true;// Wait for the audio context to resume before playing.
-self.once('resume',playWebAudio);// Cancel the end timer.
-self._clearTimer(sound._id);}}else{// Fire this when the sound is ready to play to begin HTML5 Audio playback.
-var playHtml5=function playHtml5(){node.currentTime=seek;node.muted=sound._muted||self._muted||Howler._muted||node.muted;node.volume=sound._volume*Howler.volume();node.playbackRate=sound._rate;// Some browsers will throw an error if this is called without user interaction.
-try{var play=node.play();// Support older browsers that don't support promises, and thus don't have this issue.
-if(play&&typeof Promise!=='undefined'&&(play instanceof Promise||typeof play.then==='function')){// Implements a lock to prevent DOMException: The play() request was interrupted by a call to pause().
-self._playLock=true;// Set param values immediately.
-setParams();// Releases the lock and executes queued actions.
-play.then(function(){self._playLock=false;node._unlocked=true;if(!internal){self._emit('play',sound._id);}else{self._loadQueue();}})["catch"](function(){self._playLock=false;self._emit('playerror',sound._id,'Playback was unable to start. This is most commonly an issue '+'on mobile devices and Chrome where playback was not within a user interaction.');// Reset the ended and paused values.
-sound._ended=true;sound._paused=true;});}else if(!internal){self._playLock=false;setParams();self._emit('play',sound._id);}// Setting rate before playing won't work in IE, so we set it again here.
-node.playbackRate=sound._rate;// If the node is still paused, then we can assume there was a playback issue.
-if(node.paused){self._emit('playerror',sound._id,'Playback was unable to start. This is most commonly an issue '+'on mobile devices and Chrome where playback was not within a user interaction.');return;}// Setup the end timer on sprites or listen for the ended event.
-if(sprite!=='__default'||sound._loop){self._endTimers[sound._id]=setTimeout(self._ended.bind(self,sound),timeout);}else{self._endTimers[sound._id]=function(){// Fire ended on this audio node.
-self._ended(sound);// Clear this listener.
-node.removeEventListener('ended',self._endTimers[sound._id],false);};node.addEventListener('ended',self._endTimers[sound._id],false);}}catch(err){self._emit('playerror',sound._id,err);}};// If this is streaming audio, make sure the src is set and load again.
-if(node.src==='data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA'){node.src=self._src;node.load();}// Play immediately if ready, or wait for the 'canplaythrough'e vent.
-var loadedNoReadyState=window&&window.ejecta||!node.readyState&&Howler._navigator.isCocoonJS;if(node.readyState>=3||loadedNoReadyState){playHtml5();}else{self._playLock=true;self._state='loading';var listener=function listener(){self._state='loaded';// Begin playback.
-playHtml5();// Clear this listener.
-node.removeEventListener(Howler._canPlayEvent,listener,false);};node.addEventListener(Howler._canPlayEvent,listener,false);// Cancel the end timer.
-self._clearTimer(sound._id);}}return sound._id;},/**
-     * Pause playback and save current position.
-     * @param  {Number} id The sound ID (empty to pause all in group).
-     * @return {Howl}
-     */pause:function pause(id){var self=this;// If the sound hasn't loaded or a play() promise is pending, add it to the load queue to pause when capable.
-if(self._state!=='loaded'||self._playLock){self._queue.push({event:'pause',action:function action(){self.pause(id);}});return self;}// If no id is passed, get all ID's to be paused.
-var ids=self._getSoundIds(id);for(var i=0;i<ids.length;i++){// Clear the end timer.
-self._clearTimer(ids[i]);// Get the sound.
-var sound=self._soundById(ids[i]);if(sound&&!sound._paused){// Reset the seek position.
-sound._seek=self.seek(ids[i]);sound._rateSeek=0;sound._paused=true;// Stop currently running fades.
-self._stopFade(ids[i]);if(sound._node){if(self._webAudio){// Make sure the sound has been created.
-if(!sound._node.bufferSource){continue;}if(typeof sound._node.bufferSource.stop==='undefined'){sound._node.bufferSource.noteOff(0);}else{sound._node.bufferSource.stop(0);}// Clean up the buffer source.
-self._cleanBuffer(sound._node);}else if(!isNaN(sound._node.duration)||sound._node.duration===Infinity){sound._node.pause();}}}// Fire the pause event, unless `true` is passed as the 2nd argument.
-if(!arguments[1]){self._emit('pause',sound?sound._id:null);}}return self;},/**
-     * Stop playback and reset to start.
-     * @param  {Number} id The sound ID (empty to stop all in group).
-     * @param  {Boolean} internal Internal Use: true prevents event firing.
-     * @return {Howl}
-     */stop:function stop(id,internal){var self=this;// If the sound hasn't loaded, add it to the load queue to stop when capable.
-if(self._state!=='loaded'||self._playLock){self._queue.push({event:'stop',action:function action(){self.stop(id);}});return self;}// If no id is passed, get all ID's to be stopped.
-var ids=self._getSoundIds(id);for(var i=0;i<ids.length;i++){// Clear the end timer.
-self._clearTimer(ids[i]);// Get the sound.
-var sound=self._soundById(ids[i]);if(sound){// Reset the seek position.
-sound._seek=sound._start||0;sound._rateSeek=0;sound._paused=true;sound._ended=true;// Stop currently running fades.
-self._stopFade(ids[i]);if(sound._node){if(self._webAudio){// Make sure the sound's AudioBufferSourceNode has been created.
-if(sound._node.bufferSource){if(typeof sound._node.bufferSource.stop==='undefined'){sound._node.bufferSource.noteOff(0);}else{sound._node.bufferSource.stop(0);}// Clean up the buffer source.
-self._cleanBuffer(sound._node);}}else if(!isNaN(sound._node.duration)||sound._node.duration===Infinity){sound._node.currentTime=sound._start||0;sound._node.pause();// If this is a live stream, stop download once the audio is stopped.
-if(sound._node.duration===Infinity){self._clearSound(sound._node);}}}if(!internal){self._emit('stop',sound._id);}}}return self;},/**
-     * Mute/unmute a single sound or all sounds in this Howl group.
-     * @param  {Boolean} muted Set to true to mute and false to unmute.
-     * @param  {Number} id    The sound ID to update (omit to mute/unmute all).
-     * @return {Howl}
-     */mute:function mute(muted,id){var self=this;// If the sound hasn't loaded, add it to the load queue to mute when capable.
-if(self._state!=='loaded'||self._playLock){self._queue.push({event:'mute',action:function action(){self.mute(muted,id);}});return self;}// If applying mute/unmute to all sounds, update the group's value.
-if(typeof id==='undefined'){if(typeof muted==='boolean'){self._muted=muted;}else{return self._muted;}}// If no id is passed, get all ID's to be muted.
-var ids=self._getSoundIds(id);for(var i=0;i<ids.length;i++){// Get the sound.
-var sound=self._soundById(ids[i]);if(sound){sound._muted=muted;// Cancel active fade and set the volume to the end value.
-if(sound._interval){self._stopFade(sound._id);}if(self._webAudio&&sound._node){sound._node.gain.setValueAtTime(muted?0:sound._volume,Howler.ctx.currentTime);}else if(sound._node){sound._node.muted=Howler._muted?true:muted;}self._emit('mute',sound._id);}}return self;},/**
-     * Get/set the volume of this sound or of the Howl group. This method can optionally take 0, 1 or 2 arguments.
-     *   volume() -> Returns the group's volume value.
-     *   volume(id) -> Returns the sound id's current volume.
-     *   volume(vol) -> Sets the volume of all sounds in this Howl group.
-     *   volume(vol, id) -> Sets the volume of passed sound id.
-     * @return {Howl/Number} Returns self or current volume.
-     */volume:function volume(){var self=this;var args=arguments;var vol,id;// Determine the values based on arguments.
-if(args.length===0){// Return the value of the groups' volume.
-return self._volume;}else if(args.length===1||args.length===2&&typeof args[1]==='undefined'){// First check if this is an ID, and if not, assume it is a new volume.
-var ids=self._getSoundIds();var index=ids.indexOf(args[0]);if(index>=0){id=parseInt(args[0],10);}else{vol=parseFloat(args[0]);}}else if(args.length>=2){vol=parseFloat(args[0]);id=parseInt(args[1],10);}// Update the volume or return the current volume.
-var sound;if(typeof vol!=='undefined'&&vol>=0&&vol<=1){// If the sound hasn't loaded, add it to the load queue to change volume when capable.
-if(self._state!=='loaded'||self._playLock){self._queue.push({event:'volume',action:function action(){self.volume.apply(self,args);}});return self;}// Set the group volume.
-if(typeof id==='undefined'){self._volume=vol;}// Update one or all volumes.
-id=self._getSoundIds(id);for(var i=0;i<id.length;i++){// Get the sound.
-sound=self._soundById(id[i]);if(sound){sound._volume=vol;// Stop currently running fades.
-if(!args[2]){self._stopFade(id[i]);}if(self._webAudio&&sound._node&&!sound._muted){sound._node.gain.setValueAtTime(vol,Howler.ctx.currentTime);}else if(sound._node&&!sound._muted){sound._node.volume=vol*Howler.volume();}self._emit('volume',sound._id);}}}else{sound=id?self._soundById(id):self._sounds[0];return sound?sound._volume:0;}return self;},/**
-     * Fade a currently playing sound between two volumes (if no id is passed, all sounds will fade).
-     * @param  {Number} from The value to fade from (0.0 to 1.0).
-     * @param  {Number} to   The volume to fade to (0.0 to 1.0).
-     * @param  {Number} len  Time in milliseconds to fade.
-     * @param  {Number} id   The sound id (omit to fade all sounds).
-     * @return {Howl}
-     */fade:function fade(from,to,len,id){var self=this;// If the sound hasn't loaded, add it to the load queue to fade when capable.
-if(self._state!=='loaded'||self._playLock){self._queue.push({event:'fade',action:function action(){self.fade(from,to,len,id);}});return self;}// Make sure the to/from/len values are numbers.
-from=Math.min(Math.max(0,parseFloat(from)),1);to=Math.min(Math.max(0,parseFloat(to)),1);len=parseFloat(len);// Set the volume to the start position.
-self.volume(from,id);// Fade the volume of one or all sounds.
-var ids=self._getSoundIds(id);for(var i=0;i<ids.length;i++){// Get the sound.
-var sound=self._soundById(ids[i]);// Create a linear fade or fall back to timeouts with HTML5 Audio.
-if(sound){// Stop the previous fade if no sprite is being used (otherwise, volume handles this).
-if(!id){self._stopFade(ids[i]);}// If we are using Web Audio, let the native methods do the actual fade.
-if(self._webAudio&&!sound._muted){var currentTime=Howler.ctx.currentTime;var end=currentTime+len/1000;sound._volume=from;sound._node.gain.setValueAtTime(from,currentTime);sound._node.gain.linearRampToValueAtTime(to,end);}self._startFadeInterval(sound,from,to,len,ids[i],typeof id==='undefined');}}return self;},/**
-     * Starts the internal interval to fade a sound.
-     * @param  {Object} sound Reference to sound to fade.
-     * @param  {Number} from The value to fade from (0.0 to 1.0).
-     * @param  {Number} to   The volume to fade to (0.0 to 1.0).
-     * @param  {Number} len  Time in milliseconds to fade.
-     * @param  {Number} id   The sound id to fade.
-     * @param  {Boolean} isGroup   If true, set the volume on the group.
-     */_startFadeInterval:function _startFadeInterval(sound,from,to,len,id,isGroup){var self=this;var vol=from;var diff=to-from;var steps=Math.abs(diff/0.01);var stepLen=Math.max(4,steps>0?len/steps:len);var lastTick=Date.now();// Store the value being faded to.
-sound._fadeTo=to;// Update the volume value on each interval tick.
-sound._interval=setInterval(function(){// Update the volume based on the time since the last tick.
-var tick=(Date.now()-lastTick)/len;lastTick=Date.now();vol+=diff*tick;// Round to within 2 decimal points.
-vol=Math.round(vol*100)/100;// Make sure the volume is in the right bounds.
-if(diff<0){vol=Math.max(to,vol);}else{vol=Math.min(to,vol);}// Change the volume.
-if(self._webAudio){sound._volume=vol;}else{self.volume(vol,sound._id,true);}// Set the group's volume.
-if(isGroup){self._volume=vol;}// When the fade is complete, stop it and fire event.
-if(to<from&&vol<=to||to>from&&vol>=to){clearInterval(sound._interval);sound._interval=null;sound._fadeTo=null;self.volume(to,sound._id);self._emit('fade',sound._id);}},stepLen);},/**
-     * Internal method that stops the currently playing fade when
-     * a new fade starts, volume is changed or the sound is stopped.
-     * @param  {Number} id The sound id.
-     * @return {Howl}
-     */_stopFade:function _stopFade(id){var self=this;var sound=self._soundById(id);if(sound&&sound._interval){if(self._webAudio){sound._node.gain.cancelScheduledValues(Howler.ctx.currentTime);}clearInterval(sound._interval);sound._interval=null;self.volume(sound._fadeTo,id);sound._fadeTo=null;self._emit('fade',id);}return self;},/**
-     * Get/set the loop parameter on a sound. This method can optionally take 0, 1 or 2 arguments.
-     *   loop() -> Returns the group's loop value.
-     *   loop(id) -> Returns the sound id's loop value.
-     *   loop(loop) -> Sets the loop value for all sounds in this Howl group.
-     *   loop(loop, id) -> Sets the loop value of passed sound id.
-     * @return {Howl/Boolean} Returns self or current loop value.
-     */loop:function loop(){var self=this;var args=arguments;var loop,id,sound;// Determine the values for loop and id.
-if(args.length===0){// Return the grou's loop value.
-return self._loop;}else if(args.length===1){if(typeof args[0]==='boolean'){loop=args[0];self._loop=loop;}else{// Return this sound's loop value.
-sound=self._soundById(parseInt(args[0],10));return sound?sound._loop:false;}}else if(args.length===2){loop=args[0];id=parseInt(args[1],10);}// If no id is passed, get all ID's to be looped.
-var ids=self._getSoundIds(id);for(var i=0;i<ids.length;i++){sound=self._soundById(ids[i]);if(sound){sound._loop=loop;if(self._webAudio&&sound._node&&sound._node.bufferSource){sound._node.bufferSource.loop=loop;if(loop){sound._node.bufferSource.loopStart=sound._start||0;sound._node.bufferSource.loopEnd=sound._stop;// If playing, restart playback to ensure looping updates.
-if(self.playing(ids[i])){self.pause(ids[i],true);self.play(ids[i],true);}}}}}return self;},/**
-     * Get/set the playback rate of a sound. This method can optionally take 0, 1 or 2 arguments.
-     *   rate() -> Returns the first sound node's current playback rate.
-     *   rate(id) -> Returns the sound id's current playback rate.
-     *   rate(rate) -> Sets the playback rate of all sounds in this Howl group.
-     *   rate(rate, id) -> Sets the playback rate of passed sound id.
-     * @return {Howl/Number} Returns self or the current playback rate.
-     */rate:function rate(){var self=this;var args=arguments;var rate,id;// Determine the values based on arguments.
-if(args.length===0){// We will simply return the current rate of the first node.
-id=self._sounds[0]._id;}else if(args.length===1){// First check if this is an ID, and if not, assume it is a new rate value.
-var ids=self._getSoundIds();var index=ids.indexOf(args[0]);if(index>=0){id=parseInt(args[0],10);}else{rate=parseFloat(args[0]);}}else if(args.length===2){rate=parseFloat(args[0]);id=parseInt(args[1],10);}// Update the playback rate or return the current value.
-var sound;if(typeof rate==='number'){// If the sound hasn't loaded, add it to the load queue to change playback rate when capable.
-if(self._state!=='loaded'||self._playLock){self._queue.push({event:'rate',action:function action(){self.rate.apply(self,args);}});return self;}// Set the group rate.
-if(typeof id==='undefined'){self._rate=rate;}// Update one or all volumes.
-id=self._getSoundIds(id);for(var i=0;i<id.length;i++){// Get the sound.
-sound=self._soundById(id[i]);if(sound){// Keep track of our position when the rate changed and update the playback
-// start position so we can properly adjust the seek position for time elapsed.
-if(self.playing(id[i])){sound._rateSeek=self.seek(id[i]);sound._playStart=self._webAudio?Howler.ctx.currentTime:sound._playStart;}sound._rate=rate;// Change the playback rate.
-if(self._webAudio&&sound._node&&sound._node.bufferSource){sound._node.bufferSource.playbackRate.setValueAtTime(rate,Howler.ctx.currentTime);}else if(sound._node){sound._node.playbackRate=rate;}// Reset the timers.
-var seek=self.seek(id[i]);var duration=(self._sprite[sound._sprite][0]+self._sprite[sound._sprite][1])/1000-seek;var timeout=duration*1000/Math.abs(sound._rate);// Start a new end timer if sound is already playing.
-if(self._endTimers[id[i]]||!sound._paused){self._clearTimer(id[i]);self._endTimers[id[i]]=setTimeout(self._ended.bind(self,sound),timeout);}self._emit('rate',sound._id);}}}else{sound=self._soundById(id);return sound?sound._rate:self._rate;}return self;},/**
-     * Get/set the seek position of a sound. This method can optionally take 0, 1 or 2 arguments.
-     *   seek() -> Returns the first sound node's current seek position.
-     *   seek(id) -> Returns the sound id's current seek position.
-     *   seek(seek) -> Sets the seek position of the first sound node.
-     *   seek(seek, id) -> Sets the seek position of passed sound id.
-     * @return {Howl/Number} Returns self or the current seek position.
-     */seek:function seek(){var self=this;var args=arguments;var seek,id;// Determine the values based on arguments.
-if(args.length===0){// We will simply return the current position of the first node.
-if(self._sounds.length){id=self._sounds[0]._id;}}else if(args.length===1){// First check if this is an ID, and if not, assume it is a new seek position.
-var ids=self._getSoundIds();var index=ids.indexOf(args[0]);if(index>=0){id=parseInt(args[0],10);}else if(self._sounds.length){id=self._sounds[0]._id;seek=parseFloat(args[0]);}}else if(args.length===2){seek=parseFloat(args[0]);id=parseInt(args[1],10);}// If there is no ID, bail out.
-if(typeof id==='undefined'){return 0;}// If the sound hasn't loaded, add it to the load queue to seek when capable.
-if(typeof seek==='number'&&(self._state!=='loaded'||self._playLock)){self._queue.push({event:'seek',action:function action(){self.seek.apply(self,args);}});return self;}// Get the sound.
-var sound=self._soundById(id);if(sound){if(typeof seek==='number'&&seek>=0){// Pause the sound and update position for restarting playback.
-var playing=self.playing(id);if(playing){self.pause(id,true);}// Move the position of the track and cancel timer.
-sound._seek=seek;sound._ended=false;self._clearTimer(id);// Update the seek position for HTML5 Audio.
-if(!self._webAudio&&sound._node&&!isNaN(sound._node.duration)){sound._node.currentTime=seek;}// Seek and emit when ready.
-var seekAndEmit=function seekAndEmit(){// Restart the playback if the sound was playing.
-if(playing){self.play(id,true);}self._emit('seek',id);};// Wait for the play lock to be unset before emitting (HTML5 Audio).
-if(playing&&!self._webAudio){var emitSeek=function emitSeek(){if(!self._playLock){seekAndEmit();}else{setTimeout(emitSeek,0);}};setTimeout(emitSeek,0);}else{seekAndEmit();}}else{if(self._webAudio){var realTime=self.playing(id)?Howler.ctx.currentTime-sound._playStart:0;var rateSeek=sound._rateSeek?sound._rateSeek-sound._seek:0;return sound._seek+(rateSeek+realTime*Math.abs(sound._rate));}else{return sound._node.currentTime;}}}return self;},/**
-     * Check if a specific sound is currently playing or not (if id is provided), or check if at least one of the sounds in the group is playing or not.
-     * @param  {Number}  id The sound id to check. If none is passed, the whole sound group is checked.
-     * @return {Boolean} True if playing and false if not.
-     */playing:function playing(id){var self=this;// Check the passed sound ID (if any).
-if(typeof id==='number'){var sound=self._soundById(id);return sound?!sound._paused:false;}// Otherwise, loop through all sounds and check if any are playing.
-for(var i=0;i<self._sounds.length;i++){if(!self._sounds[i]._paused){return true;}}return false;},/**
-     * Get the duration of this sound. Passing a sound id will return the sprite duration.
-     * @param  {Number} id The sound id to check. If none is passed, return full source duration.
-     * @return {Number} Audio duration in seconds.
-     */duration:function duration(id){var self=this;var duration=self._duration;// If we pass an ID, get the sound and return the sprite length.
-var sound=self._soundById(id);if(sound){duration=self._sprite[sound._sprite][1]/1000;}return duration;},/**
-     * Returns the current loaded state of this Howl.
-     * @return {String} 'unloaded', 'loading', 'loaded'
-     */state:function state(){return this._state;},/**
-     * Unload and destroy the current Howl object.
-     * This will immediately stop all sound instances attached to this group.
-     */unload:function unload(){var self=this;// Stop playing any active sounds.
-var sounds=self._sounds;for(var i=0;i<sounds.length;i++){// Stop the sound if it is currently playing.
-if(!sounds[i]._paused){self.stop(sounds[i]._id);}// Remove the source or disconnect.
-if(!self._webAudio){// Set the source to 0-second silence to stop any downloading (except in IE).
-self._clearSound(sounds[i]._node);// Remove any event listeners.
-sounds[i]._node.removeEventListener('error',sounds[i]._errorFn,false);sounds[i]._node.removeEventListener(Howler._canPlayEvent,sounds[i]._loadFn,false);sounds[i]._node.removeEventListener('ended',sounds[i]._endFn,false);// Release the Audio object back to the pool.
-Howler._releaseHtml5Audio(sounds[i]._node);}// Empty out all of the nodes.
-delete sounds[i]._node;// Make sure all timers are cleared out.
-self._clearTimer(sounds[i]._id);}// Remove the references in the global Howler object.
-var index=Howler._howls.indexOf(self);if(index>=0){Howler._howls.splice(index,1);}// Delete this sound from the cache (if no other Howl is using it).
-var remCache=true;for(i=0;i<Howler._howls.length;i++){if(Howler._howls[i]._src===self._src||self._src.indexOf(Howler._howls[i]._src)>=0){remCache=false;break;}}if(cache&&remCache){delete cache[self._src];}// Clear global errors.
-Howler.noAudio=false;// Clear out `self`.
-self._state='unloaded';self._sounds=[];self=null;return null;},/**
-     * Listen to a custom event.
-     * @param  {String}   event Event name.
-     * @param  {Function} fn    Listener to call.
-     * @param  {Number}   id    (optional) Only listen to events for this sound.
-     * @param  {Number}   once  (INTERNAL) Marks event to fire only once.
-     * @return {Howl}
-     */on:function on(event,fn,id,once){var self=this;var events=self['_on'+event];if(typeof fn==='function'){events.push(once?{id:id,fn:fn,once:once}:{id:id,fn:fn});}return self;},/**
-     * Remove a custom event. Call without parameters to remove all events.
-     * @param  {String}   event Event name.
-     * @param  {Function} fn    Listener to remove. Leave empty to remove all.
-     * @param  {Number}   id    (optional) Only remove events for this sound.
-     * @return {Howl}
-     */off:function off(event,fn,id){var self=this;var events=self['_on'+event];var i=0;// Allow passing just an event and ID.
-if(typeof fn==='number'){id=fn;fn=null;}if(fn||id){// Loop through event store and remove the passed function.
-for(i=0;i<events.length;i++){var isId=id===events[i].id;if(fn===events[i].fn&&isId||!fn&&isId){events.splice(i,1);break;}}}else if(event){// Clear out all events of this type.
-self['_on'+event]=[];}else{// Clear out all events of every type.
-var keys=Object.keys(self);for(i=0;i<keys.length;i++){if(keys[i].indexOf('_on')===0&&Array.isArray(self[keys[i]])){self[keys[i]]=[];}}}return self;},/**
-     * Listen to a custom event and remove it once fired.
-     * @param  {String}   event Event name.
-     * @param  {Function} fn    Listener to call.
-     * @param  {Number}   id    (optional) Only listen to events for this sound.
-     * @return {Howl}
-     */once:function once(event,fn,id){var self=this;// Setup the event listener.
-self.on(event,fn,id,1);return self;},/**
-     * Emit all events of a specific type and pass the sound id.
-     * @param  {String} event Event name.
-     * @param  {Number} id    Sound ID.
-     * @param  {Number} msg   Message to go with event.
-     * @return {Howl}
-     */_emit:function _emit(event,id,msg){var self=this;var events=self['_on'+event];// Loop through event store and fire all functions.
-for(var i=events.length-1;i>=0;i--){// Only fire the listener if the correct ID is used.
-if(!events[i].id||events[i].id===id||event==='load'){setTimeout(function(fn){fn.call(this,id,msg);}.bind(self,events[i].fn),0);// If this event was setup with `once`, remove it.
-if(events[i].once){self.off(event,events[i].fn,events[i].id);}}}// Pass the event type into load queue so that it can continue stepping.
-self._loadQueue(event);return self;},/**
-     * Queue of actions initiated before the sound has loaded.
-     * These will be called in sequence, with the next only firing
-     * after the previous has finished executing (even if async like play).
-     * @return {Howl}
-     */_loadQueue:function _loadQueue(event){var self=this;if(self._queue.length>0){var task=self._queue[0];// Remove this task if a matching event was passed.
-if(task.event===event){self._queue.shift();self._loadQueue();}// Run the task if no event type is passed.
-if(!event){task.action();}}return self;},/**
-     * Fired when playback ends at the end of the duration.
-     * @param  {Sound} sound The sound object to work with.
-     * @return {Howl}
-     */_ended:function _ended(sound){var self=this;var sprite=sound._sprite;// If we are using IE and there was network latency we may be clipping
-// audio before it completes playing. Lets check the node to make sure it
-// believes it has completed, before ending the playback.
-if(!self._webAudio&&sound._node&&!sound._node.paused&&!sound._node.ended&&sound._node.currentTime<sound._stop){setTimeout(self._ended.bind(self,sound),100);return self;}// Should this sound loop?
-var loop=!!(sound._loop||self._sprite[sprite][2]);// Fire the ended event.
-self._emit('end',sound._id);// Restart the playback for HTML5 Audio loop.
-if(!self._webAudio&&loop){self.stop(sound._id,true).play(sound._id);}// Restart this timer if on a Web Audio loop.
-if(self._webAudio&&loop){self._emit('play',sound._id);sound._seek=sound._start||0;sound._rateSeek=0;sound._playStart=Howler.ctx.currentTime;var timeout=(sound._stop-sound._start)*1000/Math.abs(sound._rate);self._endTimers[sound._id]=setTimeout(self._ended.bind(self,sound),timeout);}// Mark the node as paused.
-if(self._webAudio&&!loop){sound._paused=true;sound._ended=true;sound._seek=sound._start||0;sound._rateSeek=0;self._clearTimer(sound._id);// Clean up the buffer source.
-self._cleanBuffer(sound._node);// Attempt to auto-suspend AudioContext if no sounds are still playing.
-Howler._autoSuspend();}// When using a sprite, end the track.
-if(!self._webAudio&&!loop){self.stop(sound._id,true);}return self;},/**
-     * Clear the end timer for a sound playback.
-     * @param  {Number} id The sound ID.
-     * @return {Howl}
-     */_clearTimer:function _clearTimer(id){var self=this;if(self._endTimers[id]){// Clear the timeout or remove the ended listener.
-if(typeof self._endTimers[id]!=='function'){clearTimeout(self._endTimers[id]);}else{var sound=self._soundById(id);if(sound&&sound._node){sound._node.removeEventListener('ended',self._endTimers[id],false);}}delete self._endTimers[id];}return self;},/**
-     * Return the sound identified by this ID, or return null.
-     * @param  {Number} id Sound ID
-     * @return {Object}    Sound object or null.
-     */_soundById:function _soundById(id){var self=this;// Loop through all sounds and find the one with this ID.
-for(var i=0;i<self._sounds.length;i++){if(id===self._sounds[i]._id){return self._sounds[i];}}return null;},/**
-     * Return an inactive sound from the pool or create a new one.
-     * @return {Sound} Sound playback object.
-     */_inactiveSound:function _inactiveSound(){var self=this;self._drain();// Find the first inactive node to recycle.
-for(var i=0;i<self._sounds.length;i++){if(self._sounds[i]._ended){return self._sounds[i].reset();}}// If no inactive node was found, create a new one.
-return new Sound(self);},/**
-     * Drain excess inactive sounds from the pool.
-     */_drain:function _drain(){var self=this;var limit=self._pool;var cnt=0;var i=0;// If there are less sounds than the max pool size, we are done.
-if(self._sounds.length<limit){return;}// Count the number of inactive sounds.
-for(i=0;i<self._sounds.length;i++){if(self._sounds[i]._ended){cnt++;}}// Remove excess inactive sounds, going in reverse order.
-for(i=self._sounds.length-1;i>=0;i--){if(cnt<=limit){return;}if(self._sounds[i]._ended){// Disconnect the audio source when using Web Audio.
-if(self._webAudio&&self._sounds[i]._node){self._sounds[i]._node.disconnect(0);}// Remove sounds until we have the pool size.
-self._sounds.splice(i,1);cnt--;}}},/**
-     * Get all ID's from the sounds pool.
-     * @param  {Number} id Only return one ID if one is passed.
-     * @return {Array}    Array of IDs.
-     */_getSoundIds:function _getSoundIds(id){var self=this;if(typeof id==='undefined'){var ids=[];for(var i=0;i<self._sounds.length;i++){ids.push(self._sounds[i]._id);}return ids;}else{return[id];}},/**
-     * Load the sound back into the buffer source.
-     * @param  {Sound} sound The sound object to work with.
-     * @return {Howl}
-     */_refreshBuffer:function _refreshBuffer(sound){var self=this;// Setup the buffer source for playback.
-sound._node.bufferSource=Howler.ctx.createBufferSource();sound._node.bufferSource.buffer=cache[self._src];// Connect to the correct node.
-if(sound._panner){sound._node.bufferSource.connect(sound._panner);}else{sound._node.bufferSource.connect(sound._node);}// Setup looping and playback rate.
-sound._node.bufferSource.loop=sound._loop;if(sound._loop){sound._node.bufferSource.loopStart=sound._start||0;sound._node.bufferSource.loopEnd=sound._stop||0;}sound._node.bufferSource.playbackRate.setValueAtTime(sound._rate,Howler.ctx.currentTime);return self;},/**
-     * Prevent memory leaks by cleaning up the buffer source after playback.
-     * @param  {Object} node Sound's audio node containing the buffer source.
-     * @return {Howl}
-     */_cleanBuffer:function _cleanBuffer(node){var self=this;var isIOS=Howler._navigator&&Howler._navigator.vendor.indexOf('Apple')>=0;if(Howler._scratchBuffer&&node.bufferSource){node.bufferSource.onended=null;node.bufferSource.disconnect(0);if(isIOS){try{node.bufferSource.buffer=Howler._scratchBuffer;}catch(e){}}}node.bufferSource=null;return self;},/**
-     * Set the source to a 0-second silence to stop any downloading (except in IE).
-     * @param  {Object} node Audio node to clear.
-     */_clearSound:function _clearSound(node){var checkIE=/MSIE |Trident\//.test(Howler._navigator&&Howler._navigator.userAgent);if(!checkIE){node.src='data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';}}};/** Single Sound Methods **/ /***************************************************************************/ /**
-   * Setup the sound object, which each node attached to a Howl group is contained in.
-   * @param {Object} howl The Howl parent group.
-   */var Sound=function Sound(howl){this._parent=howl;this.init();};Sound.prototype={/**
-     * Initialize a new Sound object.
-     * @return {Sound}
-     */init:function init(){var self=this;var parent=self._parent;// Setup the default parameters.
-self._muted=parent._muted;self._loop=parent._loop;self._volume=parent._volume;self._rate=parent._rate;self._seek=0;self._paused=true;self._ended=true;self._sprite='__default';// Generate a unique ID for this sound.
-self._id=++Howler._counter;// Add itself to the parent's pool.
-parent._sounds.push(self);// Create the new node.
-self.create();return self;},/**
-     * Create and setup a new sound object, whether HTML5 Audio or Web Audio.
-     * @return {Sound}
-     */create:function create(){var self=this;var parent=self._parent;var volume=Howler._muted||self._muted||self._parent._muted?0:self._volume;if(parent._webAudio){// Create the gain node for controlling volume (the source will connect to this).
-self._node=typeof Howler.ctx.createGain==='undefined'?Howler.ctx.createGainNode():Howler.ctx.createGain();self._node.gain.setValueAtTime(volume,Howler.ctx.currentTime);self._node.paused=true;self._node.connect(Howler.masterGain);}else if(!Howler.noAudio){// Get an unlocked Audio object from the pool.
-self._node=Howler._obtainHtml5Audio();// Listen for errors (http://dev.w3.org/html5/spec-author-view/spec.html#mediaerror).
-self._errorFn=self._errorListener.bind(self);self._node.addEventListener('error',self._errorFn,false);// Listen for 'canplaythrough' event to let us know the sound is ready.
-self._loadFn=self._loadListener.bind(self);self._node.addEventListener(Howler._canPlayEvent,self._loadFn,false);// Listen for the 'ended' event on the sound to account for edge-case where
-// a finite sound has a duration of Infinity.
-self._endFn=self._endListener.bind(self);self._node.addEventListener('ended',self._endFn,false);// Setup the new audio node.
-self._node.src=parent._src;self._node.preload=parent._preload===true?'auto':parent._preload;self._node.volume=volume*Howler.volume();// Begin loading the source.
-self._node.load();}return self;},/**
-     * Reset the parameters of this sound to the original state (for recycle).
-     * @return {Sound}
-     */reset:function reset(){var self=this;var parent=self._parent;// Reset all of the parameters of this sound.
-self._muted=parent._muted;self._loop=parent._loop;self._volume=parent._volume;self._rate=parent._rate;self._seek=0;self._rateSeek=0;self._paused=true;self._ended=true;self._sprite='__default';// Generate a new ID so that it isn't confused with the previous sound.
-self._id=++Howler._counter;return self;},/**
-     * HTML5 Audio error listener callback.
-     */_errorListener:function _errorListener(){var self=this;// Fire an error event and pass back the code.
-self._parent._emit('loaderror',self._id,self._node.error?self._node.error.code:0);// Clear the event listener.
-self._node.removeEventListener('error',self._errorFn,false);},/**
-     * HTML5 Audio canplaythrough listener callback.
-     */_loadListener:function _loadListener(){var self=this;var parent=self._parent;// Round up the duration to account for the lower precision in HTML5 Audio.
-parent._duration=Math.ceil(self._node.duration*10)/10;// Setup a sprite if none is defined.
-if(Object.keys(parent._sprite).length===0){parent._sprite={__default:[0,parent._duration*1000]};}if(parent._state!=='loaded'){parent._state='loaded';parent._emit('load');parent._loadQueue();}// Clear the event listener.
-self._node.removeEventListener(Howler._canPlayEvent,self._loadFn,false);},/**
-     * HTML5 Audio ended listener callback.
-     */_endListener:function _endListener(){var self=this;var parent=self._parent;// Only handle the `ended`` event if the duration is Infinity.
-if(parent._duration===Infinity){// Update the parent duration to match the real audio duration.
-// Round up the duration to account for the lower precision in HTML5 Audio.
-parent._duration=Math.ceil(self._node.duration*10)/10;// Update the sprite that corresponds to the real duration.
-if(parent._sprite.__default[1]===Infinity){parent._sprite.__default[1]=parent._duration*1000;}// Run the regular ended method.
-parent._ended(self);}// Clear the event listener since the duration is now correct.
-self._node.removeEventListener('ended',self._endFn,false);}};/** Helper Methods **/ /***************************************************************************/var cache={};/**
-   * Buffer a sound from URL, Data URI or cache and decode to audio source (Web Audio API).
-   * @param  {Howl} self
-   */var loadBuffer=function loadBuffer(self){var url=self._src;// Check if the buffer has already been cached and use it instead.
-if(cache[url]){// Set the duration from the cache.
-self._duration=cache[url].duration;// Load the sound into this Howl.
-loadSound(self);return;}if(/^data:[^;]+;base64,/.test(url)){// Decode the base64 data URI without XHR, since some browsers don't support it.
-var data=atob(url.split(',')[1]);var dataView=new Uint8Array(data.length);for(var i=0;i<data.length;++i){dataView[i]=data.charCodeAt(i);}decodeAudioData(dataView.buffer,self);}else{// Load the buffer from the URL.
-var xhr=new XMLHttpRequest();xhr.open(self._xhr.method,url,true);xhr.withCredentials=self._xhr.withCredentials;xhr.responseType='arraybuffer';// Apply any custom headers to the request.
-if(self._xhr.headers){Object.keys(self._xhr.headers).forEach(function(key){xhr.setRequestHeader(key,self._xhr.headers[key]);});}xhr.onload=function(){// Make sure we get a successful response back.
-var code=(xhr.status+'')[0];if(code!=='0'&&code!=='2'&&code!=='3'){self._emit('loaderror',null,'Failed loading audio file with status: '+xhr.status+'.');return;}decodeAudioData(xhr.response,self);};xhr.onerror=function(){// If there is an error, switch to HTML5 Audio.
-if(self._webAudio){self._html5=true;self._webAudio=false;self._sounds=[];delete cache[url];self.load();}};safeXhrSend(xhr);}};/**
-   * Send the XHR request wrapped in a try/catch.
-   * @param  {Object} xhr XHR to send.
-   */var safeXhrSend=function safeXhrSend(xhr){try{xhr.send();}catch(e){xhr.onerror();}};/**
-   * Decode audio data from an array buffer.
-   * @param  {ArrayBuffer} arraybuffer The audio data.
-   * @param  {Howl}        self
-   */var decodeAudioData=function decodeAudioData(arraybuffer,self){// Fire a load error if something broke.
-var error=function error(){self._emit('loaderror',null,'Decoding audio data failed.');};// Load the sound on success.
-var success=function success(buffer){if(buffer&&self._sounds.length>0){cache[self._src]=buffer;loadSound(self,buffer);}else{error();}};// Decode the buffer into an audio source.
-if(typeof Promise!=='undefined'&&Howler.ctx.decodeAudioData.length===1){Howler.ctx.decodeAudioData(arraybuffer).then(success)["catch"](error);}else{Howler.ctx.decodeAudioData(arraybuffer,success,error);}};/**
-   * Sound is now loaded, so finish setting everything up and fire the loaded event.
-   * @param  {Howl} self
-   * @param  {Object} buffer The decoded buffer sound source.
-   */var loadSound=function loadSound(self,buffer){// Set the duration.
-if(buffer&&!self._duration){self._duration=buffer.duration;}// Setup a sprite if none is defined.
-if(Object.keys(self._sprite).length===0){self._sprite={__default:[0,self._duration*1000]};}// Fire the loaded event.
-if(self._state!=='loaded'){self._state='loaded';self._emit('load');self._loadQueue();}};/**
-   * Setup the audio context when available, or switch to HTML5 Audio mode.
-   */var setupAudioContext=function setupAudioContext(){// If we have already detected that Web Audio isn't supported, don't run this step again.
-if(!Howler.usingWebAudio){return;}// Check if we are using Web Audio and setup the AudioContext if we are.
-try{if(typeof AudioContext!=='undefined'){Howler.ctx=new AudioContext();}else if(typeof webkitAudioContext!=='undefined'){Howler.ctx=new webkitAudioContext();}else{Howler.usingWebAudio=false;}}catch(e){Howler.usingWebAudio=false;}// If the audio context creation still failed, set using web audio to false.
-if(!Howler.ctx){Howler.usingWebAudio=false;}// Check if a webview is being used on iOS8 or earlier (rather than the browser).
-// If it is, disable Web Audio as it causes crashing.
-var iOS=/iP(hone|od|ad)/.test(Howler._navigator&&Howler._navigator.platform);var appVersion=Howler._navigator&&Howler._navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/);var version=appVersion?parseInt(appVersion[1],10):null;if(iOS&&version&&version<9){var safari=/safari/.test(Howler._navigator&&Howler._navigator.userAgent.toLowerCase());if(Howler._navigator&&!safari){Howler.usingWebAudio=false;}}// Create and expose the master GainNode when using Web Audio (useful for plugins or advanced usage).
-if(Howler.usingWebAudio){Howler.masterGain=typeof Howler.ctx.createGain==='undefined'?Howler.ctx.createGainNode():Howler.ctx.createGain();Howler.masterGain.gain.setValueAtTime(Howler._muted?0:Howler._volume,Howler.ctx.currentTime);Howler.masterGain.connect(Howler.ctx.destination);}// Re-run the setup on Howler.
-Howler._setup();};// Add support for CommonJS libraries such as browserify.
-{exports.Howler=Howler;exports.Howl=Howl;}// Add to global in Node.js (for testing, etc).
-if(typeof commonjsGlobal!=='undefined'){commonjsGlobal.HowlerGlobal=HowlerGlobal;commonjsGlobal.Howler=Howler;commonjsGlobal.Howl=Howl;commonjsGlobal.Sound=Sound;}else if(typeof window!=='undefined'){// Define globally in case AMD is not available or unused.
-window.HowlerGlobal=HowlerGlobal;window.Howler=Howler;window.Howl=Howl;window.Sound=Sound;}})();/*!
- *  Spatial Plugin - Adds support for stereo and 3D audio where Web Audio is supported.
- *  
- *  howler.js v2.2.3
- *  howlerjs.com
- *
- *  (c) 2013-2020, James Simpson of GoldFire Studios
- *  goldfirestudios.com
- *
- *  MIT License
- */(function(){// Setup default properties.
-HowlerGlobal.prototype._pos=[0,0,0];HowlerGlobal.prototype._orientation=[0,0,-1,0,1,0];/** Global Methods **/ /***************************************************************************/ /**
-   * Helper method to update the stereo panning position of all current Howls.
-   * Future Howls will not use this value unless explicitly set.
-   * @param  {Number} pan A value of -1.0 is all the way left and 1.0 is all the way right.
-   * @return {Howler/Number}     Self or current stereo panning value.
-   */HowlerGlobal.prototype.stereo=function(pan){var self=this;// Stop right here if not using Web Audio.
-if(!self.ctx||!self.ctx.listener){return self;}// Loop through all Howls and update their stereo panning.
-for(var i=self._howls.length-1;i>=0;i--){self._howls[i].stereo(pan);}return self;};/**
-   * Get/set the position of the listener in 3D cartesian space. Sounds using
-   * 3D position will be relative to the listener's position.
-   * @param  {Number} x The x-position of the listener.
-   * @param  {Number} y The y-position of the listener.
-   * @param  {Number} z The z-position of the listener.
-   * @return {Howler/Array}   Self or current listener position.
-   */HowlerGlobal.prototype.pos=function(x,y,z){var self=this;// Stop right here if not using Web Audio.
-if(!self.ctx||!self.ctx.listener){return self;}// Set the defaults for optional 'y' & 'z'.
-y=typeof y!=='number'?self._pos[1]:y;z=typeof z!=='number'?self._pos[2]:z;if(typeof x==='number'){self._pos=[x,y,z];if(typeof self.ctx.listener.positionX!=='undefined'){self.ctx.listener.positionX.setTargetAtTime(self._pos[0],Howler.ctx.currentTime,0.1);self.ctx.listener.positionY.setTargetAtTime(self._pos[1],Howler.ctx.currentTime,0.1);self.ctx.listener.positionZ.setTargetAtTime(self._pos[2],Howler.ctx.currentTime,0.1);}else{self.ctx.listener.setPosition(self._pos[0],self._pos[1],self._pos[2]);}}else{return self._pos;}return self;};/**
-   * Get/set the direction the listener is pointing in the 3D cartesian space.
-   * A front and up vector must be provided. The front is the direction the
-   * face of the listener is pointing, and up is the direction the top of the
-   * listener is pointing. Thus, these values are expected to be at right angles
-   * from each other.
-   * @param  {Number} x   The x-orientation of the listener.
-   * @param  {Number} y   The y-orientation of the listener.
-   * @param  {Number} z   The z-orientation of the listener.
-   * @param  {Number} xUp The x-orientation of the top of the listener.
-   * @param  {Number} yUp The y-orientation of the top of the listener.
-   * @param  {Number} zUp The z-orientation of the top of the listener.
-   * @return {Howler/Array}     Returns self or the current orientation vectors.
-   */HowlerGlobal.prototype.orientation=function(x,y,z,xUp,yUp,zUp){var self=this;// Stop right here if not using Web Audio.
-if(!self.ctx||!self.ctx.listener){return self;}// Set the defaults for optional 'y' & 'z'.
-var or=self._orientation;y=typeof y!=='number'?or[1]:y;z=typeof z!=='number'?or[2]:z;xUp=typeof xUp!=='number'?or[3]:xUp;yUp=typeof yUp!=='number'?or[4]:yUp;zUp=typeof zUp!=='number'?or[5]:zUp;if(typeof x==='number'){self._orientation=[x,y,z,xUp,yUp,zUp];if(typeof self.ctx.listener.forwardX!=='undefined'){self.ctx.listener.forwardX.setTargetAtTime(x,Howler.ctx.currentTime,0.1);self.ctx.listener.forwardY.setTargetAtTime(y,Howler.ctx.currentTime,0.1);self.ctx.listener.forwardZ.setTargetAtTime(z,Howler.ctx.currentTime,0.1);self.ctx.listener.upX.setTargetAtTime(xUp,Howler.ctx.currentTime,0.1);self.ctx.listener.upY.setTargetAtTime(yUp,Howler.ctx.currentTime,0.1);self.ctx.listener.upZ.setTargetAtTime(zUp,Howler.ctx.currentTime,0.1);}else{self.ctx.listener.setOrientation(x,y,z,xUp,yUp,zUp);}}else{return or;}return self;};/** Group Methods **/ /***************************************************************************/ /**
-   * Add new properties to the core init.
-   * @param  {Function} _super Core init method.
-   * @return {Howl}
-   */Howl.prototype.init=function(_super){return function(o){var self=this;// Setup user-defined default properties.
-self._orientation=o.orientation||[1,0,0];self._stereo=o.stereo||null;self._pos=o.pos||null;self._pannerAttr={coneInnerAngle:typeof o.coneInnerAngle!=='undefined'?o.coneInnerAngle:360,coneOuterAngle:typeof o.coneOuterAngle!=='undefined'?o.coneOuterAngle:360,coneOuterGain:typeof o.coneOuterGain!=='undefined'?o.coneOuterGain:0,distanceModel:typeof o.distanceModel!=='undefined'?o.distanceModel:'inverse',maxDistance:typeof o.maxDistance!=='undefined'?o.maxDistance:10000,panningModel:typeof o.panningModel!=='undefined'?o.panningModel:'HRTF',refDistance:typeof o.refDistance!=='undefined'?o.refDistance:1,rolloffFactor:typeof o.rolloffFactor!=='undefined'?o.rolloffFactor:1};// Setup event listeners.
-self._onstereo=o.onstereo?[{fn:o.onstereo}]:[];self._onpos=o.onpos?[{fn:o.onpos}]:[];self._onorientation=o.onorientation?[{fn:o.onorientation}]:[];// Complete initilization with howler.js core's init function.
-return _super.call(this,o);};}(Howl.prototype.init);/**
-   * Get/set the stereo panning of the audio source for this sound or all in the group.
-   * @param  {Number} pan  A value of -1.0 is all the way left and 1.0 is all the way right.
-   * @param  {Number} id (optional) The sound ID. If none is passed, all in group will be updated.
-   * @return {Howl/Number}    Returns self or the current stereo panning value.
-   */Howl.prototype.stereo=function(pan,id){var self=this;// Stop right here if not using Web Audio.
-if(!self._webAudio){return self;}// If the sound hasn't loaded, add it to the load queue to change stereo pan when capable.
-if(self._state!=='loaded'){self._queue.push({event:'stereo',action:function action(){self.stereo(pan,id);}});return self;}// Check for PannerStereoNode support and fallback to PannerNode if it doesn't exist.
-var pannerType=typeof Howler.ctx.createStereoPanner==='undefined'?'spatial':'stereo';// Setup the group's stereo panning if no ID is passed.
-if(typeof id==='undefined'){// Return the group's stereo panning if no parameters are passed.
-if(typeof pan==='number'){self._stereo=pan;self._pos=[pan,0,0];}else{return self._stereo;}}// Change the streo panning of one or all sounds in group.
-var ids=self._getSoundIds(id);for(var i=0;i<ids.length;i++){// Get the sound.
-var sound=self._soundById(ids[i]);if(sound){if(typeof pan==='number'){sound._stereo=pan;sound._pos=[pan,0,0];if(sound._node){// If we are falling back, make sure the panningModel is equalpower.
-sound._pannerAttr.panningModel='equalpower';// Check if there is a panner setup and create a new one if not.
-if(!sound._panner||!sound._panner.pan){setupPanner(sound,pannerType);}if(pannerType==='spatial'){if(typeof sound._panner.positionX!=='undefined'){sound._panner.positionX.setValueAtTime(pan,Howler.ctx.currentTime);sound._panner.positionY.setValueAtTime(0,Howler.ctx.currentTime);sound._panner.positionZ.setValueAtTime(0,Howler.ctx.currentTime);}else{sound._panner.setPosition(pan,0,0);}}else{sound._panner.pan.setValueAtTime(pan,Howler.ctx.currentTime);}}self._emit('stereo',sound._id);}else{return sound._stereo;}}}return self;};/**
-   * Get/set the 3D spatial position of the audio source for this sound or group relative to the global listener.
-   * @param  {Number} x  The x-position of the audio source.
-   * @param  {Number} y  The y-position of the audio source.
-   * @param  {Number} z  The z-position of the audio source.
-   * @param  {Number} id (optional) The sound ID. If none is passed, all in group will be updated.
-   * @return {Howl/Array}    Returns self or the current 3D spatial position: [x, y, z].
-   */Howl.prototype.pos=function(x,y,z,id){var self=this;// Stop right here if not using Web Audio.
-if(!self._webAudio){return self;}// If the sound hasn't loaded, add it to the load queue to change position when capable.
-if(self._state!=='loaded'){self._queue.push({event:'pos',action:function action(){self.pos(x,y,z,id);}});return self;}// Set the defaults for optional 'y' & 'z'.
-y=typeof y!=='number'?0:y;z=typeof z!=='number'?-0.5:z;// Setup the group's spatial position if no ID is passed.
-if(typeof id==='undefined'){// Return the group's spatial position if no parameters are passed.
-if(typeof x==='number'){self._pos=[x,y,z];}else{return self._pos;}}// Change the spatial position of one or all sounds in group.
-var ids=self._getSoundIds(id);for(var i=0;i<ids.length;i++){// Get the sound.
-var sound=self._soundById(ids[i]);if(sound){if(typeof x==='number'){sound._pos=[x,y,z];if(sound._node){// Check if there is a panner setup and create a new one if not.
-if(!sound._panner||sound._panner.pan){setupPanner(sound,'spatial');}if(typeof sound._panner.positionX!=='undefined'){sound._panner.positionX.setValueAtTime(x,Howler.ctx.currentTime);sound._panner.positionY.setValueAtTime(y,Howler.ctx.currentTime);sound._panner.positionZ.setValueAtTime(z,Howler.ctx.currentTime);}else{sound._panner.setPosition(x,y,z);}}self._emit('pos',sound._id);}else{return sound._pos;}}}return self;};/**
-   * Get/set the direction the audio source is pointing in the 3D cartesian coordinate
-   * space. Depending on how direction the sound is, based on the `cone` attributes,
-   * a sound pointing away from the listener can be quiet or silent.
-   * @param  {Number} x  The x-orientation of the source.
-   * @param  {Number} y  The y-orientation of the source.
-   * @param  {Number} z  The z-orientation of the source.
-   * @param  {Number} id (optional) The sound ID. If none is passed, all in group will be updated.
-   * @return {Howl/Array}    Returns self or the current 3D spatial orientation: [x, y, z].
-   */Howl.prototype.orientation=function(x,y,z,id){var self=this;// Stop right here if not using Web Audio.
-if(!self._webAudio){return self;}// If the sound hasn't loaded, add it to the load queue to change orientation when capable.
-if(self._state!=='loaded'){self._queue.push({event:'orientation',action:function action(){self.orientation(x,y,z,id);}});return self;}// Set the defaults for optional 'y' & 'z'.
-y=typeof y!=='number'?self._orientation[1]:y;z=typeof z!=='number'?self._orientation[2]:z;// Setup the group's spatial orientation if no ID is passed.
-if(typeof id==='undefined'){// Return the group's spatial orientation if no parameters are passed.
-if(typeof x==='number'){self._orientation=[x,y,z];}else{return self._orientation;}}// Change the spatial orientation of one or all sounds in group.
-var ids=self._getSoundIds(id);for(var i=0;i<ids.length;i++){// Get the sound.
-var sound=self._soundById(ids[i]);if(sound){if(typeof x==='number'){sound._orientation=[x,y,z];if(sound._node){// Check if there is a panner setup and create a new one if not.
-if(!sound._panner){// Make sure we have a position to setup the node with.
-if(!sound._pos){sound._pos=self._pos||[0,0,-0.5];}setupPanner(sound,'spatial');}if(typeof sound._panner.orientationX!=='undefined'){sound._panner.orientationX.setValueAtTime(x,Howler.ctx.currentTime);sound._panner.orientationY.setValueAtTime(y,Howler.ctx.currentTime);sound._panner.orientationZ.setValueAtTime(z,Howler.ctx.currentTime);}else{sound._panner.setOrientation(x,y,z);}}self._emit('orientation',sound._id);}else{return sound._orientation;}}}return self;};/**
-   * Get/set the panner node's attributes for a sound or group of sounds.
-   * This method can optionall take 0, 1 or 2 arguments.
-   *   pannerAttr() -> Returns the group's values.
-   *   pannerAttr(id) -> Returns the sound id's values.
-   *   pannerAttr(o) -> Set's the values of all sounds in this Howl group.
-   *   pannerAttr(o, id) -> Set's the values of passed sound id.
-   *
-   *   Attributes:
-   *     coneInnerAngle - (360 by default) A parameter for directional audio sources, this is an angle, in degrees,
-   *                      inside of which there will be no volume reduction.
-   *     coneOuterAngle - (360 by default) A parameter for directional audio sources, this is an angle, in degrees,
-   *                      outside of which the volume will be reduced to a constant value of `coneOuterGain`.
-   *     coneOuterGain - (0 by default) A parameter for directional audio sources, this is the gain outside of the
-   *                     `coneOuterAngle`. It is a linear value in the range `[0, 1]`.
-   *     distanceModel - ('inverse' by default) Determines algorithm used to reduce volume as audio moves away from
-   *                     listener. Can be `linear`, `inverse` or `exponential.
-   *     maxDistance - (10000 by default) The maximum distance between source and listener, after which the volume
-   *                   will not be reduced any further.
-   *     refDistance - (1 by default) A reference distance for reducing volume as source moves further from the listener.
-   *                   This is simply a variable of the distance model and has a different effect depending on which model
-   *                   is used and the scale of your coordinates. Generally, volume will be equal to 1 at this distance.
-   *     rolloffFactor - (1 by default) How quickly the volume reduces as source moves from listener. This is simply a
-   *                     variable of the distance model and can be in the range of `[0, 1]` with `linear` and `[0, ∞]`
-   *                     with `inverse` and `exponential`.
-   *     panningModel - ('HRTF' by default) Determines which spatialization algorithm is used to position audio.
-   *                     Can be `HRTF` or `equalpower`.
-   *
-   * @return {Howl/Object} Returns self or current panner attributes.
-   */Howl.prototype.pannerAttr=function(){var self=this;var args=arguments;var o,id,sound;// Stop right here if not using Web Audio.
-if(!self._webAudio){return self;}// Determine the values based on arguments.
-if(args.length===0){// Return the group's panner attribute values.
-return self._pannerAttr;}else if(args.length===1){if(_typeof3(args[0])==='object'){o=args[0];// Set the grou's panner attribute values.
-if(typeof id==='undefined'){if(!o.pannerAttr){o.pannerAttr={coneInnerAngle:o.coneInnerAngle,coneOuterAngle:o.coneOuterAngle,coneOuterGain:o.coneOuterGain,distanceModel:o.distanceModel,maxDistance:o.maxDistance,refDistance:o.refDistance,rolloffFactor:o.rolloffFactor,panningModel:o.panningModel};}self._pannerAttr={coneInnerAngle:typeof o.pannerAttr.coneInnerAngle!=='undefined'?o.pannerAttr.coneInnerAngle:self._coneInnerAngle,coneOuterAngle:typeof o.pannerAttr.coneOuterAngle!=='undefined'?o.pannerAttr.coneOuterAngle:self._coneOuterAngle,coneOuterGain:typeof o.pannerAttr.coneOuterGain!=='undefined'?o.pannerAttr.coneOuterGain:self._coneOuterGain,distanceModel:typeof o.pannerAttr.distanceModel!=='undefined'?o.pannerAttr.distanceModel:self._distanceModel,maxDistance:typeof o.pannerAttr.maxDistance!=='undefined'?o.pannerAttr.maxDistance:self._maxDistance,refDistance:typeof o.pannerAttr.refDistance!=='undefined'?o.pannerAttr.refDistance:self._refDistance,rolloffFactor:typeof o.pannerAttr.rolloffFactor!=='undefined'?o.pannerAttr.rolloffFactor:self._rolloffFactor,panningModel:typeof o.pannerAttr.panningModel!=='undefined'?o.pannerAttr.panningModel:self._panningModel};}}else{// Return this sound's panner attribute values.
-sound=self._soundById(parseInt(args[0],10));return sound?sound._pannerAttr:self._pannerAttr;}}else if(args.length===2){o=args[0];id=parseInt(args[1],10);}// Update the values of the specified sounds.
-var ids=self._getSoundIds(id);for(var i=0;i<ids.length;i++){sound=self._soundById(ids[i]);if(sound){// Merge the new values into the sound.
-var pa=sound._pannerAttr;pa={coneInnerAngle:typeof o.coneInnerAngle!=='undefined'?o.coneInnerAngle:pa.coneInnerAngle,coneOuterAngle:typeof o.coneOuterAngle!=='undefined'?o.coneOuterAngle:pa.coneOuterAngle,coneOuterGain:typeof o.coneOuterGain!=='undefined'?o.coneOuterGain:pa.coneOuterGain,distanceModel:typeof o.distanceModel!=='undefined'?o.distanceModel:pa.distanceModel,maxDistance:typeof o.maxDistance!=='undefined'?o.maxDistance:pa.maxDistance,refDistance:typeof o.refDistance!=='undefined'?o.refDistance:pa.refDistance,rolloffFactor:typeof o.rolloffFactor!=='undefined'?o.rolloffFactor:pa.rolloffFactor,panningModel:typeof o.panningModel!=='undefined'?o.panningModel:pa.panningModel};// Update the panner values or create a new panner if none exists.
-var panner=sound._panner;if(panner){panner.coneInnerAngle=pa.coneInnerAngle;panner.coneOuterAngle=pa.coneOuterAngle;panner.coneOuterGain=pa.coneOuterGain;panner.distanceModel=pa.distanceModel;panner.maxDistance=pa.maxDistance;panner.refDistance=pa.refDistance;panner.rolloffFactor=pa.rolloffFactor;panner.panningModel=pa.panningModel;}else{// Make sure we have a position to setup the node with.
-if(!sound._pos){sound._pos=self._pos||[0,0,-0.5];}// Create a new panner node.
-setupPanner(sound,'spatial');}}}return self;};/** Single Sound Methods **/ /***************************************************************************/ /**
-   * Add new properties to the core Sound init.
-   * @param  {Function} _super Core Sound init method.
-   * @return {Sound}
-   */Sound.prototype.init=function(_super){return function(){var self=this;var parent=self._parent;// Setup user-defined default properties.
-self._orientation=parent._orientation;self._stereo=parent._stereo;self._pos=parent._pos;self._pannerAttr=parent._pannerAttr;// Complete initilization with howler.js core Sound's init function.
-_super.call(this);// If a stereo or position was specified, set it up.
-if(self._stereo){parent.stereo(self._stereo);}else if(self._pos){parent.pos(self._pos[0],self._pos[1],self._pos[2],self._id);}};}(Sound.prototype.init);/**
-   * Override the Sound.reset method to clean up properties from the spatial plugin.
-   * @param  {Function} _super Sound reset method.
-   * @return {Sound}
-   */Sound.prototype.reset=function(_super){return function(){var self=this;var parent=self._parent;// Reset all spatial plugin properties on this sound.
-self._orientation=parent._orientation;self._stereo=parent._stereo;self._pos=parent._pos;self._pannerAttr=parent._pannerAttr;// If a stereo or position was specified, set it up.
-if(self._stereo){parent.stereo(self._stereo);}else if(self._pos){parent.pos(self._pos[0],self._pos[1],self._pos[2],self._id);}else if(self._panner){// Disconnect the panner.
-self._panner.disconnect(0);self._panner=undefined;parent._refreshBuffer(self);}// Complete resetting of the sound.
-return _super.call(this);};}(Sound.prototype.reset);/** Helper Methods **/ /***************************************************************************/ /**
-   * Create a new panner node and save it on the sound.
-   * @param  {Sound} sound Specific sound to setup panning on.
-   * @param {String} type Type of panner to create: 'stereo' or 'spatial'.
-   */var setupPanner=function setupPanner(sound,type){type=type||'spatial';// Create the new panner node.
-if(type==='spatial'){sound._panner=Howler.ctx.createPanner();sound._panner.coneInnerAngle=sound._pannerAttr.coneInnerAngle;sound._panner.coneOuterAngle=sound._pannerAttr.coneOuterAngle;sound._panner.coneOuterGain=sound._pannerAttr.coneOuterGain;sound._panner.distanceModel=sound._pannerAttr.distanceModel;sound._panner.maxDistance=sound._pannerAttr.maxDistance;sound._panner.refDistance=sound._pannerAttr.refDistance;sound._panner.rolloffFactor=sound._pannerAttr.rolloffFactor;sound._panner.panningModel=sound._pannerAttr.panningModel;if(typeof sound._panner.positionX!=='undefined'){sound._panner.positionX.setValueAtTime(sound._pos[0],Howler.ctx.currentTime);sound._panner.positionY.setValueAtTime(sound._pos[1],Howler.ctx.currentTime);sound._panner.positionZ.setValueAtTime(sound._pos[2],Howler.ctx.currentTime);}else{sound._panner.setPosition(sound._pos[0],sound._pos[1],sound._pos[2]);}if(typeof sound._panner.orientationX!=='undefined'){sound._panner.orientationX.setValueAtTime(sound._orientation[0],Howler.ctx.currentTime);sound._panner.orientationY.setValueAtTime(sound._orientation[1],Howler.ctx.currentTime);sound._panner.orientationZ.setValueAtTime(sound._orientation[2],Howler.ctx.currentTime);}else{sound._panner.setOrientation(sound._orientation[0],sound._orientation[1],sound._orientation[2]);}}else{sound._panner=Howler.ctx.createStereoPanner();sound._panner.pan.setValueAtTime(sound._stereo,Howler.ctx.currentTime);}sound._panner.connect(sound._node);// Update the connections.
-if(!sound._paused){sound._parent.pause(sound._id,true).play(sound._id,true);}};})();});/**
- * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
- */var Gig=/*#__PURE__*/function(_bachJs_esm$Music){_inherits3(Gig,_bachJs_esm$Music);var _super31=_createSuper2(Gig);/**
-   * @param {Object} source track represented in Bach.JSON
-   * @param {Audio} [audio] track audio
-   * @param {boolean} [loop] enable track looping
-   * @param {Object} [timer] alternative timer API (default is monotonic and uses raf)
-   * @param {Function} [now] custom monotonic timer function
-   * @param {Object} [howler] optional Howler configuration overrides
-   * @param {boolean} [stateless] enable stateless/monotonic cursor
-   */function Gig(){var _this38;var _ref101=arguments.length>0&&arguments[0]!==undefined?arguments[0]:{},source=_ref101.source,audio=_ref101.audio,loop=_ref101.loop,timer=_ref101.timer,now=_ref101.now,howler$1=_ref101.howler,_ref101$stateless=_ref101.stateless,stateless=_ref101$stateless===void 0?true:_ref101$stateless;_classCallCheck3(this,Gig);_this38=_super31.call(this,source);_events["default"].call(_assertThisInitialized2(_this38));_this38.audio=audio;_this38.loop=loop;// this.tempo  = tempo // FIXME: Sync with Howler's rate property
-_this38.timer=timer||clock;_this38.now=now||performanceNow;_this38.index=0;_this38.times={origin:null,last:null,beat:null,paused:null};_this38.status=STATUS.pristine;_this38.stateless=stateless;if(audio){_this38.music=new howler.Howl(Object.assign({src:audio,loop:loop},howler$1));}// this.listen()
-return _this38;}/**
-   * Provides the beat found at the track's cursor
-   *
-   * @returns {Object}
-   */_createClass3(Gig,[{key:"state",get:function get(){return this.at(this.cursor);}/**
-   * Provides beat found one step behind the track's cursor
-   *
-   * @returns {Object}
-   */},{key:"prev",get:function get(){return this.at(this.cursor-1);}/**
-   * Provides the beat found one step ahead of the track's cursor
-   *
-   * @returns {Object}
-   */},{key:"next",get:function get(){return this.at(this.cursor+1);}/**
-   * Determines the cyclic/relative step beat index.
-   *
-   * @returns {Number}
-   */},{key:"cursor",get:function get(){return this.durations.cyclic(this.current);}/**
-   * Determines the global/absolute step beat index.
-   * When stateless the step is calculated based on monotonic time.
-   * When stateful the step is calculated based on current index value.
-   *
-   * @returns {Number}
-   */},{key:"current",get:function get(){return!this.stateless?this.index:Math.floor(this.place);}/**
-   * Determines the global/absolute step beat based on elapsed monotonic time.
-   *
-   * @returns {Number}
-   */},{key:"place",get:function get(){return this.durations.cast(this.elapsed,{is:'ms',as:'step'});}/**
-   * Centralized getter that allows for custom monotomic timer functions (`now`).
-   * Defaults to process.hrtime polyfill when a custom `now` function is not provided.
-   *
-   * @returns {Number}
-   */},{key:"time",get:function get(){return typeof this.now==='function'&&this.clock?this.now(this.clock):performanceNow();}/**
-   * Determines the base bach-js duration unit to use based on stateless config.
-   *
-   * Can be provided to cast as `is`: `gig.durations.cast(4, { is: gig.unit })`.
-   *
-   * @returns {String}
-   */},{key:"unit",get:function get(){return this.stateless?'ms':'step';}/**
-   * Determines if the cursor is on the first step
-   *
-   * @returns {Boolean}
-   */},{key:"first",get:function get(){return this.cursor===0;}/**
-   * Determines if the cursor is on the least measure, beat, or section
-   *
-   * @returns {Boolean}
-   */},{key:"last",get:function get(){return this.cursor===this.durations.total;}/**
-   * Determines if the track is actively playing
-   *
-   * @returns {Boolean}
-   */},{key:"playing",get:function get(){return this.status===STATUS.playing;}/**
-   * Determines if the track is paused
-   *
-   * @returns {Boolean}
-   */},{key:"paused",get:function get(){return this.status===STATUS.paused;}/**
-   * Determines if the track's music is loading (when audible).
-   */},{key:"loading",get:function get(){return this.audible?this.music.state()==='loading':false;}/**
-   * Determines if the track's music is loaded (when audible).
-   */},{key:"loaded",get:function get(){return this.audible?this.music.state()==='loaded':this.active;}/**
-   * Determines if the track is pristine (i.e. hasn't changed status since initialization).
-   *
-   * @returns {Boolean}
-   */},{key:"pristine",get:function get(){return this.status===STATUS.pristine;}/**
-   * Determines if the track is actively playing (currently the same as .playing)
-   *
-   * @returns {Boolean}
-   */},{key:"active",get:function get(){return ACTIVE_STATUS.includes(this.status);}/**
-   * Determines if the track is inactive
-   *
-   * @returns {Boolean}
-   */},{key:"inactive",get:function get(){return INACTIVE_STATUS.includes(this.status);}/**
-   * Determines if the track is expired
-   *
-   * @returns {Boolean}
-   */},{key:"expired",get:function get(){return EXPIRED_STATUS.includes(this.status);}/**
-   * Determines if the track has a status where baseline playback can be started
-   *
-   * @returns {Boolean}
-   */},{key:"based",get:function get(){return BASED_STATUS.includes(this.status);}/**
-   * The total duration of the track's run-time (in milliseconds).
-   *
-   * @returns {Number}
-   */},{key:"duration",get:function get(){return this.durations.cast(this.durations.total,{as:'ms'});}/**
-   * Establishes the origin time of run-time playback, skewed to pause time.
-   *
-   * @returns {Number}
-   */},{key:"origin",get:function get(){return this.times.origin!=null?this.times.origin+this.skew:null;}/**
-   * Determines the base time of the current step.
-   *
-   * @returns {Number}
-   */},{key:"basis",get:function get(){return(this.times.last||this.times.origin)+this.skew;}/**
-   * The amount of time that's elapsed since the track started playing.
-   *
-   * Used to determine the cursor step when Gig is set to stateless.
-   *
-   * @returns {Float}
-   */},{key:"elapsed",get:function get(){return this.origin!=null?this.time-this.origin:0;}/**
-   * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
-   *
-   * @returns {Number}
-   */},{key:"progress",get:function get(){return this.completion%1;}/**
-   * The run-time completion of the entire track (values exceeding 1 mean the track has looped).
-   *
-   * @returns {Number}
-   */},{key:"completion",get:function get(){return this.elapsed/this.duration;}/**
-   * The run-time progression (0-1) of the current step.
-   *
-   * @returns {Number}
-   */},{key:"stride",get:function get(){return(this.time-this.basis)/this.interval;}/**
-   * Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
-   *
-   * @returns {Number}
-   */},{key:"skew",get:function get(){return this.time-(this.times.paused||this.time);}/**
-   * Determines the amount of run-time drift, in ms, of the current beat.
-   *
-   * @returns {Number}
-   */},{key:"drift",get:function get(){return this.times.beat?this.times.beat+this.skew-this.moment(this.state.beat.index):0;}/**
-   * Provides an offset, in steps, based on the total number of iterations.
-   * Useful for adjusting between absolute (global) and relative (cyclic) duration calculations.
-   *
-   * @returns {Number}
-   */},{key:"offset",get:function get(){return this.durations.total*Math.floor(this.iterations);}/**
-   * Whether or not the Gig object has associated audio.
-   *
-   * @returns {Boolean}
-   */},{key:"audible",get:function get(){return this.audio&&this.music;}/**
-   * Whether or not the track is configured to loop playback indefinitely.
-   *
-   * @returns {Boolean}
-   */},{key:"loops",get:function get(){return this.loop||!!(this.audible&&this.music.loop());}/**
-   * Changes loop configuration of track and associated audio.
-   *
-   * @returns {Boolean}
-   */,set:function set(loop){this.loop=loop;if(this.audible){this.music.loop(loop);}}/**
-   * Determines the number of times the track has already looped/repeated.
-   *
-   * @returns {Number}
-   */},{key:"iterations",get:function get(){return this.current/this.durations.total;}/**
-   * Determines if the track has already looped/repeated.
-   *
-   * @returns {Boolean}
-   */},{key:"repeating",get:function get(){return this.iterations>=1;}/**
-   * Specifies the limit of steps in a track
-   *
-   * @returns {Number}
-   */},{key:"limit",get:function get(){return this.loops?Math.Infinity:this.durations.total;}/**
-   * Provides the index of the current pulse beat under the context of a looping metronome.
-   *
-   * @returns {Number}
-   */},{key:"metronome",get:function get(){return this.durations.metronize(this.elapsed,{is:'ms'});}/**
-   * Determines if the current step's beat has changed from the previous step's beat.
-   *
-   * @returns {Boolean}
-   */},{key:"updated",get:function get(){return this.state.beat.index!==this.prev.beat.index;}/**
-   * Synchronizes track with the Howler API
-   */},{key:"listen",value:function listen(){this.music.on('play',this.play);this.music.on('pause',this.pause);this.music.on('stop',this.stop);this.music.on('rate',this.rate);this.music.on('seek',this.seek);}/**
-   * Instantiates a new clock which acts as the primary synchronization mechanism
-   */ // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
-},{key:"start",value:function start(){this.clock=this.timer(this);this.times.origin=this.time;this.emit('start');this.is('playing');}/**
-   * Loads the audio data and kicks off the synchronization clock
-   */},{key:"play",value:function play(){var _this39=this;if(this.audible){var ready=function ready(){_this39.start();_this39.music.play();_this39.emit('play');};if(this.loaded){ready();}else{this.music.on('load',ready);}}else{this.start();this.emit('play');}return this;}/**
-   * Stops the audio and the synchronization clock (no resume)
-   */},{key:"stop",value:function stop(){if(!this.clock)return this;if(this.audible){this.music.stop();this.music.unload();}this.clock.stop();this.emit('stop');return this.reset().is('stopped');}/**
-   * Pauses the audio and the synchronization clock
-   */},{key:"pause",value:function pause(){if(this.audible)this.music.pause();this.times.paused=this.time;this.clock.pause();this.emit('pause');return this.is('paused');}/**
-   * Resumes the audio and the synchronization clock
-   */},{key:"resume",value:function resume(){if(this.audible)this.music.play();var skew=this.time-this.times.paused;this.times.origin+=skew;this.times.last+=skew;this.times.beat+=skew;this.times.paused=null;this.clock.resume();this.emit('resume');return this.is('playing');}/**
-   * Toggles playback based on the current run-time status.
-   */},{key:"toggle",value:function toggle(){if(this.based){return this.play();}else if(this.playing){return this.pause();}else if(this.paused){return this.resume();}return this;}/**
-   * Mutes the track audio
-   */},{key:"mute",value:function mute(){if(this.audible)this.music.mute();this.emit('mute');return this;}/**
-   * Seek to a new position in the track
-   *
-   * @param {Number} duration time value
-   * @param {String} [is] duration unit
-   */},{key:"seek",value:function seek(duration){var is=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'step';if(this.audible){var _max=this.durations.cast(this.music.duration(),{is:'second',as:is});var time=this.durations.cyclic(duration,{is:is,as:'second',max:_max});this.music.seek(time);}this.travel(duration,is);this.emit('seek');return this;}/**
-   * Invokes the action to perform on each interval and emits
-   * various events based on current state of the step.
-   * Only emits beat events if the beat has updated from the previous step.
-   */},{key:"step",value:function step(){this.index=this.times.last?this.index+1:0;var state=this.state,interval=this.interval;var beat=state.beat,play=state.play,stop=state.stop;this.emit('step',state);if(stop.length){this.emit('stop:beat',stop);}if(!this.stateless&&!this.updated){return this;}if(this.repeating&&this.first){if(this.loops){this.emit('loop',state);}else{return this.kill();}}if(play.length){this.emit('play:beat',beat);this.times.beat=this.time;}this.times.last=this.time;return this;}/**
-   * Converts a localized/cyclic duration into its globalized version.
-   * The inverse of this conversion can be achieved with Gig.durations.cyclic().
-   *
-   * @param {Number} duration time value
-   * @param {Object} [lens] unit conversions
-   * @returns {Number}
-   */},{key:"globalize",value:function globalize(duration){var _ref102=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{},_ref102$is=_ref102.is,is=_ref102$is===void 0?'step':_ref102$is,_ref102$as=_ref102.as,as=_ref102$as===void 0?'step':_ref102$as;return this.durations.cyclic(duration,{is:is,as:as})+this.durations.cast(this.offset,{as:as});}/**
-   * Determines when a duration occurs (in milliseconds, by default) globalized to the run-time origin.
-   *
-   * @param {Number} duration time value
-   * @param {Object} [lens] unit conversions
-   * @returns {Number}
-   */},{key:"moment",value:function moment(duration){var _ref103=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{},_ref103$is=_ref103.is,is=_ref103$is===void 0?'step':_ref103$is,_ref103$as=_ref103.as,as=_ref103$as===void 0?'ms':_ref103$as;var time=this.globalize(duration,{is:is,as:'ms'});var moment=this.origin+time;return this.durations.cast(moment,{is:'ms',as:as});}/**
-   * Moves playback cursor to the provided duration.
-   *
-   * @param {Number} duration time value
-   * @param {String} [is] duration unit
-   */},{key:"travel",value:function travel(duration){var is=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'step';if(this.based){console.warn('[gig:travel] Currently unsupported on tracks that have not started playing');return this;}var step=this.durations.cast(duration,{is:is,as:'step'});var time=this.durations.cast(step,{as:'ms'});var index=Math.floor(step);var last=this.durations.cast(index,{as:'ms'});var state=this.at(index);this.index=index;this.times.last=last;this.times.origin=this.time-this.skew-time;this.times.beat=this.moment(state.beat.index);// TODO: Determine if we want to emit a different event here instead for greater specificity and control
-// TODO: Consider if we should emit `stop` as well on the beat we traveled from
-if(state.play.length&&this.paused){this.emit('play:beat',state.beat);}return this;}/**
-   * Resets the cursor indices to their initial unplayed state
-   */},{key:"reset",value:function reset(){this.index=0;this.times={origin:null,last:null,paused:null,beat:null};return this;}/**
-   * Removes all active event listeners
-   *
-   * TODO: Consider automatically stopping the track here if already running
-   */ // purge
-},{key:"clear",value:function clear(){return this.removeAllListeners();}/**
-   * Immediately stops the track, its clock, and removes all active event listeners
-   */},{key:"kill",value:function kill(){return this.stop().clear().is('killed');}/**
-   * Updates the playing status of the track (idempotent, no reactivity or side-effects).
-   */},{key:"is",value:function is(status){var key=status.toLowerCase();var value=STATUS[key];if(!value)throw Error("".concat(key," is an invalid status"));this.status=value;this.emit('update:status',key);return this;}/**
-   * Determines if the playing status matches the provided status key string.
-   *
-   * @returns {Boolean}
-   */},{key:"check",value:function check(status){var key=status.toLowerCase();var value=STATUS[key];return this.status===value;}}]);return Gig;}(bachJs_esm.Music);_exports2.Gig=Gig;Object.assign(bachJs_esm.Music.prototype,_events["default"].prototype);var STATUS={pristine:Symbol('pristine'),playing:Symbol('playing'),stopped:Symbol('stopped'),paused:Symbol('paused'),killed:Symbol('killed')};_exports2.STATUS=STATUS;var ACTIVE_STATUS=[STATUS.playing];_exports2.ACTIVE_STATUS=ACTIVE_STATUS;var INACTIVE_STATUS=[STATUS.pristine,STATUS.stopped,STATUS.paused,STATUS.killed];_exports2.INACTIVE_STATUS=INACTIVE_STATUS;var EXPIRED_STATUS=[STATUS.stopped,STATUS.killed];_exports2.EXPIRED_STATUS=EXPIRED_STATUS;var BASED_STATUS=[STATUS.pristine,STATUS.stopped,STATUS.killed];_exports2.BASED_STATUS=BASED_STATUS;var CONSTANTS=Gig.CONSTANTS={STATUS:STATUS,ACTIVE_STATUS:ACTIVE_STATUS,INACTIVE_STATUS:INACTIVE_STATUS,EXPIRED_STATUS:EXPIRED_STATUS,BASED_STATUS:BASED_STATUS};_exports2.CONSTANTS=CONSTANTS;});
+   * @param {Gig} gig parent instance provided on construction
+   * @param {function} [tick] optional function to call on each tick of the clock
+   */
+  // TODO: Allow clock to be configured to optionally cancelAnimationFrame(interval) on each tick
+  var clock = function clock(gig, tick) {
+    var last = null;
+    var interval = null;
+    var loop = function loop() {
+      var time = gig.time,
+        cursor = gig.cursor,
+        expired = gig.expired;
+      if (expired) return cancel();
+      if (cursor !== last) {
+        last = cursor;
+        gig.step();
+      }
+      if (typeof tick === 'function') {
+        tick(gig, time);
+      }
+      interval = (0, _raf["default"])(loop);
+    };
+    var cancel = function cancel() {
+      _raf["default"].cancel(interval);
+      interval = null;
+    };
+    var timer = {
+      play: function play() {
+        loop();
+      },
+      pause: function pause() {
+        cancel();
+      },
+      resume: function resume() {
+        timer.play();
+      },
+      stop: function stop() {
+        last = null;
+        cancel();
+      }
+    };
+    timer.play();
+    return timer;
+  };
+
+  /**
+   * Represents a musical song/track that can be synchronized with arbitrary behavior and data in real-time
+   */
+  _exports.clock = clock;
+  var Gig = /*#__PURE__*/function (_Music) {
+    _inherits(Gig, _Music);
+    var _super = _createSuper(Gig);
+    /**
+     * @param {Object} source track represented in Bach.JSON
+     * @param {Audio} [audio] track audio
+     * @param {boolean} [loop] enable track looping
+     * @param {Object} [timer] alternative timer API (default is monotonic and uses raf)
+     * @param {Function} [now] custom monotonic timer function
+     * @param {Object} [howler] optional Howler configuration overrides
+     * @param {boolean} [stateless] enable stateless/monotonic cursor
+     */
+    function Gig() {
+      var _this;
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        source = _ref.source,
+        audio = _ref.audio,
+        loop = _ref.loop,
+        timer = _ref.timer,
+        now = _ref.now,
+        howler = _ref.howler,
+        _ref$stateless = _ref.stateless,
+        stateless = _ref$stateless === void 0 ? true : _ref$stateless;
+      _classCallCheck(this, Gig);
+      _this = _super.call(this, source);
+      _events["default"].call(_assertThisInitialized(_this));
+      _this.audio = audio;
+      _this.loop = loop;
+      // this.tempo  = tempo // FIXME: Sync with Howler's rate property
+      _this.timer = timer || clock;
+      _this.now = now || _performanceNow["default"];
+      _this.index = 0;
+      _this.times = {
+        origin: null,
+        last: null,
+        beat: null,
+        paused: null
+      };
+      _this.status = STATUS.pristine;
+      _this.stateless = stateless;
+      if (audio) {
+        _this.music = new _howler.Howl(Object.assign({
+          src: audio,
+          ctx: true,
+          loop: loop
+        }, howler));
+      }
+
+      // this.listen()
+      return _this;
+    }
+
+    /**
+     * Provides the beat found at the track's cursor
+     *
+     * @returns {Object}
+     */
+    _createClass(Gig, [{
+      key: "state",
+      get: function get() {
+        return this.at(this.cursor);
+      }
+
+      /**
+       * Provides beat found one step behind the track's cursor
+       *
+       * @returns {Object}
+       */
+    }, {
+      key: "prev",
+      get: function get() {
+        return this.at(this.cursor - 1);
+      }
+
+      /**
+       * Provides the beat found one step ahead of the track's cursor
+       *
+       * @returns {Object}
+       */
+    }, {
+      key: "next",
+      get: function get() {
+        return this.at(this.cursor + 1);
+      }
+
+      /**
+       * Determines the cyclic/relative step beat index.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "cursor",
+      get: function get() {
+        return this.durations.cyclic(this.current);
+      }
+
+      /**
+       * Determines the global/absolute step beat index.
+       * When stateless the step is calculated based on monotonic time.
+       * When stateful the step is calculated based on current index value.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "current",
+      get: function get() {
+        return !this.stateless ? this.index : Math.floor(this.place);
+      }
+
+      /**
+       * Determines the global/absolute step beat based on elapsed monotonic time.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "place",
+      get: function get() {
+        return this.durations.cast(this.elapsed, {
+          is: 'ms',
+          as: 'step'
+        });
+      }
+
+      /**
+       * Centralized getter that allows for custom monotomic timer functions (`now`).
+       * Defaults to process.hrtime polyfill when a custom `now` function is not provided.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "time",
+      get: function get() {
+        return typeof this.now === 'function' && this.clock ? this.now(this.clock) : (0, _performanceNow["default"])();
+      }
+
+      /**
+       * Determines the base bach-js duration unit to use based on stateless config.
+       *
+       * Can be provided to cast as `is`: `gig.durations.cast(4, { is: gig.unit })`.
+       *
+       * @returns {String}
+       */
+    }, {
+      key: "unit",
+      get: function get() {
+        return this.stateless ? 'ms' : 'step';
+      }
+
+      /**
+       * Determines if the cursor is on the first step
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "first",
+      get: function get() {
+        return this.cursor === 0;
+      }
+
+      /**
+       * Determines if the cursor is on the least measure, beat, or section
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "last",
+      get: function get() {
+        return this.cursor === this.durations.total;
+      }
+
+      /**
+       * Determines if the track is actively playing
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "playing",
+      get: function get() {
+        return this.status === STATUS.playing;
+      }
+
+      /**
+       * Determines if the track is paused
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "paused",
+      get: function get() {
+        return this.status === STATUS.paused;
+      }
+
+      /**
+       * Determines if the track's music is loading (when audible).
+       */
+    }, {
+      key: "loading",
+      get: function get() {
+        return this.audible ? this.music.state() === 'loading' : false;
+      }
+
+      /**
+       * Determines if the track's music is loaded (when audible).
+       */
+    }, {
+      key: "loaded",
+      get: function get() {
+        return this.audible ? this.music.state() === 'loaded' : this.active;
+      }
+
+      /**
+       * Determines if the track is pristine (i.e. hasn't changed status since initialization).
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "pristine",
+      get: function get() {
+        return this.status === STATUS.pristine;
+      }
+
+      /**
+       * Determines if the track is actively playing (currently the same as .playing)
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "active",
+      get: function get() {
+        return ACTIVE_STATUS.includes(this.status);
+      }
+
+      /**
+       * Determines if the track is inactive
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "inactive",
+      get: function get() {
+        return INACTIVE_STATUS.includes(this.status);
+      }
+
+      /**
+       * Determines if the track is expired
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "expired",
+      get: function get() {
+        return EXPIRED_STATUS.includes(this.status);
+      }
+
+      /**
+       * Determines if the track has a status where baseline playback can be started
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "based",
+      get: function get() {
+        return BASED_STATUS.includes(this.status);
+      }
+
+      /**
+       * The total duration of the track's run-time (in milliseconds).
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "duration",
+      get: function get() {
+        return this.durations.cast(this.durations.total, {
+          as: 'ms'
+        });
+      }
+
+      /**
+       * Establishes the origin time of run-time playback, skewed to pause time.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "origin",
+      get: function get() {
+        return this.times.origin != null ? this.times.origin + this.skew : null;
+      }
+
+      /**
+       * Determines the base time of the current step.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "basis",
+      get: function get() {
+        return (this.times.last || this.times.origin) + this.skew;
+      }
+
+      /**
+       * The amount of time that's elapsed since the track started playing.
+       *
+       * Used to determine the cursor step when Gig is set to stateless.
+       *
+       * @returns {Float}
+       */
+    }, {
+      key: "elapsed",
+      get: function get() {
+        return this.origin != null ? this.time - this.origin : 0;
+      }
+
+      /**
+       * The progress of the track's audio (in milliseconds), modulated to 1 (e.g. 1.2 -> 0.2).
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "progress",
+      get: function get() {
+        return this.completion % 1;
+      }
+
+      /**
+       * The run-time completion of the entire track (values exceeding 1 mean the track has looped).
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "completion",
+      get: function get() {
+        return this.elapsed / this.duration;
+      }
+
+      /**
+       * The run-time progression (0-1) of the current step.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "stride",
+      get: function get() {
+        return (this.time - this.basis) / this.interval;
+      }
+
+      /**
+       * Determines the skew, in ms, of the clock. Returns 0 if no pause time exists.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "skew",
+      get: function get() {
+        return this.time - (this.times.paused || this.time);
+      }
+
+      /**
+       * Determines the amount of run-time drift, in ms, of the current beat.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "drift",
+      get: function get() {
+        return this.times.beat ? this.times.beat + this.skew - this.moment(this.state.beat.index) : 0;
+      }
+
+      /**
+       * Provides an offset, in steps, based on the total number of iterations.
+       * Useful for adjusting between absolute (global) and relative (cyclic) duration calculations.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "offset",
+      get: function get() {
+        return this.durations.total * Math.floor(this.iterations);
+      }
+
+      /**
+       * Whether or not the Gig object has associated audio.
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "audible",
+      get: function get() {
+        return this.audio && this.music;
+      }
+
+      /**
+       * Whether or not the track is configured to loop playback indefinitely.
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "loops",
+      get: function get() {
+        return this.loop || !!(this.audible && this.music.loop());
+      }
+
+      /**
+       * Changes loop configuration of track and associated audio.
+       *
+       * @returns {Boolean}
+       */,
+      set: function set(loop) {
+        this.loop = loop;
+        if (this.audible) {
+          this.music.loop(loop);
+        }
+      }
+
+      /**
+       * Determines the number of times the track has already looped/repeated.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "iterations",
+      get: function get() {
+        return this.current / this.durations.total;
+      }
+
+      /**
+       * Determines if the track has already looped/repeated.
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "repeating",
+      get: function get() {
+        return this.iterations >= 1;
+      }
+
+      /**
+       * Specifies the limit of steps in a track
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "limit",
+      get: function get() {
+        return this.loops ? Math.Infinity : this.durations.total;
+      }
+
+      /**
+       * Provides the index of the current pulse beat under the context of a looping metronome.
+       *
+       * @returns {Number}
+       */
+    }, {
+      key: "metronome",
+      get: function get() {
+        return this.durations.metronize(this.elapsed, {
+          is: 'ms'
+        });
+      }
+
+      /**
+       * Determines if the current step's beat has changed from the previous step's beat.
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "updated",
+      get: function get() {
+        return this.state.beat.index !== this.prev.beat.index;
+      }
+
+      /**
+       * Synchronizes track with the Howler API
+       */
+    }, {
+      key: "listen",
+      value: function listen() {
+        this.music.on('play', this.play);
+        this.music.on('pause', this.pause);
+        this.music.on('stop', this.stop);
+        this.music.on('rate', this.rate);
+        this.music.on('seek', this.seek);
+      }
+
+      /**
+       * Instantiates a new clock which acts as the primary synchronization mechanism
+       */
+      // FIXME: This needs to return a Promise, that way `play` only gets called after the timer has been invoked
+    }, {
+      key: "start",
+      value: function start() {
+        this.clock = this.timer(this);
+        this.times.origin = this.time;
+        this.emit('start');
+        this.is('playing');
+      }
+
+      /**
+       * Loads the audio data and kicks off the synchronization clock
+       */
+    }, {
+      key: "play",
+      value: function play() {
+        var _this2 = this;
+        if (this.audible) {
+          var ready = function ready() {
+            if (_this2.check('killed')) {
+              return;
+            }
+            _this2.start();
+            _this2.music.play();
+            _this2.emit('play');
+          };
+          if (this.loaded) {
+            ready();
+          } else {
+            this.music.on('load', ready);
+          }
+        } else {
+          this.start();
+          this.emit('play');
+        }
+        return this;
+      }
+
+      /**
+       * Stops the audio and the synchronization clock (no resume)
+       */
+    }, {
+      key: "stop",
+      value: function stop() {
+        if (!this.clock) return this;
+        if (this.audible) {
+          this.music.stop();
+          this.music.unload();
+        }
+        this.clock.stop();
+        this.emit('stop');
+        return this.reset().is('stopped');
+      }
+
+      /**
+       * Pauses the audio and the synchronization clock
+       */
+    }, {
+      key: "pause",
+      value: function pause() {
+        if (this.audible) this.music.pause();
+        this.times.paused = this.time;
+        this.clock.pause();
+        this.emit('pause');
+        return this.is('paused');
+      }
+
+      /**
+       * Resumes the audio and the synchronization clock
+       */
+    }, {
+      key: "resume",
+      value: function resume() {
+        if (this.audible) this.music.play();
+        var skew = this.time - this.times.paused;
+        this.times.origin += skew;
+        this.times.last += skew;
+        this.times.beat += skew;
+        this.times.paused = null;
+        this.clock.resume();
+        this.emit('resume');
+        return this.is('playing');
+      }
+
+      /**
+       * Toggles playback based on the current run-time status.
+       */
+    }, {
+      key: "toggle",
+      value: function toggle() {
+        if (this.based) {
+          return this.play();
+        } else if (this.playing) {
+          return this.pause();
+        } else if (this.paused) {
+          return this.resume();
+        }
+        return this;
+      }
+
+      /**
+       * Mutes the track audio
+       */
+    }, {
+      key: "mute",
+      value: function mute() {
+        if (this.audible) this.music.mute();
+        this.emit('mute');
+        return this;
+      }
+
+      /**
+       * Seek to a new position in the track
+       *
+       * @param {Number} duration time value
+       * @param {String} [is] duration unit
+       */
+    }, {
+      key: "seek",
+      value: function seek(duration) {
+        var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+        if (this.audible) {
+          var max = this.durations.cast(this.music.duration(), {
+            is: 'second',
+            as: is
+          });
+          var time = this.durations.cyclic(duration, {
+            is: is,
+            as: 'second',
+            max: max
+          });
+          this.music.seek(time);
+        }
+        this.travel(duration, is);
+        this.emit('seek');
+        return this;
+      }
+
+      /**
+       * Invokes the action to perform on each interval and emits
+       * various events based on current state of the step.
+       * Only emits beat events if the beat has updated from the previous step.
+       */
+    }, {
+      key: "step",
+      value: function step() {
+        this.index = this.times.last ? this.index + 1 : 0;
+        var state = this.state,
+          interval = this.interval;
+        var beat = state.beat,
+          play = state.play,
+          stop = state.stop;
+        this.emit('step', state);
+        if (stop.length) {
+          this.emit('stop:beat', stop);
+        }
+        if (!this.stateless && !this.updated) {
+          return this;
+        }
+        if (this.repeating && this.first) {
+          if (this.loops) {
+            this.emit('loop', state);
+          } else {
+            return this.kill();
+          }
+        }
+        if (play.length) {
+          this.emit('play:beat', beat);
+          this.times.beat = this.time;
+        }
+        this.times.last = this.time;
+        return this;
+      }
+
+      /**
+       * Converts a localized/relative/cyclic duration into its globalized/absolute version.
+       * The inverse of this conversion can be achieved with Gig.durations.cyclic().
+       *
+       * @param {Number} duration time value
+       * @param {Object} [lens] unit conversions
+       * @returns {Number}
+       */
+    }, {
+      key: "globalize",
+      value: function globalize(duration) {
+        var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref2$is = _ref2.is,
+          is = _ref2$is === void 0 ? 'step' : _ref2$is,
+          _ref2$as = _ref2.as,
+          as = _ref2$as === void 0 ? 'step' : _ref2$as;
+        return this.durations.cyclic(duration, {
+          is: is,
+          as: as
+        }) + this.durations.cast(this.offset, {
+          as: as
+        });
+      }
+
+      /**
+       * Determines when a duration occurs (in milliseconds, by default) globalized to the run-time origin.
+       *
+       * @param {Number} duration time value
+       * @param {Object} [lens] unit conversions
+       * @returns {Number}
+       */
+    }, {
+      key: "moment",
+      value: function moment(duration) {
+        var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref3$is = _ref3.is,
+          is = _ref3$is === void 0 ? 'step' : _ref3$is,
+          _ref3$as = _ref3.as,
+          as = _ref3$as === void 0 ? 'ms' : _ref3$as;
+        var time = this.globalize(duration, {
+          is: is,
+          as: 'ms'
+        });
+        var moment = this.origin + time;
+        return this.durations.cast(moment, {
+          is: 'ms',
+          as: as
+        });
+      }
+
+      /**
+       * Moves playback cursor to the provided duration.
+       *
+       * @param {Number} duration time value
+       * @param {String} [is] duration unit
+       */
+    }, {
+      key: "travel",
+      value: function travel(duration) {
+        var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+        if (this.based) {
+          console.warn('[gig:travel] Currently unsupported on tracks that have not started playing');
+          return this;
+        }
+        var step = this.durations.cast(duration, {
+          is: is,
+          as: 'step'
+        });
+        var time = this.durations.cast(step, {
+          as: 'ms'
+        });
+        var index = Math.floor(step);
+        var last = this.durations.cast(index, {
+          as: 'ms'
+        });
+        var state = this.at(index);
+        this.index = index;
+        this.times.last = last;
+        this.times.origin = this.time - this.skew - time;
+        this.times.beat = this.moment(state.beat.index) - this.skew;
+        // TODO: Probably also need to adjust times.paused if already paused (seems to be causing a sporadic bug in gig.drift when traveling while paused)
+
+        // TODO: Determine if we want to emit a different event here instead for greater specificity and control
+        // TODO: Consider if we should emit `stop` as well on the beat we traveled from
+        if (state.play.length && this.paused) {
+          this.emit('play:beat', state.beat);
+        }
+        return this;
+      }
+
+      /**
+       * Resets the cursor indices to their initial unplayed state
+       */
+    }, {
+      key: "reset",
+      value: function reset() {
+        this.index = 0;
+        this.times = {
+          origin: null,
+          last: null,
+          paused: null,
+          beat: null
+        };
+        return this;
+      }
+
+      /**
+       * Removes all active event listeners
+       *
+       * TODO: Consider automatically stopping the track here if already running
+       */
+      // purge
+    }, {
+      key: "clear",
+      value: function clear() {
+        this.reset();
+        this.music = null;
+        return this.removeAllListeners();
+      }
+
+      /**
+       * Immediately stops the track, its clock, and removes all active event listeners
+       */
+    }, {
+      key: "kill",
+      value: function kill() {
+        return this.stop().clear().is('killed');
+      }
+
+      /**
+       * Updates the playing status of the track (idempotent, no reactivity or side-effects).
+       */
+    }, {
+      key: "is",
+      value: function is(status) {
+        var key = status.toLowerCase();
+        var value = STATUS[key];
+        if (!value) throw Error("".concat(key, " is an invalid status"));
+        this.status = value;
+        this.emit('update:status', key);
+        return this;
+      }
+
+      /**
+       * Determines if the playing status matches the provided status key string.
+       *
+       * @returns {Boolean}
+       */
+    }, {
+      key: "check",
+      value: function check(status) {
+        var key = status.toLowerCase();
+        var value = STATUS[key];
+        return this.status === value;
+      }
+    }]);
+    return Gig;
+  }(_bachJs.Music);
+  _exports.Gig = Gig;
+  Object.assign(_bachJs.Music.prototype, _events["default"].prototype);
+  var STATUS = {
+    pristine: Symbol('pristine'),
+    playing: Symbol('playing'),
+    stopped: Symbol('stopped'),
+    paused: Symbol('paused'),
+    killed: Symbol('killed')
+  };
+  _exports.STATUS = STATUS;
+  var ACTIVE_STATUS = [STATUS.playing];
+  _exports.ACTIVE_STATUS = ACTIVE_STATUS;
+  var INACTIVE_STATUS = [STATUS.pristine, STATUS.stopped, STATUS.paused, STATUS.killed];
+  _exports.INACTIVE_STATUS = INACTIVE_STATUS;
+  var EXPIRED_STATUS = [STATUS.stopped, STATUS.killed];
+  _exports.EXPIRED_STATUS = EXPIRED_STATUS;
+  var BASED_STATUS = [STATUS.pristine, STATUS.stopped, STATUS.killed];
+  _exports.BASED_STATUS = BASED_STATUS;
+  var CONSTANTS = Gig.CONSTANTS = {
+    STATUS: STATUS,
+    ACTIVE_STATUS: ACTIVE_STATUS,
+    INACTIVE_STATUS: INACTIVE_STATUS,
+    EXPIRED_STATUS: EXPIRED_STATUS,
+    BASED_STATUS: BASED_STATUS
+  };
+  _exports.CONSTANTS = CONSTANTS;
+});
 //# sourceMappingURL=gig.umd.js.map
