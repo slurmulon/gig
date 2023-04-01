@@ -160,6 +160,7 @@ export class Gig extends Track {
     return this.status === STATUS.paused
   }
 
+
   /**
    * Determines if the track's music is loading (when audible).
    */
@@ -429,7 +430,7 @@ export class Gig extends Track {
       if (this.loaded) {
         ready()
       } else {
-        this.music.on('load', ready)
+        this.music.once('load', ready)
       }
     } else {
       this.start()
@@ -474,19 +475,28 @@ export class Gig extends Track {
    * Resumes the audio and the synchronization clock
    */
   resume () {
-    if (this.audible) this.music.play()
+    const invoke = () => {
+      const skew = this.time - this.times.paused
 
-    const skew = this.time - this.times.paused
+      this.times.origin += skew
+      this.times.last += skew
+      this.times.beat += skew
+      this.times.paused = null
 
-    this.times.origin += skew
-    this.times.last += skew
-    this.times.beat += skew
-    this.times.paused = null
+      this.clock.resume()
+      this.emit('resume')
 
-    this.clock.resume()
-    this.emit('resume')
+      this.is('playing')
+    }
 
-    return this.is('playing')
+    if (this.audible) {
+      this.music.once('play', invoke)
+      this.music.play()
+
+      return this
+    }
+
+    return invoke()
   }
 
   /**
