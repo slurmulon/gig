@@ -597,7 +597,7 @@
           if (this.loaded) {
             ready();
           } else {
-            this.music.on('load', ready);
+            this.music.once('load', ready);
           }
         } else {
           this.start();
@@ -641,15 +641,23 @@
     }, {
       key: "resume",
       value: function resume() {
-        if (this.audible) this.music.play();
-        var skew = this.time - this.times.paused;
-        this.times.origin += skew;
-        this.times.last += skew;
-        this.times.beat += skew;
-        this.times.paused = null;
-        this.clock.resume();
-        this.emit('resume');
-        return this.is('playing');
+        var _this3 = this;
+        var invoke = function invoke() {
+          var skew = _this3.time - _this3.times.paused;
+          _this3.times.origin += skew;
+          _this3.times.last += skew;
+          _this3.times.beat += skew;
+          _this3.times.paused = null;
+          _this3.clock.resume();
+          _this3.emit('resume');
+          _this3.is('playing');
+        };
+        if (this.audible) {
+          this.music.once('play', invoke);
+          this.music.play();
+          return this;
+        }
+        return invoke();
       }
 
       /**
