@@ -270,9 +270,11 @@ setTimeout(() => {
 }, 1000)
 ```
 
-#### `moment(duration, is)`
+#### `moment(duration, lens)`
 
 Determines when a duration occurs (in milliseconds) relative to the run-time origin.
+
+By default, `lens` is configured to convert from `step` to `ms`.
 
 ```js
 import { Gig } from 'gig'
@@ -280,10 +282,81 @@ import source from './lullaby.bach.json'
 
 const gig = new Gig({ source })
 
-gig.moment(4, 'step')
-gig.moment(12, 'pulse')
-gig.moment(2.5, 'bar')
-gig.moment(30, 'second')
+gig.moment(4)
+gig.moment(4, { as: 'step' }) // same as above
+gig.moment(4, { is: 'step' }) // same as above
+gig.moment(12, { as: 'pulse' })
+gig.moment(2.5, { is: 'step', as: 'bar' })
+gig.moment(30, { as: 'second' })
+```
+
+#### `globalize(duration, lens)`
+
+Converts a localized/relative/cyclic duration into its globalized/absolute version.
+
+The inverse of this conversion can be achieved with `Gig.durations.cyclic(duration)`.
+
+By default, `lens` is configured to convert from `step` to `step` (identity/no-op).
+
+```js
+import { Gig } from 'gig'
+import source from './lullaby.bach.json'
+
+const gig = new Gig({ source })
+
+gig.globalize(0) // 0 steps
+gig.globalize(0, { is: 'step' }) // 0 steps - same as above
+gig.globalize(0, { as: 'step' }) // 0 steps - same as above
+gig.globalize(2, { as: 'ms' }) // 500ms
+
+// Wait for song to loop once - assume track duration is 4 seconds (16 steps, 8 pulses, 2 bars)
+setTimeout(() => {
+  gig.globalize(0) // 16 steps
+  gig.globalize(0, { as: 'ms' }) // 4000ms
+  gig.globalize(2) // 18 steps
+  gig.globalize(2, { as: 'ms' }) // 4500ms
+  gig.globalize(2, { as: 'step' }) // 18 steps
+  gig.globalize(1, { is: 'bar', as : 'step' }) // 24 steps
+}, gig.duration)
+```
+
+#### `seek(duration, is)`
+
+Seeks playback to a new target position (duration) in the track.
+
+Target positions that exceed the total duration of the track are wrapped via `gig.durations.cyclic`.
+
+Automatically synchronizes audio, adjusts for drift, and emits state change events (`seek`, `play:beat`).
+
+Can be called at run-time, but is currently unsupported on tracks that have not started playing yet (`gig.based === true`).
+
+```js
+import { Gig } from 'gig'
+import source from './lullaby.bach.json'
+
+// Total Duration:
+// 16 steps, 8 pulses, 2 bars, 4000 ms, 4 seconds
+const gig = new Gig({ source })
+
+gig.play()
+
+gig.seek(2) // Jump 500ms (2 steps, 1 pulse)
+gig.seek(2, 'step') // Jump 500ms (short-hand for above)
+gig.seek(500, 'ms') // Jump 500ms 
+gig.seek(1, 'pulse') // Jump 500ms (1 pulse)
+
+gig.seek(gig.duration) // Jump to end of track
+gig.seek(gig.duration * 2) // Jump to end of track, 2nd loop
+gig.seek(0) // Jump to start of track
+gig.seek(8500, 'ms') // Jump 8500ms, safely looping to beginning of track
+
+// Seeking is achieved using absolute/global durations, so your input `duration` is must be pre-globalized.
+// If you want to seek to a relative/local duration instead, you simply need to globalize it first:
+const jump = (step) => {
+  const duration = get(gig).globalize(step)
+
+  get(gig).seek(duration)
+}
 ```
 
 #### `check(status)`
@@ -429,6 +502,8 @@ gig.play()
 > **Warning**
 > 
 > Be sure to unsubscribe to events using the `off` method when you're no longer using them in order to avoid memory leaks!
+>
+> You can also just call `gig.kill()` when you are done with playback, which will remove any event listeners and allow unused memory to be garbage collected.
 
 ### Timers
 
@@ -517,7 +592,7 @@ The best example of a timer implementation is `gig`'s default monotonic clock, w
 
  - [ ] Replace `howler` with `tone.js`
  - [ ] Unit and integration tests
- - [ ] Seek functionality
+ - [x] Seek functionality
  - [ ] Tempo adjustment (required in `bach-js` or `bach` core)
 
 ## License
