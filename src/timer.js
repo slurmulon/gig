@@ -13,18 +13,18 @@ export const clock = (gig, tick) => {
   let interval = null
 
   const loop = () => {
-    const { time, cursor, expired } = gig
+    const { time, cursor, expired, step } = gig
 
     if (expired) return cancel()
 
     if (cursor !== last) {
       last = cursor
 
-      gig.step()
+      step.call(gig)
     }
 
     if (typeof tick === 'function') {
-      tick(gig, time)
+      tick(time)
     }
 
     interval = raf(loop)
