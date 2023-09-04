@@ -8,7 +8,8 @@ import pkg from './package.json'
 // browser-friendly UMD build
 export default [
   {
-    external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'raf', 'events'],
+    // external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'raf', 'events'],
+    external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'raf', 'events', 'ajv'],
     input: 'src/index.js',
     output: {
       name: 'gig',
@@ -43,7 +44,8 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/index.js',
-    external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'raf', 'events'],
+    // external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'raf', 'events'],
+    external: [/@babel\/runtime/, 'bach-js', 'bach-cljs', 'howler', 'performance-now', 'raf', 'events', 'ajv'],
     output: [
       {
         file: pkg.main,
