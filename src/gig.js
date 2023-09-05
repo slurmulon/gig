@@ -44,6 +44,9 @@ export class Gig extends Track {
       }, howler))
     }
 
+    // TODO: After audio is loaded, determine if ((music.duration() / 1000) !== gig.duration)
+    //  - If so, capture the amount of gap between the two and then allow either head or tail or audio to be clipped (as a sprite?) so we can support "gap-prone" lossy audio codecs (mp3, caf, etc) where .ogg and .webm aren't supported
+
     // this.listen()
   }
 
