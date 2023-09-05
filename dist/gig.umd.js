@@ -1,4 +1,4 @@
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(["exports", "bach-js", "raf", "howler", "performance-now", "events"], factory);
@@ -40,22 +40,22 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    *
    * @param {Gig} gig parent instance provided on construction
    * @param {function} [tick] optional function to call on each tick of the clock
-   */
-  // TODO: Allow clock to be configured to optionally cancelAnimationFrame(interval) on each tick
+   */ // TODO: Allow clock to be configured to optionally cancelAnimationFrame(interval) on each tick
   var clock = function clock(gig, tick) {
     var last = null;
     var interval = null;
     var loop = function loop() {
       var time = gig.time,
         cursor = gig.cursor,
-        expired = gig.expired;
+        expired = gig.expired,
+        step = gig.step;
       if (expired) return cancel();
       if (cursor !== last) {
         last = cursor;
-        gig.step();
+        step.call(gig);
       }
       if (typeof tick === 'function') {
-        tick(gig, time);
+        tick(time);
       }
       interval = (0, _raf["default"])(loop);
     };
@@ -133,6 +133,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           loop: loop
         }, howler));
       }
+
+      // TODO: After audio is loaded, determine if ((music.duration() / 1000) !== gig.duration)
+      //  - If so, capture the amount of gap between the two and then allow either head or tail or audio to be clipped (as a sprite?) so we can support "gap-prone" lossy audio codecs (mp3, caf, etc) where .ogg and .webm aren't supported
 
       // this.listen()
       return _this;
